@@ -1,0 +1,1346 @@
+[debug] [2025-09-09T05:42:06.318Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.321Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.321Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.321Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.321Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.322Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.322Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.322Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.322Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.323Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.323Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.323Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.324Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T05:42:06.324Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.355Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.355Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.356Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.356Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.357Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.357Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.358Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.358Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.358Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T05:42:06.358Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.391Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.391Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.392Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.393Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.394Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.394Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.394Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.394Z] Checked if tokens are valid: true, expires at: 1757397918143
+[debug] [2025-09-09T05:42:06.394Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T05:42:06.394Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.395Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.395Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.396Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.396Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.397Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.397Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.398Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.398Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.398Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T05:42:06.398Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.399Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T05:42:06.399Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.399Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.399Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.400Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.400Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.400Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.400Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.401Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T05:42:06.401Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:06.401Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T05:42:06.401Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T05:42:08.040Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T05:42:08.040Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T05:42:08.054Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T05:42:08.054Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T05:42:08.058Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T05:42:08.058Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T05:42:08.086Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T05:42:08.086Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.091Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T05:42:08.092Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.092Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T05:42:08.092Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.093Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T05:42:08.093Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.093Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T05:42:08.093Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.094Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T05:42:08.094Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.095Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T05:42:08.095Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.096Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T05:42:08.096Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.098Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T05:42:08.098Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.099Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T05:42:08.099Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.100Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T05:42:08.100Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.107Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T05:42:08.107Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T05:42:08.138Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T05:42:08.138Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T05:42:08.141Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T05:42:08.142Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T05:42:08.287Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T05:42:08.287Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T05:42:08.288Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T05:42:08.288Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T05:42:08.290Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T05:42:08.290Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T07:21:31.072Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.076Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.076Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.079Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.079Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.174Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.174Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.175Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.175Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.176Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.182Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.182Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.183Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.183Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.183Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.186Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.187Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.187Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.187Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.187Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.192Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.192Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.192Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.193Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.193Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.195Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.195Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.195Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.195Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.196Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.269Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.269Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.269Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.270Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.270Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.272Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.272Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.272Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.272Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.272Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.275Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.276Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.276Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.276Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.276Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.279Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.279Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.279Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.280Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.280Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.281Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.281Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.281Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.281Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.282Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.283Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.283Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.283Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.283Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.283Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.285Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.285Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.285Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.285Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.285Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.286Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.286Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.287Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.287Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.287Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.288Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.288Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.288Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.289Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.289Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.290Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.290Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.290Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.291Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.291Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.292Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.292Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.292Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.292Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.292Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.293Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.293Z] Checked if tokens are valid: false, expires at: 1757397918143
+[debug] [2025-09-09T07:21:31.293Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T07:21:31.293Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T07:21:31.293Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.407Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.407Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.419Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.419Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.432Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.433Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.445Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.445Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.447Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.447Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.453Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.453Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.473Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.473Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.481Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T07:21:31.481Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.482Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.482Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.491Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.491Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.509Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.509Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.516Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T07:21:31.516Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.523Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.523Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.530Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.530Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.532Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.532Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.539Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.539Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.547Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.547Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.555Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T07:21:31.555Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.557Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.557Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.564Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T07:21:31.564Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.566Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.566Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.572Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.572Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.579Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.579Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.585Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.586Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.593Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.593Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.601Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T07:21:31.601Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.607Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.607Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.615Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.615Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.617Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.617Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.624Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T07:21:31.624Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.631Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.631Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.639Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.639Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.654Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.654Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.661Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.661Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.669Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T07:21:31.669Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T07:21:31.675Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T07:21:31.675Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T07:21:31.920Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T07:21:31.920Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.142Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T07:21:33.142Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T07:21:33.164Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T07:21:33.164Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.165Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T07:21:33.165Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.176Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T07:21:33.176Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.261Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T07:21:33.261Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.263Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T07:21:33.263Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T07:21:33.266Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T07:21:33.266Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T07:21:33.270Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T07:21:33.271Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.278Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T07:21:33.278Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.327Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T07:21:33.327Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.347Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T07:21:33.348Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.348Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T07:21:33.348Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.367Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T07:21:33.367Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.371Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T07:21:33.372Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T07:21:33.570Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T07:21:33.570Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T07:21:33.577Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T07:21:33.577Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T07:21:33.580Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T07:21:33.580Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T07:21:33.675Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T07:21:33.676Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T07:21:33.678Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T07:21:33.678Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T09:22:44.633Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.635Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.636Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.637Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.637Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.669Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.669Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.669Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.670Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.670Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.671Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.671Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.671Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.672Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.672Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.673Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.673Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.673Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.673Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.673Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.674Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.674Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.674Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.674Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.674Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.675Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.675Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.675Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.675Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.675Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.703Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.703Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.703Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.703Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.703Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.704Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.704Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.704Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.705Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.705Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.706Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.706Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.706Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.706Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.706Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.708Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.708Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.708Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.708Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.708Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.709Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.709Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.709Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.709Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.709Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.710Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.710Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.710Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.710Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.710Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.710Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.710Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.710Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.711Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.711Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.711Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.711Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.711Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.711Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.711Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.712Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.712Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.712Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.712Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.712Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.713Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.713Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.713Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.713Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.713Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.714Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.714Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.714Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.714Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.714Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.714Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.714Z] Checked if tokens are valid: false, expires at: 1757406090669
+[debug] [2025-09-09T09:22:44.714Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T09:22:44.715Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T09:22:44.715Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.828Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.828Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.835Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T09:22:44.835Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.839Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.839Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.844Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.844Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.845Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.845Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.850Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T09:22:44.850Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.856Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.856Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.861Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.861Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.865Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.865Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.869Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.870Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.871Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.871Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.876Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.876Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.882Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.882Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.886Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.886Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.887Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.887Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.892Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T09:22:44.892Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.897Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.897Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.902Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.902Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.903Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.903Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.908Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.909Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.915Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.915Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.919Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.919Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.921Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.921Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.925Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.925Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.926Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.926Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.930Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.930Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.931Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.931Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.935Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T09:22:44.935Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.940Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.940Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.945Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.945Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.946Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.946Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.951Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T09:22:44.951Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.957Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.957Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.961Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T09:22:44.961Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:44.963Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T09:22:44.963Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T09:22:44.968Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T09:22:44.968Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T09:22:46.496Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T09:22:46.497Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T09:22:46.560Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T09:22:46.560Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.562Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T09:22:46.562Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.597Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T09:22:46.598Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T09:22:46.602Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T09:22:46.602Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.603Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T09:22:46.603Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.605Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T09:22:46.605Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.607Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T09:22:46.607Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T09:22:46.627Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T09:22:46.627Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.628Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T09:22:46.628Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.654Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T09:22:46.654Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.655Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T09:22:46.655Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.682Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T09:22:46.682Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.888Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T09:22:46.888Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T09:22:46.892Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T09:22:46.893Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T09:22:46.907Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T09:22:46.907Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T09:22:46.940Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T09:22:46.940Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.943Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T09:22:46.943Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T09:22:46.954Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T09:22:46.954Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T09:22:46.958Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T09:22:46.958Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T10:03:30.719Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.722Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.723Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.723Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.723Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.724Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.724Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.724Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.725Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.725Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.725Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.725Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.726Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T10:03:30.726Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.761Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.761Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.762Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.762Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.763Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.763Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.764Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.764Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.765Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T10:03:30.765Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.797Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.797Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.798Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.799Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] Checked if tokens are valid: true, expires at: 1757413363963
+[debug] [2025-09-09T10:03:30.800Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T10:03:30.800Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.801Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.801Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.803Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.803Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.805Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.805Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.805Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.805Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.806Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T10:03:30.806Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.806Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T10:03:30.806Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.807Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.807Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.807Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.807Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.808Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.808Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.808Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T10:03:30.808Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:30.809Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T10:03:30.809Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T10:03:31.285Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T10:03:31.285Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.460Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T10:03:32.460Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T10:03:32.467Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T10:03:32.467Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T10:03:32.480Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T10:03:32.481Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T10:03:32.490Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T10:03:32.490Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.490Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T10:03:32.490Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.493Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T10:03:32.493Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.500Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T10:03:32.500Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.518Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T10:03:32.518Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.519Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T10:03:32.519Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.526Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T10:03:32.526Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.533Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T10:03:32.533Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.534Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T10:03:32.534Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.546Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T10:03:32.546Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:32.776Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T10:03:32.777Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T10:03:32.810Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T10:03:32.811Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T10:03:32.813Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T10:03:32.813Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T10:03:32.814Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T10:03:32.815Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T10:03:33.144Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T10:03:33.144Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T10:03:33.146Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T10:03:33.146Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T11:21:05.245Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.247Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.248Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.249Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.250Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.283Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.283Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.283Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.283Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.283Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.285Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.285Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.285Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.285Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.285Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.287Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.287Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.287Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.287Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.287Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.288Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.288Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.288Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.288Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.288Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.289Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.289Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.289Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.290Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.290Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.317Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.317Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.317Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.317Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.317Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.318Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.318Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.318Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.319Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.319Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.321Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.321Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.321Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.321Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.321Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.324Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.324Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.324Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.324Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.324Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.325Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.325Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.325Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.325Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.325Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.326Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.326Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.326Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.327Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.327Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.328Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.328Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.328Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.328Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.328Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.328Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.328Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.328Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.328Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.329Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.329Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.329Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.329Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.329Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.329Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.330Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.330Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.330Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.330Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.330Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.331Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.331Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.331Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.331Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.331Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.331Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.332Z] Checked if tokens are valid: false, expires at: 1757413363963
+[debug] [2025-09-09T11:21:05.332Z] > refreshing access token with scopes: []
+[debug] [2025-09-09T11:21:05.332Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-09T11:21:05.332Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.548Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.548Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.554Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T11:21:05.554Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.563Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.563Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.569Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.569Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.571Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.571Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.575Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.575Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.576Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.577Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.583Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.583Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.590Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.590Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.595Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.595Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.597Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.597Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.602Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T11:21:05.602Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.607Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.607Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.612Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.612Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.613Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.613Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.619Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.619Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.627Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.627Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.633Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-09T11:21:05.633Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.635Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.635Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.640Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.640Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.644Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.644Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.649Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T11:21:05.649Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.650Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.650Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.656Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.656Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.657Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.657Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.663Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.663Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.668Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.668Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.673Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.673Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.674Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.674Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.680Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T11:21:05.680Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.682Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.682Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.687Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.687Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.689Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.689Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.693Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-09T11:21:05.693Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:05.700Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-09T11:21:05.700Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-09T11:21:05.705Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-09T11:21:05.705Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-09T11:21:06.130Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T11:21:06.130Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.283Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T11:21:07.283Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.287Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T11:21:07.287Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.308Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T11:21:07.308Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.311Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T11:21:07.311Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T11:21:07.314Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T11:21:07.314Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T11:21:07.326Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T11:21:07.326Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.327Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T11:21:07.327Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.337Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-09T11:21:07.338Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.339Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-09T11:21:07.339Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-09T11:21:07.360Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-09T11:21:07.360Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.365Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T11:21:07.365Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.371Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T11:21:07.371Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.371Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-09T11:21:07.371Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.447Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-09T11:21:07.447Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-09T11:21:07.578Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T11:21:07.578Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T11:21:07.594Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T11:21:07.594Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T11:21:07.597Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T11:21:07.597Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-09T11:21:07.651Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-09T11:21:07.651Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-09T11:21:07.655Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-09T11:21:07.655Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-10T05:42:33.746Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.748Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.749Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.750Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.750Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.791Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.791Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.791Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.792Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.792Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.794Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.794Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.794Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.794Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.794Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.795Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.795Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.795Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.796Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.796Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.796Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.796Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.797Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.797Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.797Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.798Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.798Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.798Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.798Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.798Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.828Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.828Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.828Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.829Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.829Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.830Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.830Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.830Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.830Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.830Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.832Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.832Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.833Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.833Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.833Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.834Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.834Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.834Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.835Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.835Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.835Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.835Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.835Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.835Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.835Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.836Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.836Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.836Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.836Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.836Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.837Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.837Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.837Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.837Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.837Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.838Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.838Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.838Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.838Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.838Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.838Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.838Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.839Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.839Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.839Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.839Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.839Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.839Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.840Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.840Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.840Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.840Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.840Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.840Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.840Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.841Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.841Z] Checked if tokens are valid: false, expires at: 1757420464700
+[debug] [2025-09-10T05:42:33.841Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T05:42:33.842Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T05:42:33.842Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.960Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:33.960Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.968Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T05:42:33.969Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:33.970Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:33.970Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.975Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T05:42:33.975Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:33.983Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:33.983Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.987Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T05:42:33.987Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:33.988Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:33.988Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.993Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T05:42:33.993Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:33.995Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:33.995Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:33.999Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T05:42:33.999Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.003Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.003Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.008Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T05:42:34.008Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.009Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.009Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.014Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.014Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.015Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.015Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.019Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T05:42:34.019Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.025Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.025Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.030Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.030Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.038Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.038Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.043Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.043Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.044Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.044Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.049Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T05:42:34.049Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.050Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.050Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.055Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.055Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.056Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.056Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.061Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.061Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.070Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.071Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.075Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.075Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.076Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.076Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.081Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.081Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.087Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.087Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.091Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T05:42:34.092Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.097Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.097Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.102Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.102Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.103Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T05:42:34.103Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T05:42:34.107Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T05:42:34.107Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T05:42:34.391Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T05:42:34.392Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T05:42:35.650Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T05:42:35.650Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T05:42:35.705Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T05:42:35.705Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T05:42:35.708Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T05:42:35.708Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.709Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T05:42:35.709Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.733Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T05:42:35.733Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.755Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T05:42:35.755Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.814Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T05:42:35.815Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.829Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T05:42:35.829Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.832Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T05:42:35.832Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:35.875Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T05:42:35.876Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:36.032Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T05:42:36.032Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T05:42:36.052Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T05:42:36.052Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T05:42:36.065Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T05:42:36.065Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T05:42:36.851Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-10T05:42:36.852Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-10T05:42:36.855Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-10T05:42:36.855Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-10T05:42:37.345Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T05:42:37.345Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:37.346Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T05:42:37.346Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:37.400Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T05:42:37.400Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T05:42:37.405Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T05:42:37.405Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:39.456Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.458Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.458Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.458Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.459Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.459Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.459Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.459Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.460Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.460Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.460Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.460Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.461Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T06:25:39.461Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.493Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.493Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.494Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.494Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.495Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.495Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.495Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.495Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.496Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T06:25:39.496Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.512Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.512Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.512Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.512Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.513Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.514Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.515Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.515Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.515Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.515Z] Checked if tokens are valid: true, expires at: 1757486553103
+[debug] [2025-09-10T06:25:39.515Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T06:25:39.515Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.516Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.516Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.517Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.517Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.518Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.518Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.518Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.518Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.519Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T06:25:39.519Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.520Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T06:25:39.520Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.520Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.520Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.521Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.521Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.521Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.521Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.522Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T06:25:39.522Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:39.522Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T06:25:39.522Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:25:41.164Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T06:25:41.164Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T06:25:41.173Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T06:25:41.173Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T06:25:41.216Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T06:25:41.217Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.217Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T06:25:41.217Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.218Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T06:25:41.218Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T06:25:41.219Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T06:25:41.219Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.220Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T06:25:41.220Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.220Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T06:25:41.220Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.221Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T06:25:41.221Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.239Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T06:25:41.239Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.240Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T06:25:41.240Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.241Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T06:25:41.241Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.242Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T06:25:41.242Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.249Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T06:25:41.249Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.262Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T06:25:41.262Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T06:25:41.459Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T06:25:41.459Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T06:25:41.480Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T06:25:41.480Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T06:25:41.482Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-10T06:25:41.483Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-10T06:25:41.495Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T06:25:41.496Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T06:25:41.499Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-10T06:25:41.499Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-10T06:29:19.001Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.003Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.004Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.005Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.005Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.040Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.040Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.040Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.040Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.040Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.042Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.042Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.042Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.042Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.042Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.043Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.043Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.043Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.044Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.044Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.044Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.044Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.044Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.045Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.045Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.046Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.047Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.047Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.047Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.047Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.066Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.066Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.066Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.066Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.066Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.067Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.067Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.067Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.067Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.067Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.069Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.069Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.069Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.069Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.069Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.070Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.070Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.071Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.071Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.071Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.071Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.071Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.071Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.072Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.072Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.072Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.072Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.072Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.072Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.072Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.073Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.073Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.073Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.073Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.073Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.074Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.074Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.074Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.074Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.074Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.075Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.075Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.075Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.075Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.075Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.076Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.076Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.076Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.076Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.076Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.077Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.077Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.077Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.077Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.077Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.077Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.078Z] Checked if tokens are valid: false, expires at: 1757486553103
+[debug] [2025-09-10T06:29:19.078Z] > refreshing access token with scopes: []
+[debug] [2025-09-10T06:29:19.078Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-09-10T06:29:19.078Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.202Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.202Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.209Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.210Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.217Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.217Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.222Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.222Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.226Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.226Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.231Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.231Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.232Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.232Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.238Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.238Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.239Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.239Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.244Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.244Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.245Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.245Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.250Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.250Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.256Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.257Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.261Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.261Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.263Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.263Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.267Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.267Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.269Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.269Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.274Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T06:29:19.274Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.278Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.278Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.284Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T06:29:19.284Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.292Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.293Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.297Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.297Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.299Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.299Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.303Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.303Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.310Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.310Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.315Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.315Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.320Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.320Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.325Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [none]
+[debug] [2025-09-10T06:29:19.325Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.326Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.326Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.330Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T06:29:19.330Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.332Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.332Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.337Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T06:29:19.337Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.344Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.344Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.349Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [none]
+[debug] [2025-09-10T06:29:19.349Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:19.350Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-09-10T06:29:19.350Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-09-10T06:29:19.354Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [none]
+[debug] [2025-09-10T06:29:19.354Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ x-goog-quota-user=projects/claude-image-analysis-chat
+[debug] [2025-09-10T06:29:20.928Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T06:29:20.928Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T06:29:20.943Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T06:29:20.944Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:20.944Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T06:29:20.944Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:20.945Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T06:29:20.945Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:20.946Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T06:29:20.946Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:20.956Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T06:29:20.957Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T06:29:20.968Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com 403
+[debug] [2025-09-10T06:29:20.968Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseio.com [omitted]
+[debug] [2025-09-10T06:29:20.981Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-10T06:29:20.981Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:20.982Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T06:29:20.983Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:20.983Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T06:29:20.984Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:21.025Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T06:29:21.025Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T06:29:21.025Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T06:29:21.026Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:21.026Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T06:29:21.026Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T06:29:21.027Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T06:29:21.027Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:21.032Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-10T06:29:21.032Z] > authorizing via signed-in user (zazikant@gmail.com)
+[debug] [2025-09-10T06:29:21.035Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-10T06:29:21.035Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:21.037Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com 200
+[debug] [2025-09-10T06:29:21.038Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firestore.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:21.056Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-10T06:29:21.056Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-10T06:29:21.238Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ 200
+[debug] [2025-09-10T06:29:21.238Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/claude-image-analysis-chat/services/ [omitted]
+[debug] [2025-09-10T06:29:21.241Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-10T06:29:21.241Z] > authorizing via signed-in user (zazikant@gmail.com)

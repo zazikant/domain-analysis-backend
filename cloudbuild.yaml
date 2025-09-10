@@ -1,0 +1,48 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', 
+      '-t', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA',
+      '-t', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:latest',
+      '.'
+    ]
+
+  # Push the images to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:latest']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'advanced-csv-domain-analysis',
+      '--image', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA',
+      '--region', 'europe-west1',
+      '--platform', 'managed',
+      '--allow-unauthenticated',
+      '--memory', '4Gi',
+      '--cpu', '2',
+      '--timeout', '900',
+      '--max-instances', '10',
+      '--min-instances', '0',
+      '--concurrency', '1000',
+      '--port', '8080'
+    ]
+
+# Store images in Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:latest'
+
+# Build options
+options:
+  machineType: 'E2_HIGHCPU_8'
+  diskSizeGb: 50
+  logging: CLOUD_LOGGING_ONLY
+
+# Set build timeout
+timeout: 1200s

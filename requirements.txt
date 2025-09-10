@@ -1,0 +1,43 @@
+# Core FastAPI and web framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+websockets==12.0
+
+# Data processing and analysis
+pandas==2.1.4
+numpy==1.24.4
+
+# Google Cloud services
+google-cloud-bigquery==3.13.0
+google-cloud-secret-manager==2.18.1
+google-auth==2.23.4
+pandas-gbq==0.19.2
+
+# LangChain and AI/ML - UPDATED TO COMPATIBLE VERSIONS
+langchain==0.1.20
+langchain-core==0.1.52
+langchain-community==0.0.38
+langsmith==0.1.17
+google-generativeai==0.3.2
+
+# HTTP requests and web scraping
+requests==2.31.0
+urllib3==2.1.0
+
+# Data validation and parsing
+pydantic==2.5.2
+pydantic[email]==2.5.2
+
+# Utility libraries
+python-dotenv==1.0.0
+python-json-logger==2.0.7
+
+# Date/time handling
+python-dateutil==2.8.2
+
+# Additional utilities
+typing-extensions==4.8.0
+certifi==2023.11.17
+charset-normalizer==3.3.2
+idna==3.6

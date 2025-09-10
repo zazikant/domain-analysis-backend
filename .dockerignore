@@ -1,0 +1,74 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Python cache and build artifacts
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.pytest_cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.mypy_cache
+.pyre
+.pytype
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node modules (will be copied separately)
+frontend/node_modules/
+frontend/.git/
+frontend/coverage/
+frontend/.nyc_output/
+
+# Claude directory
+.claude/
+
+# Test files
+test_*.py
+*_test.py
+tests/
+test/
+
+# Documentation
+*.md
+docs/
+
+# Example and config files
+.env.example
+*.example
+
+# Jupyter notebooks
+*.ipynb
