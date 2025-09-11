@@ -33,6 +33,125 @@ domain_analyzer: Optional[DomainAnalyzer] = None
 bigquery_client: Optional[BigQueryClient] = None
 
 
+def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
+    """
+    Enhanced email cleaning from pandas DataFrame with comprehensive validation and BigQuery duplicate checking
+    
+    Args:
+        df: pandas DataFrame containing email data
+        bq_client: Optional BigQuery client for checking existing domains
+        
+    Returns:
+        tuple: (list of valid emails, cleaning stats dict)
+    """
+    stats = {
+        "total_rows": len(df),
+        "email_column": None,
+        "valid_emails": 0,
+        "invalid_emails": 0,
+        "duplicates_removed": 0,
+        "empty_rows": 0,
+        "bigquery_duplicates": 0,
+        "new_emails": 0
+    }
+    
+    # Auto-detect email column
+    email_column = None
+    email_keywords = ['email', 'e-mail', 'mail', 'address', 'contact']
+    
+    # Try to find column with email-like name
+    for col in df.columns:
+        if any(keyword in col.lower() for keyword in email_keywords):
+            email_column = col
+            break
+    
+    # If no email-named column found, use first column
+    if email_column is None:
+        email_column = df.columns[0]
+    
+    stats["email_column"] = email_column
+    
+    # Extract and clean emails
+    emails_series = df[email_column].copy()
+    
+    # Convert to string and handle NaN values
+    emails_series = emails_series.astype(str)
+    
+    # Remove obvious non-email values
+    emails_series = emails_series.replace(['nan', 'NaN', 'None', 'null', ''], pd.NA)
+    
+    # Count empty rows
+    stats["empty_rows"] = emails_series.isna().sum()
+    
+    # Remove empty rows
+    emails_series = emails_series.dropna()
+    
+    # Comprehensive cleaning
+    emails_series = (emails_series
+                    .str.strip()                    # Remove leading/trailing spaces
+                    .str.replace(r'\s+', '', regex=True)  # Remove any internal spaces
+                    .str.lower()                    # Convert to lowercase
+                    .str.replace(r'^mailto:', '', regex=True)  # Remove mailto: prefix
+                    .str.replace(r'[<>]', '', regex=True)     # Remove angle brackets
+                    )
+    
+    # Email validation regex (more comprehensive)
+    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    
+    # Filter valid emails
+    valid_mask = emails_series.str.match(email_pattern, na=False)
+    valid_emails = emails_series[valid_mask].tolist()
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_emails = []
+    duplicates = 0
+    
+    for email in valid_emails:
+        if email not in seen:
+            seen.add(email)
+            unique_emails.append(email)
+        else:
+            duplicates += 1
+    
+    # Check BigQuery for existing domains if client provided
+    final_emails = unique_emails
+    bigquery_duplicates = 0
+    
+    if bq_client and unique_emails:
+        try:
+            # Extract domains from emails
+            domains = [email.split('@')[1] for email in unique_emails]
+            
+            # Check which domains exist in BigQuery
+            existing_domains = bq_client.check_multiple_domains_exist(domains)
+            
+            # Filter out emails with existing domains
+            new_emails = []
+            for email in unique_emails:
+                domain = email.split('@')[1]
+                if not existing_domains.get(domain, False):
+                    new_emails.append(email)
+                else:
+                    bigquery_duplicates += 1
+            
+            final_emails = new_emails
+            
+        except Exception as e:
+            logger.error(f"Error checking BigQuery duplicates: {str(e)}")
+            # On error, use all unique emails
+            final_emails = unique_emails
+    
+    # Update stats
+    stats["valid_emails"] = len(unique_emails)
+    stats["invalid_emails"] = len(emails_series) - len(valid_emails)
+    stats["duplicates_removed"] = duplicates
+    stats["bigquery_duplicates"] = bigquery_duplicates
+    stats["new_emails"] = len(final_emails)
+    
+    return final_emails, stats
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
@@ -353,8 +472,8 @@ async def process_email_analysis(
     domain_output = analyzer.extract_domain_from_email(email)
     domain = domain_output.domain
     
-    # Check if we have recent results (unless force refresh)
-    if not force_refresh and bq_client.check_domain_exists(domain, max_age_hours=24):
+    # Check if we have any previous results (unless force refresh)
+    if not force_refresh and bq_client.check_domain_exists(domain, max_age_hours=525600):  # 10 years
         logger.info(f"Using cached result for domain: {domain}")
         
         cached_df = bq_client.query_domain_results(domain, limit=1)
@@ -722,6 +841,37 @@ Feel free to submit another email or upload a CSV file!"""
         )
 
 
+@app.post("/chat/preview-csv")
+async def preview_csv_file(
+    session_id: str,
+    file: UploadFile = File(...),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """Preview CSV file with BigQuery duplicate checking before processing"""
+    try:
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            return {"error": "Please upload a CSV file."}
+        
+        # Read CSV file
+        contents = await file.read()
+        df = pd.read_csv(io.BytesIO(contents))
+        
+        # Clean emails and check BigQuery duplicates
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
+        
+        return {
+            "valid_emails": valid_emails[:10],  # Preview first 10
+            "total_count": cleaning_stats['new_emails'],
+            "has_more": cleaning_stats['new_emails'] > 10,
+            "stats": cleaning_stats
+        }
+        
+    except Exception as e:
+        logger.error(f"Error previewing CSV: {str(e)}")
+        return {"error": f"Error processing CSV file: {str(e)}"}
+
+
 @app.post("/chat/upload-csv")
 async def upload_csv_file(
     session_id: str,
@@ -743,30 +893,41 @@ async def upload_csv_file(
         contents = await file.read()
         df = pd.read_csv(io.BytesIO(contents))
         
-        # Find email column (first column or column with 'email' in name)
-        email_column = None
-        for col in df.columns:
-            if 'email' in col.lower():
-                email_column = col
-                break
-        
-        if email_column is None:
-            email_column = df.columns[0]  # Use first column
-        
-        # Clean and validate emails
-        emails = df[email_column].astype(str).str.strip().str.lower()
-        valid_emails = []
-        
-        for email in emails:
-            if pd.notna(email) and re.match(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', email):
-                valid_emails.append(email)
+        # Enhanced email cleaning using new function with BigQuery duplicate checking
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
         
         if not valid_emails:
-            error_msg = "No valid email addresses found in the CSV file."
+            error_msg = f"""No new email addresses found in the CSV file.
+            
+📊 Processing Summary:
+• Total rows: {cleaning_stats['total_rows']}
+• Email column used: '{cleaning_stats['email_column']}'
+• Valid emails found: {cleaning_stats['valid_emails']}
+• Invalid emails: {cleaning_stats['invalid_emails']}
+• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
+• Already in database: {cleaning_stats['bigquery_duplicates']}
+• New emails to process: {cleaning_stats['new_emails']}
+• Empty rows: {cleaning_stats['empty_rows']}
+
+All valid emails are already processed in our database. Please check with new email addresses."""
             await send_chat_message(session_id, error_msg)
             return {"error": error_msg}
         
-        await send_chat_message(session_id, f"Found {len(valid_emails)} valid emails. Starting processing...")
+        # Send detailed processing summary
+        summary_msg = f"""📁 CSV file processed successfully!
+
+📊 Processing Summary:
+• Total rows: {cleaning_stats['total_rows']}
+• Email column used: '{cleaning_stats['email_column']}'
+• Valid emails found: {cleaning_stats['valid_emails']}
+• Invalid emails: {cleaning_stats['invalid_emails']}
+• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
+• Already in database: {cleaning_stats['bigquery_duplicates']} ⚡
+• New emails to process: {cleaning_stats['new_emails']}
+• Empty rows skipped: {cleaning_stats['empty_rows']}
+
+🚀 Starting analysis for {len(valid_emails)} new emails..."""
+        await send_chat_message(session_id, summary_msg)
         
         # Process emails in background
         asyncio.create_task(process_csv_emails_background(

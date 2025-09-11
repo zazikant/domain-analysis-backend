@@ -5,7 +5,7 @@ Handles DataFrame to BigQuery integration for domain analysis results
 
 import os
 import logging
-from typing import Optional
+from typing import Optional, List, Dict
 import pandas as pd
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
@@ -220,6 +220,60 @@ class BigQueryClient:
         except Exception as e:
             logger.error(f"Error checking domain existence: {str(e)}")
             return False
+    
+    def check_multiple_domains_exist(self, domains: List[str], max_age_hours: int = 87600) -> Dict[str, bool]:
+        """
+        Check if multiple domains exist in the database in batch
+        
+        Args:
+            domains: List of domains to check
+            max_age_hours: Maximum age in hours for considering result fresh
+            
+        Returns:
+            Dict mapping domain to boolean (True if exists)
+        """
+        if not domains:
+            return {}
+            
+        try:
+            # Create domain list for SQL IN clause
+            domain_params = []
+            query_params = []
+            
+            for i, domain in enumerate(domains):
+                param_name = f"domain_{i}"
+                domain_params.append(f"@{param_name}")
+                query_params.append(bigquery.ScalarQueryParameter(param_name, "STRING", domain))
+            
+            domains_in_clause = ", ".join(domain_params)
+            
+            query = f"""
+            SELECT extracted_domain, COUNT(*) as count
+            FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
+            WHERE extracted_domain IN ({domains_in_clause})
+            AND created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL {max_age_hours} HOUR)
+            AND scraping_status NOT IN ('error', 'failed')
+            GROUP BY extracted_domain
+            """
+            
+            job_config = bigquery.QueryJobConfig(query_parameters=query_params)
+            query_job = self.client.query(query, job_config=job_config)
+            results = query_job.result()
+            
+            # Create result dict - all domains default to False
+            result_dict = {domain: False for domain in domains}
+            
+            # Update with existing domains
+            for row in results:
+                if row.count > 0:
+                    result_dict[row.extracted_domain] = True
+                    
+            return result_dict
+            
+        except Exception as e:
+            logger.error(f"Error checking multiple domains existence: {str(e)}")
+            # Return all False on error
+            return {domain: False for domain in domains}
     
     def get_recent_results(self, limit: int = 100) -> pd.DataFrame:
         """
