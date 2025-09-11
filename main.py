@@ -102,6 +102,13 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
     valid_mask = emails_series.str.match(email_pattern, na=False)
     valid_emails = emails_series[valid_mask].tolist()
     
+    # Debug: Log invalid emails for troubleshooting
+    invalid_emails = emails_series[~valid_mask].tolist()
+    if invalid_emails:
+        logger.info(f"Invalid emails found: {invalid_emails}")
+    
+    logger.info(f"Email validation: {len(emails_series)} total → {len(valid_emails)} valid, {len(invalid_emails)} invalid")
+    
     # Remove duplicates while preserving order
     seen = set()
     unique_emails = []
@@ -123,8 +130,8 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
             # Extract domains from emails
             domains = [email.split('@')[1] for email in unique_emails]
             
-            # Check which domains exist in BigQuery
-            existing_domains = bq_client.check_multiple_domains_exist(domains)
+            # Check which domains exist in BigQuery (within 24 hours for CSV preview)
+            existing_domains = bq_client.check_multiple_domains_exist(domains, max_age_hours=24)
             
             # Filter out emails with existing domains
             new_emails = []
