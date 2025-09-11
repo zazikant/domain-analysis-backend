@@ -3,24 +3,24 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', 
-      '-t', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA',
-      '-t', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:latest',
+      '-t', 'gcr.io/$PROJECT_ID/domain-analysis-backend:$COMMIT_SHA',
+      '-t', 'gcr.io/$PROJECT_ID/domain-analysis-backend:latest',
       '.'
     ]
 
   # Push the images to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/domain-analysis-backend:$COMMIT_SHA']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:latest']
+    args: ['push', 'gcr.io/$PROJECT_ID/domain-analysis-backend:latest']
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
     entrypoint: gcloud
     args: [
-      'run', 'deploy', 'advanced-csv-domain-analysis',
-      '--image', 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA',
+      'run', 'deploy', 'domain-analysis-backend',
+      '--image', 'gcr.io/$PROJECT_ID/domain-analysis-backend:$COMMIT_SHA',
       '--region', 'europe-west1',
       '--platform', 'managed',
       '--allow-unauthenticated',
@@ -35,8 +35,8 @@ steps:
 
 # Store images in Container Registry
 images:
-  - 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:$COMMIT_SHA'
-  - 'gcr.io/$PROJECT_ID/advanced-csv-domain-analysis:latest'
+  - 'gcr.io/$PROJECT_ID/domain-analysis-backend:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/domain-analysis-backend:latest'
 
 # Build options
 options:

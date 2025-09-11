@@ -7,7 +7,7 @@ set -e
 
 # Configuration
 PROJECT_ID="${GCP_PROJECT_ID:-feisty-outrider-471302-k6}"
-SERVICE_NAME="advanced-csv-domain-analysis"
+SERVICE_NAME="domain-analysis-backend"
 REGION="europe-west1"
 IMAGE_NAME="gcr.io/$PROJECT_ID/$SERVICE_NAME"
 

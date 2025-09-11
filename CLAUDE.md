@@ -438,7 +438,7 @@ gcloud run deploy domain-analysis-chat \
 **Verification**:
 ```bash
 # Test command that now works correctly:
-curl -X POST 'https://advanced-csv-domain-analysis-456664817971.europe-west1.run.app/analyze' \
+curl -X POST 'https://domain-analysis-backend-456664817971.europe-west1.run.app/analyze' \
   -H 'Content-Type: application/json' \
   -d '{"email": "user@jpinfra.com", "force_refresh": false}'
 
