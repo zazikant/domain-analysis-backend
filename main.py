@@ -127,17 +127,13 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
     
     if bq_client and unique_emails:
         try:
-            # Extract domains from emails
-            domains = [email.split('@')[1] for email in unique_emails]
+            # Check which specific EMAIL ADDRESSES exist in BigQuery (exact match, not domain similarity)
+            existing_emails = bq_client.check_multiple_emails_exist(unique_emails, max_age_hours=24)
             
-            # Check which domains exist in BigQuery (within 24 hours for CSV preview)
-            existing_domains = bq_client.check_multiple_domains_exist(domains, max_age_hours=24)
-            
-            # Filter out emails with existing domains
+            # Filter out emails that already exist (exact email match only)
             new_emails = []
             for email in unique_emails:
-                domain = email.split('@')[1]
-                if not existing_domains.get(domain, False):
+                if not existing_emails.get(email, False):
                     new_emails.append(email)
                 else:
                     bigquery_duplicates += 1

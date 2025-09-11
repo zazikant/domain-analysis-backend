@@ -221,6 +221,60 @@ class BigQueryClient:
             logger.error(f"Error checking domain existence: {str(e)}")
             return False
     
+    def check_multiple_emails_exist(self, emails: List[str], max_age_hours: int = 87600) -> Dict[str, bool]:
+        """
+        Check if multiple email addresses exist in the database in batch
+        
+        Args:
+            emails: List of email addresses to check
+            max_age_hours: Maximum age in hours for considering result fresh
+            
+        Returns:
+            Dict mapping email to boolean (True if exists)
+        """
+        if not emails:
+            return {}
+            
+        try:
+            # Create email list for SQL IN clause
+            email_params = []
+            query_params = []
+            
+            for i, email in enumerate(emails):
+                param_name = f"email_{i}"
+                email_params.append(f"@{param_name}")
+                query_params.append(bigquery.ScalarQueryParameter(param_name, "STRING", email))
+            
+            emails_in_clause = ", ".join(email_params)
+            
+            query = f"""
+            SELECT original_email, COUNT(*) as count
+            FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
+            WHERE original_email IN ({emails_in_clause})
+            AND created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL {max_age_hours} HOUR)
+            AND scraping_status NOT IN ('error', 'failed')
+            GROUP BY original_email
+            """
+            
+            job_config = bigquery.QueryJobConfig(query_parameters=query_params)
+            query_job = self.client.query(query, job_config=job_config)
+            results = query_job.result()
+            
+            # Create result dict - all emails default to False
+            result_dict = {email: False for email in emails}
+            
+            # Update with existing emails
+            for row in results:
+                if row.count > 0:
+                    result_dict[row.original_email] = True
+                    
+            return result_dict
+            
+        except Exception as e:
+            logger.error(f"Error checking multiple emails existence: {str(e)}")
+            # Return all False on error
+            return {email: False for email in emails}
+
     def check_multiple_domains_exist(self, domains: List[str], max_age_hours: int = 87600) -> Dict[str, bool]:
         """
         Check if multiple domains exist in the database in batch
