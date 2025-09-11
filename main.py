@@ -208,14 +208,11 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://domain-analysis-frontend-456664817971.europe-west1.run.app",
-        "http://localhost:3000",  # For local development
-        "http://localhost:8080",  # For local testing
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],  # Temporary wildcard for debugging
+    allow_credentials=False,  # Must be False with wildcard origins
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Serve static files (React build)
@@ -841,6 +838,18 @@ Feel free to submit another email or upload a CSV file!"""
         )
 
 
+@app.options("/chat/preview-csv")
+async def preview_csv_options():
+    """Handle CORS preflight for CSV preview endpoint"""
+    return JSONResponse(
+        content={"message": "OPTIONS OK"}, 
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
+
 @app.post("/chat/preview-csv")
 async def preview_csv_file(
     file: UploadFile = File(...),
@@ -848,6 +857,7 @@ async def preview_csv_file(
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
     """Preview CSV file with BigQuery duplicate checking before processing"""
+    logger.info(f"CSV preview request received for session: {session_id}, file: {file.filename}")
     try:
         # Validate file type
         if not file.filename.endswith('.csv'):
@@ -860,17 +870,45 @@ async def preview_csv_file(
         # Clean emails and check BigQuery duplicates
         valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
         
-        return {
+        response_data = {
             "valid_emails": valid_emails[:10],  # Preview first 10
             "total_count": cleaning_stats['new_emails'],
             "has_more": cleaning_stats['new_emails'] > 10,
             "stats": cleaning_stats
         }
         
+        return JSONResponse(
+            content=response_data,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS",
+                "Access-Control-Allow-Headers": "*",
+            }
+        )
+        
     except Exception as e:
         logger.error(f"Error previewing CSV: {str(e)}")
-        return {"error": f"Error processing CSV file: {str(e)}"}
+        return JSONResponse(
+            content={"error": f"Error processing CSV file: {str(e)}"},
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS", 
+                "Access-Control-Allow-Headers": "*",
+            }
+        )
 
+
+@app.options("/chat/upload-csv")
+async def upload_csv_options():
+    """Handle CORS preflight for CSV upload endpoint"""
+    return JSONResponse(
+        content={"message": "OK"}, 
+        headers={
+            "Access-Control-Allow-Origin": "https://domain-analysis-frontend-456664817971.europe-west1.run.app",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
 
 @app.post("/chat/upload-csv")
 async def upload_csv_file(
@@ -880,6 +918,7 @@ async def upload_csv_file(
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
     """Handle CSV file upload and process emails in batch"""
+    logger.info(f"CSV upload request received for session: {session_id}, file: {file.filename}")
     try:
         session = get_or_create_session(session_id)
         
