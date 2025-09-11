@@ -14,7 +14,7 @@ from datetime import datetime
 from contextlib import asynccontextmanager
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, WebSocket, WebSocketDisconnect, UploadFile, File
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, WebSocket, WebSocketDisconnect, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -843,8 +843,8 @@ Feel free to submit another email or upload a CSV file!"""
 
 @app.post("/chat/preview-csv")
 async def preview_csv_file(
-    session_id: str,
     file: UploadFile = File(...),
+    session_id: str = Form(...),
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
     """Preview CSV file with BigQuery duplicate checking before processing"""
@@ -874,8 +874,8 @@ async def preview_csv_file(
 
 @app.post("/chat/upload-csv")
 async def upload_csv_file(
-    session_id: str,
     file: UploadFile = File(...),
+    session_id: str = Form(...),
     analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
