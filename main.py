@@ -45,7 +45,7 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
         tuple: (list of valid emails, cleaning stats dict)
     """
     stats = {
-        "total_rows": len(df),
+        "total_rows": int(len(df)),
         "email_column": None,
         "valid_emails": 0,
         "invalid_emails": 0,
@@ -81,7 +81,7 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
     emails_series = emails_series.replace(['nan', 'NaN', 'None', 'null', ''], pd.NA)
     
     # Count empty rows
-    stats["empty_rows"] = emails_series.isna().sum()
+    stats["empty_rows"] = int(emails_series.isna().sum())
     
     # Remove empty rows
     emails_series = emails_series.dropna()
@@ -142,12 +142,12 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
             # On error, use all unique emails
             final_emails = unique_emails
     
-    # Update stats
-    stats["valid_emails"] = len(unique_emails)
-    stats["invalid_emails"] = len(emails_series) - len(valid_emails)
-    stats["duplicates_removed"] = duplicates
-    stats["bigquery_duplicates"] = bigquery_duplicates
-    stats["new_emails"] = len(final_emails)
+    # Update stats - Convert to Python native types for JSON serialization
+    stats["valid_emails"] = int(len(unique_emails))
+    stats["invalid_emails"] = int(len(emails_series) - len(valid_emails))
+    stats["duplicates_removed"] = int(duplicates)
+    stats["bigquery_duplicates"] = int(bigquery_duplicates)
+    stats["new_emails"] = int(len(final_emails))
     
     return final_emails, stats
 
