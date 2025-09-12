@@ -973,9 +973,11 @@ All valid emails are already processed in our database. Please check with new em
         
         # Process emails in background
         logger.info(f"Starting background processing for {len(valid_emails)} emails")
-        asyncio.create_task(process_csv_emails_background(
+        task = asyncio.create_task(process_csv_emails_background(
             session_id, valid_emails, analyzer, bq_client
         ))
+        # Add exception handler to catch silent failures
+        task.add_done_callback(lambda t: logger.error(f"Background task error: {t.exception()}") if t.exception() else logger.info("Background task completed successfully"))
         
         return {
             "message": f"Processing {len(valid_emails)} emails. You'll receive updates every 10 completions.",
@@ -1072,8 +1074,14 @@ All results have been saved to the database. You can now submit more emails or u
         
     except Exception as e:
         logger.error(f"Error in background processing: {str(e)}")
+        logger.error(f"Exception details: {type(e).__name__}: {e}")
+        import traceback
+        logger.error(f"Full traceback: {traceback.format_exc()}")
         error_msg = f"Batch processing failed: {str(e)}"
-        await send_chat_message(session_id, error_msg)
+        try:
+            await send_chat_message(session_id, error_msg)
+        except Exception as send_error:
+            logger.error(f"Failed to send error message: {send_error}")
 
 
 # Serve React app for all non-API routes
