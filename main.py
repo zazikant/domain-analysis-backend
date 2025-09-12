@@ -227,7 +227,7 @@ if os.path.exists(static_dir):
 @app.get("/favicon.ico")
 async def favicon():
     """Serve favicon to prevent 404 errors"""
-    return JSONResponse(status_code=204)
+    return JSONResponse(content="", status_code=204)
 
 
 # Request/Response Models
@@ -972,6 +972,7 @@ All valid emails are already processed in our database. Please check with new em
         await send_chat_message(session_id, summary_msg)
         
         # Process emails in background
+        logger.info(f"Starting background processing for {len(valid_emails)} emails")
         asyncio.create_task(process_csv_emails_background(
             session_id, valid_emails, analyzer, bq_client
         ))
@@ -995,6 +996,7 @@ async def process_csv_emails_background(
     bq_client: BigQueryClient
 ):
     """Process emails in background with progress updates"""
+    logger.info(f"Background processing started for session {session_id} with {len(emails)} emails")
     try:
         session = get_or_create_session(session_id)
         total_emails = len(emails)
