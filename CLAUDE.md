@@ -451,3 +451,271 @@ curl -X POST 'https://domain-analysis-backend-456664817971.europe-west1.run.app/
 - ✅ Infrastructure companies properly classified (Airport, Power, etc.) 
 - ✅ Industrial companies properly classified (Aerospace, Warehouse, etc.)
 - ✅ Faster processing and better user experience
+
+## Google OAuth Authentication Integration
+
+### Overview
+The system supports Google OAuth authentication integration to protect access to the domain analysis chat interface. This provides enterprise-level security with centralized user approval management.
+
+### Deployment URLs
+- **Frontend**: https://domain-analysis-frontend-456664817971.europe-west1.run.app/
+- **Backend**: https://domain-analysis-backend-456664817971.europe-west1.run.app/
+
+### Authentication Flow
+```
+User Visit → Google OAuth Login → BigQuery User Verification → Access Control
+    ↓              ↓                        ↓                      ↓
+domain.app → Google Sign-In → Check Approval Status → Chat Interface or Pending
+```
+
+### Implementation Architecture
+
+#### 1. Frontend Authentication Components
+```typescript
+// Core auth components structure
+src/
+├── components/auth/
+│   ├── GoogleAuth.tsx          // Google OAuth login interface
+│   ├── ProtectedRoute.tsx      // Route protection logic
+│   ├── AuthProvider.tsx        // Authentication context
+│   └── WaitingForApproval.tsx  // Pending approval screen
+├── pages/api/auth/
+│   └── status.ts              // Auth status verification API
+└── utils/
+    └── auth.ts                // Auth utilities and BigQuery integration
+```
+
+#### 2. Authentication States
+- **Not Authenticated**: Google OAuth login screen
+- **Pending Approval**: Waiting for admin approval message
+- **Approved**: Full access to chat interface
+- **Denied**: Access denied message
+
+#### 3. BigQuery User Management
+The system integrates with BigQuery for centralized user approval management:
+
+```sql
+-- User approval table structure
+CREATE TABLE `project.dataset.users` (
+  email STRING NOT NULL,
+  name STRING,
+  access_status STRING NOT NULL, -- 'Granted', 'Pending', 'Denied'
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  approved_at TIMESTAMP,
+  approved_by STRING
+);
+```
+
+#### 4. Environment Variables
+Required environment variables for authentication:
+
+```bash
+# Frontend Environment Variables
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-oauth-client-id
+NEXT_PUBLIC_API_URL=https://domain-analysis-backend-456664817971.europe-west1.run.app
+
+# Backend Environment Variables  
+GOOGLE_APPLICATION_CREDENTIALS_JSON={"type":"service_account",...}
+GCP_PROJECT_ID=your-gcp-project-id
+BIGQUERY_DATASET_ID=advanced_csv_analysis
+BIGQUERY_TABLE_ID=users
+```
+
+### Implementation Steps
+
+#### Step 1: Frontend Auth Integration
+1. **Install Dependencies**
+   ```bash
+   npm install @google-cloud/bigquery google-auth-library @google-oauth/id
+   ```
+
+2. **Auth Provider Setup**
+   ```typescript
+   // Wrap app with authentication context
+   export default function App({ Component, pageProps }) {
+     return (
+       <AuthProvider>
+         <Component {...pageProps} />
+       </AuthProvider>
+     )
+   }
+   ```
+
+3. **Protected Routes**
+   ```typescript
+   // Protect chat interface with auth check
+   export default function Home() {
+     return (
+       <ProtectedRoute>
+         <ChatInterface />
+       </ProtectedRoute>
+     )
+   }
+   ```
+
+#### Step 2: Backend API Protection
+```python
+# Add auth middleware to FastAPI
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
+    # Skip auth for health checks
+    if request.url.path in ["/health", "/docs"]:
+        return await call_next(request)
+    
+    # Check authorization for analysis endpoints
+    if request.url.path.startswith("/analyze"):
+        token = request.headers.get("authorization", "").replace("Bearer ", "")
+        
+        if not verify_user_access(token):
+            return JSONResponse(
+                status_code=401,
+                content={"error": "Unauthorized - User not approved"}
+            )
+    
+    return await call_next(request)
+```
+
+#### Step 3: User Verification System
+```typescript
+// Check user approval status in BigQuery
+export async function checkUserAccess(email: string): Promise<string> {
+  const bigquery = new BigQuery()
+  const query = `
+    SELECT access_status 
+    FROM \`${process.env.GCP_PROJECT_ID}.${process.env.BIGQUERY_DATASET_ID}.${process.env.BIGQUERY_TABLE_ID}\`
+    WHERE email = @email
+  `
+  
+  const [rows] = await bigquery.query({
+    query,
+    params: { email }
+  })
+  
+  return rows[0]?.access_status || 'Pending'
+}
+```
+
+### User Experience Flow
+
+#### 1. First-Time User
+1. Visits https://domain-analysis-frontend-456664817971.europe-west1.run.app/
+2. Sees Google OAuth login button
+3. Signs in with Google account
+4. System checks BigQuery for approval status
+5. Shows "Waiting for Approval" message if not yet approved
+6. Admin approves user in BigQuery
+7. User refreshes and gains access to chat interface
+
+#### 2. Approved User
+1. Visits domain analysis URL
+2. Automatically authenticated via Google OAuth
+3. System verifies approval status in BigQuery
+4. Direct access to chat interface
+5. All API calls include auth token
+
+#### 3. Admin Management
+- Admins can manage user access via BigQuery console
+- Update `access_status` field: 'Pending' → 'Granted' or 'Denied'
+- Real-time access control without app redeployment
+
+### Security Features
+
+#### 1. JWT Token Validation
+- Google OAuth JWT tokens verified on every request
+- Token expiration handled automatically
+- Secure token storage in httpOnly cookies
+
+#### 2. BigQuery Integration
+- Centralized user management
+- Audit trail of access requests
+- Role-based access control ready
+
+#### 3. API Protection
+- All analysis endpoints protected with auth middleware
+- Unauthorized requests rejected with 401 status
+- Rate limiting and abuse prevention
+
+### Deployment Configuration
+
+#### Frontend Deployment
+```bash
+gcloud run deploy domain-analysis-frontend \
+  --image gcr.io/$PROJECT_ID/domain-analysis-frontend \
+  --platform managed \
+  --region europe-west1 \
+  --allow-unauthenticated \
+  --set-env-vars "NEXT_PUBLIC_API_URL=https://domain-analysis-backend-456664817971.europe-west1.run.app" \
+  --set-env-vars "NEXT_PUBLIC_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID"
+```
+
+#### Backend Deployment  
+```bash
+gcloud run deploy domain-analysis-backend \
+  --image gcr.io/$PROJECT_ID/domain-analysis-backend \
+  --platform managed \
+  --region europe-west1 \
+  --allow-unauthenticated \
+  --set-env-vars "GOOGLE_APPLICATION_CREDENTIALS_JSON=$SERVICE_ACCOUNT_JSON" \
+  --set-env-vars "BIGQUERY_DATASET_ID=advanced_csv_analysis,BIGQUERY_TABLE_ID=users"
+```
+
+### Benefits
+
+#### 1. Enterprise Security
+- Google OAuth provides enterprise-grade authentication
+- Multi-factor authentication support
+- SSO integration capabilities
+
+#### 2. Centralized Management
+- Single BigQuery table manages all user access
+- Easy approval workflow for administrators
+- Audit trail and access logs
+
+#### 3. Scalable Architecture
+- Supports unlimited users with BigQuery scaling
+- Cloud Run auto-scaling handles traffic spikes
+- Cost-effective pay-per-use model
+
+#### 4. User Experience
+- Seamless Google sign-in experience
+- Clear messaging for pending approvals
+- No additional password management required
+
+### Testing the Integration
+
+#### 1. Authentication Flow Test
+```bash
+# Test unauthenticated access (should redirect to login)
+curl https://domain-analysis-frontend-456664817971.europe-west1.run.app/
+
+# Test authenticated API call
+curl -X POST 'https://domain-analysis-backend-456664817971.europe-west1.run.app/analyze' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \
+  -d '{"email": "test@example.com"}'
+```
+
+#### 2. User Approval Test
+```sql
+-- Grant access to test user
+UPDATE `project.advanced_csv_analysis.users` 
+SET access_status = 'Granted', approved_at = CURRENT_TIMESTAMP()
+WHERE email = 'test@example.com';
+```
+
+### Future Enhancements
+
+#### 1. Role-Based Access
+- Different permission levels (viewer, analyzer, admin)
+- Feature-specific access control
+- Usage quotas and limits
+
+#### 2. Enhanced Security
+- IP whitelisting for additional security
+- Session management and timeout controls
+- Advanced threat detection
+
+#### 3. User Management UI
+- Admin dashboard for user approval
+- Self-service user registration
+- Access request notifications
