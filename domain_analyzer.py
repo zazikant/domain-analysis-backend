@@ -62,6 +62,36 @@ class FinalSummaryOutput(BaseModel):
     infrastructure: str = Field(description="Infrastructure sector classification")
     industrial: str = Field(description="Industrial sector classification")
 
+# New models for batch processing
+class BatchProcessingRequest(BaseModel):
+    emails: List[str] = Field(description="List of email addresses to process")
+    batch_id: str = Field(description="Unique batch identifier")
+    priority: int = Field(default=5, description="Processing priority (1=highest, 10=lowest)")
+    user_session_id: str = Field(description="User session identifier")
+
+class BatchStatus(BaseModel):
+    batch_id: str = Field(description="Batch identifier")
+    total_emails: int = Field(description="Total number of emails in batch")
+    processed_emails: int = Field(description="Number of processed emails")
+    successful_emails: int = Field(description="Number of successful analyses")
+    failed_emails: int = Field(description="Number of failed analyses")
+    duplicate_emails: int = Field(description="Number of duplicate emails found")
+    status: str = Field(description="Current batch status")
+    progress_percentage: float = Field(description="Progress percentage (0-100)")
+    created_at: Optional[str] = Field(description="Batch creation timestamp")
+    started_at: Optional[str] = Field(description="Processing start timestamp")
+    completed_at: Optional[str] = Field(description="Processing completion timestamp")
+    last_updated: Optional[str] = Field(description="Last update timestamp")
+
+class QueueItem(BaseModel):
+    queue_id: str = Field(description="Queue item identifier")
+    batch_id: str = Field(description="Batch identifier")
+    email: str = Field(description="Email address to process")
+    extracted_domain: str = Field(description="Extracted domain")
+    status: str = Field(description="Queue item status")
+    priority: int = Field(description="Processing priority")
+    created_at: str = Field(description="Creation timestamp")
+
 
 # Custom Gemini LLM Wrapper
 class GeminiLLM(LLM):

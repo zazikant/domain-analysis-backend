@@ -38,6 +38,7 @@ class BigQueryClient:
         # Ensure dataset and table exist
         self._ensure_dataset_exists()
         self._ensure_table_exists()
+        self._ensure_queue_tables_exist()
     
     def _ensure_dataset_exists(self):
         """Create dataset if it doesn't exist"""
@@ -274,6 +275,398 @@ class BigQueryClient:
             logger.error(f"Error checking multiple emails existence: {str(e)}")
             # Return all False on error
             return {email: False for email in emails}
+
+    def _ensure_queue_tables_exist(self):
+        """Create processing queue tables if they don't exist"""
+        self._create_processing_queue_table()
+        self._create_batch_tracking_table()
+    
+    def _create_processing_queue_table(self):
+        """Create email processing queue table"""
+        queue_table_ref = self.dataset_ref.table("email_processing_queue")
+        
+        try:
+            self.client.get_table(queue_table_ref)
+            logger.info("Processing queue table already exists")
+        except NotFound:
+            schema = [
+                bigquery.SchemaField("queue_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("batch_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("email", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("extracted_domain", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("status", "STRING", mode="REQUIRED"),  # pending, processing, completed, failed
+                bigquery.SchemaField("priority", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("retry_count", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("error_message", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("created_at", "TIMESTAMP", mode="REQUIRED"),
+                bigquery.SchemaField("started_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("completed_at", "TIMESTAMP", mode="NULLABLE"),
+            ]
+            
+            table = bigquery.Table(queue_table_ref, schema=schema)
+            table.description = "Email processing queue for batch operations"
+            
+            # Partition by created_at for performance
+            table.time_partitioning = bigquery.TimePartitioning(
+                type_=bigquery.TimePartitioningType.DAY,
+                field="created_at"
+            )
+            
+            # Cluster by batch_id and status for common queries
+            table.clustering_fields = ["batch_id", "status", "extracted_domain"]
+            
+            self.client.create_table(table, timeout=30)
+            logger.info("Created email processing queue table")
+    
+    def _create_batch_tracking_table(self):
+        """Create batch tracking table"""
+        batch_table_ref = self.dataset_ref.table("processing_batches")
+        
+        try:
+            self.client.get_table(batch_table_ref)
+            logger.info("Batch tracking table already exists")
+        except NotFound:
+            schema = [
+                bigquery.SchemaField("batch_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("user_session_id", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("original_filename", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("total_emails", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("processed_emails", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("successful_emails", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("failed_emails", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("duplicate_emails", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("status", "STRING", mode="REQUIRED"),  # pending, processing, completed, failed
+                bigquery.SchemaField("progress_percentage", "FLOAT64", mode="NULLABLE"),
+                bigquery.SchemaField("estimated_completion_time", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("created_at", "TIMESTAMP", mode="REQUIRED"),
+                bigquery.SchemaField("started_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("completed_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("last_updated", "TIMESTAMP", mode="REQUIRED"),
+            ]
+            
+            table = bigquery.Table(batch_table_ref, schema=schema)
+            table.description = "Batch processing tracking and progress monitoring"
+            
+            # Partition by created_at
+            table.time_partitioning = bigquery.TimePartitioning(
+                type_=bigquery.TimePartitioningType.DAY,
+                field="created_at"
+            )
+            
+            # Cluster for performance
+            table.clustering_fields = ["user_session_id", "status"]
+            
+            self.client.create_table(table, timeout=30)
+            logger.info("Created batch tracking table")
+
+    def add_emails_to_queue(self, emails: List[str], batch_id: str, priority: int = 5) -> bool:
+        """
+        Add emails to processing queue
+        
+        Args:
+            emails: List of email addresses
+            batch_id: Unique batch identifier
+            priority: Processing priority (1=highest, 10=lowest)
+            
+        Returns:
+            bool: True if successful
+        """
+        try:
+            import uuid
+            from datetime import datetime
+            
+            rows_to_insert = []
+            for email in emails:
+                queue_id = f"queue_{uuid.uuid4().hex[:8]}"
+                extracted_domain = email.split('@')[-1] if '@' in email else None
+                
+                rows_to_insert.append({
+                    "queue_id": queue_id,
+                    "batch_id": batch_id,
+                    "email": email.strip().lower(),
+                    "extracted_domain": extracted_domain,
+                    "status": "pending",
+                    "priority": priority,
+                    "retry_count": 0,
+                    "error_message": None,
+                    "created_at": datetime.utcnow().isoformat(),
+                    "started_at": None,
+                    "completed_at": None,
+                })
+            
+            queue_table_ref = self.dataset_ref.table("email_processing_queue")
+            errors = self.client.insert_rows_json(queue_table_ref, rows_to_insert)
+            
+            if not errors:
+                logger.info(f"Added {len(rows_to_insert)} emails to processing queue for batch {batch_id}")
+                return True
+            else:
+                logger.error(f"Errors adding emails to queue: {errors}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error adding emails to queue: {str(e)}")
+            return False
+
+    def create_batch_record(self, batch_id: str, total_emails: int, user_session_id: str = None, filename: str = None) -> bool:
+        """
+        Create batch tracking record
+        
+        Args:
+            batch_id: Unique batch identifier
+            total_emails: Total number of emails in batch
+            user_session_id: User session identifier
+            filename: Original CSV filename
+            
+        Returns:
+            bool: True if successful
+        """
+        try:
+            from datetime import datetime
+            
+            row = {
+                "batch_id": batch_id,
+                "user_session_id": user_session_id,
+                "original_filename": filename,
+                "total_emails": total_emails,
+                "processed_emails": 0,
+                "successful_emails": 0,
+                "failed_emails": 0,
+                "duplicate_emails": 0,
+                "status": "pending",
+                "progress_percentage": 0.0,
+                "estimated_completion_time": None,
+                "created_at": datetime.utcnow().isoformat(),
+                "started_at": None,
+                "completed_at": None,
+                "last_updated": datetime.utcnow().isoformat(),
+            }
+            
+            batch_table_ref = self.dataset_ref.table("processing_batches")
+            errors = self.client.insert_rows_json(batch_table_ref, [row])
+            
+            if not errors:
+                logger.info(f"Created batch record for {batch_id} with {total_emails} emails")
+                return True
+            else:
+                logger.error(f"Errors creating batch record: {errors}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error creating batch record: {str(e)}")
+            return False
+
+    def update_batch_progress(self, batch_id: str, processed: int = None, successful: int = None, 
+                            failed: int = None, duplicates: int = None, status: str = None) -> bool:
+        """
+        Update batch processing progress
+        
+        Args:
+            batch_id: Batch identifier
+            processed: Number of processed emails
+            successful: Number of successful analyses
+            failed: Number of failed analyses
+            duplicates: Number of duplicate emails found
+            status: Current batch status
+            
+        Returns:
+            bool: True if successful
+        """
+        try:
+            from datetime import datetime
+            
+            # Build update query dynamically
+            updates = []
+            query_params = [bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
+            
+            if processed is not None:
+                updates.append("processed_emails = @processed")
+                query_params.append(bigquery.ScalarQueryParameter("processed", "INTEGER", processed))
+            
+            if successful is not None:
+                updates.append("successful_emails = @successful") 
+                query_params.append(bigquery.ScalarQueryParameter("successful", "INTEGER", successful))
+                
+            if failed is not None:
+                updates.append("failed_emails = @failed")
+                query_params.append(bigquery.ScalarQueryParameter("failed", "INTEGER", failed))
+                
+            if duplicates is not None:
+                updates.append("duplicate_emails = @duplicates")
+                query_params.append(bigquery.ScalarQueryParameter("duplicates", "INTEGER", duplicates))
+                
+            if status is not None:
+                updates.append("status = @status")
+                query_params.append(bigquery.ScalarQueryParameter("status", "STRING", status))
+                
+                if status == "processing" and "started_at" not in [u.split(" = ")[0] for u in updates]:
+                    updates.append("started_at = @started_at")
+                    query_params.append(bigquery.ScalarQueryParameter("started_at", "TIMESTAMP", datetime.utcnow()))
+                elif status in ["completed", "failed"]:
+                    updates.append("completed_at = @completed_at")
+                    query_params.append(bigquery.ScalarQueryParameter("completed_at", "TIMESTAMP", datetime.utcnow()))
+            
+            # Always update last_updated and calculate progress
+            updates.extend([
+                "last_updated = @last_updated",
+                "progress_percentage = SAFE_DIVIDE(processed_emails, total_emails) * 100"
+            ])
+            query_params.append(bigquery.ScalarQueryParameter("last_updated", "TIMESTAMP", datetime.utcnow()))
+            
+            update_query = f"""
+            UPDATE `{self.project_id}.{self.dataset_id}.processing_batches`
+            SET {', '.join(updates)}
+            WHERE batch_id = @batch_id
+            """
+            
+            job_config = bigquery.QueryJobConfig(query_parameters=query_params)
+            query_job = self.client.query(update_query, job_config=job_config)
+            query_job.result()
+            
+            logger.info(f"Updated batch progress for {batch_id}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error updating batch progress: {str(e)}")
+            return False
+
+    def get_batch_status(self, batch_id: str) -> Dict:
+        """
+        Get current batch processing status
+        
+        Args:
+            batch_id: Batch identifier
+            
+        Returns:
+            Dict with batch status information
+        """
+        try:
+            query = f"""
+            SELECT *
+            FROM `{self.project_id}.{self.dataset_id}.processing_batches`
+            WHERE batch_id = @batch_id
+            """
+            
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
+            )
+            
+            query_job = self.client.query(query, job_config=job_config)
+            results = query_job.result()
+            
+            for row in results:
+                return {
+                    "batch_id": row.batch_id,
+                    "total_emails": row.total_emails,
+                    "processed_emails": row.processed_emails,
+                    "successful_emails": row.successful_emails,
+                    "failed_emails": row.failed_emails,
+                    "duplicate_emails": row.duplicate_emails,
+                    "status": row.status,
+                    "progress_percentage": row.progress_percentage,
+                    "created_at": row.created_at.isoformat() if row.created_at else None,
+                    "started_at": row.started_at.isoformat() if row.started_at else None,
+                    "completed_at": row.completed_at.isoformat() if row.completed_at else None,
+                    "last_updated": row.last_updated.isoformat() if row.last_updated else None,
+                }
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting batch status: {str(e)}")
+            return None
+
+    def get_pending_queue_items(self, limit: int = 50, priority_order: bool = True) -> List[Dict]:
+        """
+        Get pending items from processing queue
+        
+        Args:
+            limit: Maximum number of items to return
+            priority_order: Whether to order by priority
+            
+        Returns:
+            List of queue items ready for processing
+        """
+        try:
+            order_clause = "ORDER BY priority ASC, created_at ASC" if priority_order else "ORDER BY created_at ASC"
+            
+            query = f"""
+            SELECT *
+            FROM `{self.project_id}.{self.dataset_id}.email_processing_queue`
+            WHERE status = 'pending'
+            {order_clause}
+            LIMIT {limit}
+            """
+            
+            query_job = self.client.query(query)
+            results = query_job.result()
+            
+            items = []
+            for row in results:
+                items.append({
+                    "queue_id": row.queue_id,
+                    "batch_id": row.batch_id,
+                    "email": row.email,
+                    "extracted_domain": row.extracted_domain,
+                    "priority": row.priority,
+                    "created_at": row.created_at.isoformat() if row.created_at else None,
+                })
+            
+            return items
+            
+        except Exception as e:
+            logger.error(f"Error getting pending queue items: {str(e)}")
+            return []
+
+    def update_queue_item_status(self, queue_id: str, status: str, error_message: str = None) -> bool:
+        """
+        Update processing queue item status
+        
+        Args:
+            queue_id: Queue item identifier
+            status: New status (processing, completed, failed)
+            error_message: Error message if failed
+            
+        Returns:
+            bool: True if successful
+        """
+        try:
+            from datetime import datetime
+            
+            # Build update fields based on status
+            updates = ["status = @status", "last_updated = @last_updated"]
+            query_params = [
+                bigquery.ScalarQueryParameter("queue_id", "STRING", queue_id),
+                bigquery.ScalarQueryParameter("status", "STRING", status),
+                bigquery.ScalarQueryParameter("last_updated", "TIMESTAMP", datetime.utcnow())
+            ]
+            
+            if status == "processing":
+                updates.append("started_at = @started_at")
+                query_params.append(bigquery.ScalarQueryParameter("started_at", "TIMESTAMP", datetime.utcnow()))
+            elif status in ["completed", "failed"]:
+                updates.append("completed_at = @completed_at")
+                query_params.append(bigquery.ScalarQueryParameter("completed_at", "TIMESTAMP", datetime.utcnow()))
+                
+            if error_message:
+                updates.append("error_message = @error_message")
+                query_params.append(bigquery.ScalarQueryParameter("error_message", "STRING", error_message))
+            
+            update_query = f"""
+            UPDATE `{self.project_id}.{self.dataset_id}.email_processing_queue`
+            SET {', '.join(updates)}
+            WHERE queue_id = @queue_id
+            """
+            
+            job_config = bigquery.QueryJobConfig(query_parameters=query_params)
+            query_job = self.client.query(update_query, job_config=job_config)
+            query_job.result()
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error updating queue item status: {str(e)}")
+            return False
 
     def check_multiple_domains_exist(self, domains: List[str], max_age_hours: int = 87600) -> Dict[str, bool]:
         """

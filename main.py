@@ -21,7 +21,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, EmailStr
 import uvicorn
 
-from domain_analyzer import DomainAnalyzer
+from domain_analyzer import DomainAnalyzer, BatchProcessingRequest, BatchStatus, QueueItem
 from bigquery_client import BigQueryClient, create_bigquery_client
 
 # Configure logging
@@ -222,6 +222,220 @@ app.add_middleware(
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# Massive Batch Processing Endpoints
+
+@app.post("/batch/upload-massive-csv", response_model=BatchStatus)
+async def upload_massive_csv(
+    file: UploadFile = File(...),
+    session_id: str = Form(...),
+    priority: int = Form(5),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Upload massive CSV files (unlimited size) with immediate queue processing
+    """
+    logger.info(f"Massive CSV upload request received for session: {session_id}, file: {file.filename}")
+    try:
+        # Generate unique batch ID
+        batch_id = f"batch_{uuid.uuid4().hex[:12]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            raise HTTPException(status_code=400, detail="Please upload a CSV file.")
+        
+        # Read CSV file (no size limits)
+        contents = await file.read()
+        df = pd.read_csv(io.BytesIO(contents))
+        
+        # Enhanced email cleaning
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
+        
+        if not valid_emails:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"No valid email addresses found. Processed {cleaning_stats['total_rows']} rows from column '{cleaning_stats['email_column']}'"
+            )
+        
+        # Create batch record in BigQuery
+        success = bq_client.create_batch_record(
+            batch_id=batch_id,
+            total_emails=len(valid_emails),
+            user_session_id=session_id,
+            filename=file.filename
+        )
+        
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to create batch record")
+        
+        # Add all emails to processing queue
+        queue_success = bq_client.add_emails_to_queue(
+            emails=valid_emails,
+            batch_id=batch_id,
+            priority=priority
+        )
+        
+        if not queue_success:
+            raise HTTPException(status_code=500, detail="Failed to add emails to processing queue")
+        
+        # Update batch status to processing
+        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
+        
+        # Start distributed background processing
+        asyncio.create_task(process_massive_batch_background(batch_id, bq_client))
+        
+        logger.info(f"Successfully created massive batch {batch_id} with {len(valid_emails)} emails")
+        
+        # Return immediate batch status
+        batch_status = bq_client.get_batch_status(batch_id)
+        if batch_status:
+            return BatchStatus(**batch_status)
+        else:
+            raise HTTPException(status_code=500, detail="Failed to retrieve batch status")
+            
+    except Exception as e:
+        logger.error(f"Error in massive CSV upload: {str(e)}")
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/batch/status/{batch_id}", response_model=BatchStatus)
+async def get_batch_status_endpoint(
+    batch_id: str,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get real-time batch processing status
+    """
+    try:
+        batch_status = bq_client.get_batch_status(batch_id)
+        
+        if not batch_status:
+            raise HTTPException(status_code=404, detail=f"Batch {batch_id} not found")
+        
+        return BatchStatus(**batch_status)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting batch status: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/batch/results/{batch_id}", response_model=List[AnalysisResult])
+async def get_batch_results(
+    batch_id: str,
+    offset: int = 0,
+    limit: int = 100,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get completed results from a batch
+    """
+    try:
+        # Get batch info first to verify it exists
+        batch_status = bq_client.get_batch_status(batch_id)
+        if not batch_status:
+            raise HTTPException(status_code=404, detail=f"Batch {batch_id} not found")
+        
+        # Query results from main analysis table
+        query = f"""
+        SELECT da.*
+        FROM `{bq_client.project_id}.{bq_client.dataset_id}.domain_analysis` da
+        JOIN `{bq_client.project_id}.{bq_client.dataset_id}.email_processing_queue` epq
+        ON da.original_email = epq.email
+        WHERE epq.batch_id = @batch_id
+        AND epq.status = 'completed'
+        ORDER BY da.created_at DESC
+        LIMIT {limit} OFFSET {offset}
+        """
+        
+        from google.cloud import bigquery
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
+        )
+        
+        query_job = bq_client.client.query(query, job_config=job_config)
+        df = query_job.result().to_dataframe()
+        
+        if df.empty:
+            return []
+        
+        # Convert to analysis results
+        results = []
+        for _, row in df.iterrows():
+            result = AnalysisResult(
+                original_email=row.get('original_email', ''),
+                extracted_domain=row.get('extracted_domain', ''),
+                selected_url=row.get('selected_url', ''),
+                scraping_status=row.get('scraping_status', ''),
+                website_summary=row.get('website_summary', ''),
+                confidence_score=row.get('confidence_score', 0.0),
+                selection_reasoning=row.get('selection_reasoning', ''),
+                completed_timestamp=row.get('completed_timestamp', '').isoformat() if row.get('completed_timestamp') else None,
+                processing_time_seconds=row.get('processing_time_seconds', 0.0),
+                created_at=row.get('created_at', '').isoformat() if row.get('created_at') else None,
+                from_cache=False,
+                real_estate=row.get('real_estate', 'Can\'t Say'),
+                infrastructure=row.get('infrastructure', 'Can\'t Say'),
+                industrial=row.get('industrial', 'Can\'t Say'),
+            )
+            results.append(result)
+        
+        return results
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting batch results: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/batch/retry/{batch_id}")
+async def retry_failed_batch_items(
+    batch_id: str,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Retry failed items in a batch
+    """
+    try:
+        # Reset failed items to pending
+        from google.cloud import bigquery
+        from datetime import datetime
+        
+        query = f"""
+        UPDATE `{bq_client.project_id}.{bq_client.dataset_id}.email_processing_queue`
+        SET status = 'pending',
+            retry_count = retry_count + 1,
+            error_message = NULL,
+            started_at = NULL,
+            completed_at = NULL
+        WHERE batch_id = @batch_id 
+        AND status = 'failed'
+        AND retry_count < 3
+        """
+        
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
+        )
+        
+        query_job = bq_client.client.query(query, job_config=job_config)
+        query_job.result()
+        
+        # Update batch status back to processing
+        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
+        
+        # Restart background processing
+        asyncio.create_task(process_massive_batch_background(batch_id, bq_client))
+        
+        return {"message": f"Retrying failed items for batch {batch_id}"}
+        
+    except Exception as e:
+        logger.error(f"Error retrying batch: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # Serve favicon
 @app.get("/favicon.ico")
@@ -989,6 +1203,199 @@ All valid emails are already processed in our database. Please check with new em
         error_msg = f"Error processing CSV file: {str(e)}"
         await send_chat_message(session_id, error_msg)
         return {"error": error_msg}
+
+
+async def process_massive_batch_background(batch_id: str, bq_client: BigQueryClient):
+    """
+    Distributed background processing for massive batches
+    Uses parallel workers to process queue items concurrently
+    """
+    logger.info(f"Starting distributed processing for massive batch {batch_id}")
+    
+    try:
+        # Initialize analyzer
+        analyzer = get_domain_analyzer()
+        
+        # Configuration for parallel processing
+        MAX_CONCURRENT_WORKERS = 10  # Adjust based on API rate limits
+        BATCH_SIZE = 50  # Process in chunks
+        
+        # Get batch info
+        batch_info = bq_client.get_batch_status(batch_id)
+        if not batch_info:
+            logger.error(f"Batch {batch_id} not found")
+            return
+        
+        total_emails = batch_info['total_emails']
+        logger.info(f"Processing batch {batch_id} with {total_emails} emails using {MAX_CONCURRENT_WORKERS} workers")
+        
+        # Create semaphore to limit concurrent workers
+        semaphore = asyncio.Semaphore(MAX_CONCURRENT_WORKERS)
+        
+        # Statistics tracking
+        stats = {
+            'processed': 0,
+            'successful': 0,
+            'failed': 0,
+            'duplicates': 0
+        }
+        
+        async def process_queue_batch():
+            """Process a batch of queue items"""
+            async with semaphore:
+                try:
+                    # Get pending items from queue
+                    queue_items = bq_client.get_pending_queue_items(limit=BATCH_SIZE, priority_order=True)
+                    
+                    if not queue_items:
+                        return False  # No more items to process
+                    
+                    # Filter items for this batch only
+                    batch_items = [item for item in queue_items if item['batch_id'] == batch_id]
+                    
+                    if not batch_items:
+                        return False  # No items for this batch
+                    
+                    # Process each item in this batch
+                    for item in batch_items:
+                        try:
+                            queue_id = item['queue_id']
+                            email = item['email']
+                            
+                            # Mark as processing
+                            bq_client.update_queue_item_status(queue_id, "processing")
+                            
+                            # Check if already exists (duplicate handling)
+                            domain = email.split('@')[-1] if '@' in email else None
+                            if domain and bq_client.check_domain_exists(domain, max_age_hours=24):
+                                logger.info(f"Domain {domain} already exists, marking as duplicate")
+                                bq_client.update_queue_item_status(queue_id, "completed")
+                                stats['duplicates'] += 1
+                                stats['processed'] += 1
+                                continue
+                            
+                            # Perform domain analysis
+                            result = await asyncio.to_thread(analyzer.analyze_email_domain, email)
+                            
+                            if result and hasattr(result, 'scraping_status') and result.scraping_status == 'success':
+                                # Insert successful result to main analysis table
+                                result_dict = {
+                                    'original_email': result.original_email,
+                                    'extracted_domain': result.extracted_domain,
+                                    'selected_url': result.selected_url,
+                                    'scraping_status': result.scraping_status,
+                                    'website_summary': result.website_summary,
+                                    'confidence_score': result.confidence_score,
+                                    'selection_reasoning': result.selection_reasoning,
+                                    'completed_timestamp': result.completed_timestamp,
+                                    'processing_time_seconds': result.processing_time_seconds,
+                                    'created_at': datetime.utcnow().isoformat(),
+                                    'real_estate': getattr(result, 'real_estate', 'Can\'t Say'),
+                                    'infrastructure': getattr(result, 'infrastructure', 'Can\'t Say'),
+                                    'industrial': getattr(result, 'industrial', 'Can\'t Say'),
+                                }
+                                
+                                success = bq_client.insert_single_result(result_dict)
+                                
+                                if success:
+                                    bq_client.update_queue_item_status(queue_id, "completed")
+                                    stats['successful'] += 1
+                                    logger.info(f"Successfully processed {email}")
+                                else:
+                                    bq_client.update_queue_item_status(queue_id, "failed", "Failed to insert result to BigQuery")
+                                    stats['failed'] += 1
+                                    logger.error(f"Failed to insert result for {email}")
+                            else:
+                                # Analysis failed
+                                error_msg = f"Domain analysis failed for {email}"
+                                bq_client.update_queue_item_status(queue_id, "failed", error_msg)
+                                stats['failed'] += 1
+                                logger.error(error_msg)
+                                
+                            stats['processed'] += 1
+                            
+                        except Exception as e:
+                            # Handle individual item failures
+                            error_msg = f"Processing error for {item.get('email', 'unknown')}: {str(e)}"
+                            logger.error(error_msg)
+                            bq_client.update_queue_item_status(item['queue_id'], "failed", str(e))
+                            stats['failed'] += 1
+                            stats['processed'] += 1
+                    
+                    return True  # Successfully processed batch
+                    
+                except Exception as e:
+                    logger.error(f"Error in process_queue_batch: {str(e)}")
+                    return False
+        
+        # Main processing loop
+        active_batches = 0
+        max_retries = 3
+        retry_count = 0
+        
+        while True:
+            try:
+                # Create batch processing tasks
+                tasks = []
+                for _ in range(MAX_CONCURRENT_WORKERS):
+                    task = asyncio.create_task(process_queue_batch())
+                    tasks.append(task)
+                
+                # Wait for all batch tasks to complete
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                
+                # Check if any batches processed items
+                any_processed = any(r is True for r in results if not isinstance(r, Exception))
+                
+                if not any_processed:
+                    retry_count += 1
+                    if retry_count >= max_retries:
+                        logger.info(f"No more items to process for batch {batch_id}, stopping")
+                        break
+                    else:
+                        # Wait a bit before retrying
+                        await asyncio.sleep(2)
+                        continue
+                else:
+                    retry_count = 0  # Reset retry count on successful processing
+                
+                # Update batch progress every processing cycle
+                bq_client.update_batch_progress(
+                    batch_id=batch_id,
+                    processed=stats['processed'],
+                    successful=stats['successful'],
+                    failed=stats['failed'],
+                    duplicates=stats['duplicates']
+                )
+                
+                # Log progress
+                progress_pct = (stats['processed'] / total_emails * 100) if total_emails > 0 else 0
+                logger.info(f"Batch {batch_id} progress: {stats['processed']}/{total_emails} ({progress_pct:.1f}%) - ✅ {stats['successful']} successful, ❌ {stats['failed']} failed, 🔄 {stats['duplicates']} duplicates")
+                
+                # Small delay to prevent overwhelming the APIs
+                await asyncio.sleep(1)
+                
+            except Exception as e:
+                logger.error(f"Error in main processing loop: {str(e)}")
+                await asyncio.sleep(5)  # Wait longer on errors
+        
+        # Final status update
+        final_status = "completed" if stats['failed'] == 0 else "completed_with_errors"
+        bq_client.update_batch_progress(
+            batch_id=batch_id,
+            processed=stats['processed'],
+            successful=stats['successful'],
+            failed=stats['failed'],
+            duplicates=stats['duplicates'],
+            status=final_status
+        )
+        
+        logger.info(f"Massive batch {batch_id} processing completed: {stats['processed']} processed, {stats['successful']} successful, {stats['failed']} failed, {stats['duplicates']} duplicates")
+        
+    except Exception as e:
+        logger.error(f"Error in massive batch background processing: {str(e)}")
+        # Update batch status to failed
+        bq_client.update_batch_progress(batch_id=batch_id, status="failed")
 
 
 async def process_csv_emails_background(
