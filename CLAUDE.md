@@ -3,36 +3,29 @@
 ## Overview
 This system implements an advanced RAG (Retrieval Augmented Generation) pipeline with a modern **chat-based interface** for analyzing email domains. The system extracts comprehensive website summaries with **semantic sector classification** and provides real-time progress updates through a React frontend.
 
-**✅ LATEST UPDATE (2025-09-12)**: Implemented complete Google OAuth authentication system with protected routes, user approval workflow, and secure API integration.
-
-**✅ PREVIOUS UPDATE (2025-09-09)**: Fixed critical sector classification parsing issue - the system now correctly populates Real Estate, Infrastructure, and Industrial sector fields instead of defaulting to "Can't Say".
+**✅ LATEST UPDATE (2025-09-09)**: Fixed critical sector classification parsing issue - the system now correctly populates Real Estate, Infrastructure, and Industrial sector fields instead of defaulting to "Can't Say".
 
 ## Architecture
 
 ### Core Components
-1. **FastAPI Backend** - Production-ready API with WebSocket support & authentication middleware
-2. **React Chat Interface** - Modern, responsive frontend with Google OAuth integration
-3. **Google OAuth Authentication** - Secure user authentication and access control ✅ **NEW**
-4. **BigQuery User Management** - Centralized user approval workflow ✅ **NEW** 
-5. **LangChain Sequential Chain Framework** - Orchestrates the multi-step pipeline
-6. **Google Gemini 1.5 Flash** - Primary LLM for intelligent decision making & sector classification
-7. **Serper API** - Web search functionality 
-8. **Bright Data API** - Advanced web scraping with bot detection bypass
-9. **BigQuery Integration** - Data persistence and caching
-10. **WebSocket Communication** - Real-time chat updates
+1. **FastAPI Backend** - Production-ready API with WebSocket support
+2. **React Chat Interface** - Modern, responsive frontend
+3. **LangChain Sequential Chain Framework** - Orchestrates the multi-step pipeline
+4. **Google Gemini 1.5 Flash** - Primary LLM for intelligent decision making & sector classification
+5. **Serper API** - Web search functionality 
+6. **Bright Data API** - Advanced web scraping with bot detection bypass
+7. **BigQuery Integration** - Data persistence and caching
+8. **WebSocket Communication** - Real-time chat updates
 
 ### Enhanced Pipeline Flow
 ```
-Google OAuth Login → User Approval Check → Email Input/CSV Upload → Domain Extraction → Duplicate Check → Search Query Generation → Web Search → URL Selection → Content Scraping → Summary Generation + Sector Classification → Results Display
+Email Input/CSV Upload → Domain Extraction → Duplicate Check → Search Query Generation → Web Search → URL Selection → Content Scraping → Summary Generation + Sector Classification → Results Display
 ```
 
 ## Key Features
 
-### 1. Chat-Based Interface with Authentication ✅ **NEW**
+### 1. Chat-Based Interface
 - **Modern React Frontend** - Responsive chat interface with real-time updates
-- **Google OAuth Authentication** - Secure login with Google accounts
-- **Role-Based Access Control** - Admin approval workflow for user access
-- **Protected Routes** - Authentication required to access chat interface
 - **WebSocket Communication** - Live progress notifications during processing
 - **File Upload Support** - CSV file upload with drag-and-drop functionality
 - **Session Management** - Persistent chat sessions with message history
@@ -102,35 +95,6 @@ SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 BRIGHTDATA_API_TOKEN = os.getenv("BRIGHTDATA_API_TOKEN")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")
-
-# Authentication Configuration ✅ NEW
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")  # Backend OAuth verification
-DISABLE_AUTH = os.getenv("DISABLE_AUTH", "false")  # Temporary auth bypass
-```
-
-#### Frontend Environment Variables (.env.local)
-```bash
-# Authentication (required)
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-GCP_PROJECT_ID=your-gcp-project-id
-GOOGLE_APPLICATION_CREDENTIALS_JSON={"type":"service_account",...}
-
-# API Configuration
-NEXT_PUBLIC_API_URL=https://domain-analysis-backend-456664817971.europe-west1.run.app
-```
-
-#### Backend Environment Variables (Cloud Run)
-```bash
-# Authentication (required)
-GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-DISABLE_AUTH=false  # Set to true to temporarily bypass auth during development
-
-# Existing configuration
-SERPER_API_KEY=your-serper-api-key
-BRIGHTDATA_API_TOKEN=your-brightdata-token
-GOOGLE_API_KEY=your-gemini-api-key
-GCP_PROJECT_ID=your-gcp-project-id
-GOOGLE_APPLICATION_CREDENTIALS_JSON={"type":"service_account",...}
 ```
 
 ### Enhanced Data Schema (BigQuery)
@@ -428,9 +392,6 @@ gcloud run deploy domain-analysis-chat \
 ## System Capabilities
 
 ### Current Features ✅ **ALL WORKING**
-- **✅ Google OAuth Authentication** with protected routes and user approval workflow ✅ **NEW**
-- **✅ Secure API endpoints** with Bearer token authentication ✅ **NEW**
-- **✅ BigQuery user management** with admin approval system ✅ **NEW**
 - **Chat-based interface** with React frontend
 - **Real-time WebSocket communication** for progress updates
 - **CSV batch processing** with progress notifications every 10 emails
@@ -457,46 +418,6 @@ gcloud run deploy domain-analysis-chat \
 - **CRM Integration** - API endpoints for programmatic access
 
 ## Recent Updates & Fixes
-
-### ✅ **Version 1.2 (2025-09-12) - Complete Authentication System** ✅ **NEW**
-
-**Implementation Completed**: Full Google OAuth authentication system with protected routes, user approval workflow, and secure API integration.
-
-**Components Added**:
-- **Frontend Auth Components**: `GoogleAuth.tsx`, `ProtectedRoute.tsx` with complete OAuth flow
-- **Next.js API Routes**: `/api/auth/register` and `/api/auth/status` for user management
-- **FastAPI Middleware**: Authentication middleware with Google token verification
-- **BigQuery Integration**: Reuses existing user management system for approvals
-- **Secure API Calls**: All API endpoints now include Bearer token authentication
-
-**Authentication Flow**:
-```
-https://domain-analysis-frontend-456664817971.europe-west1.run.app/
-    ↓
-Google OAuth Login Screen
-    ↓
-BigQuery User Verification
-    ↓
-[If Approved] → Chat Interface (Full Access)
-[If Pending] → "Waiting for Approval" Message  
-[If Denied] → Access Denied Message
-```
-
-**Security Features**:
-- ✅ Google OAuth 2.0 token verification
-- ✅ BigQuery-based user approval system
-- ✅ Protected API endpoints with Bearer authentication
-- ✅ Route-level access control on frontend
-- ✅ Temporary auth bypass for development (`DISABLE_AUTH=true`)
-
-**Technical Implementation**:
-- `AuthProvider` context wraps entire application
-- `ProtectedRoute` component guards chat interface
-- API client automatically includes OAuth tokens
-- Backend middleware verifies tokens and user permissions
-- Session management with localStorage integration
-
-**Build Status**: ✅ Frontend builds successfully, ✅ All type checks pass
 
 ### ✅ **Version 1.1 (2025-09-09) - Sector Classification Fix**
 

@@ -36,9 +36,6 @@ python-json-logger==2.0.7
 # Date/time handling
 python-dateutil==2.8.2
 
-# Authentication and security
-PyJWT==2.8.0
-
 # Additional utilities
 typing-extensions==4.8.0
 certifi==2023.11.17

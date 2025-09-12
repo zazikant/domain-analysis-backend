@@ -14,14 +14,12 @@ from datetime import datetime
 from contextlib import asynccontextmanager
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, WebSocket, WebSocketDisconnect, UploadFile, File, Form, Request
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, WebSocket, WebSocketDisconnect, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, EmailStr
 import uvicorn
-from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests
 
 from domain_analyzer import DomainAnalyzer
 from bigquery_client import BigQueryClient, create_bigquery_client
@@ -33,54 +31,6 @@ logger = logging.getLogger(__name__)
 # Global variables for clients
 domain_analyzer: Optional[DomainAnalyzer] = None
 bigquery_client: Optional[BigQueryClient] = None
-
-# Authentication configuration
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")  # Set this in environment
-
-
-def verify_google_token(token: str) -> dict:
-    """Verify Google OAuth token"""
-    try:
-        idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), GOOGLE_CLIENT_ID)
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-        return idinfo
-    except ValueError as e:
-        logger.warning(f"Token verification failed: {e}")
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-
-def check_user_access(email: str) -> bool:
-    """Check if user has granted access via BigQuery"""
-    global bigquery_client
-    if not bigquery_client:
-        logger.error("BigQuery client not initialized")
-        return False
-    
-    try:
-        # Query user access status from BigQuery
-        query = """
-        SELECT access_status 
-        FROM `advanced_csv_analysis.users` 
-        WHERE email = @email 
-        LIMIT 1
-        """
-        
-        job_config = bigquery_client.bigquery.QueryJobConfig(
-            query_parameters=[
-                bigquery_client.bigquery.ScalarQueryParameter("email", "STRING", email)
-            ]
-        )
-        
-        query_job = bigquery_client.bigquery.query(query, job_config=job_config)
-        results = list(query_job)
-        
-        if results and len(results) > 0:
-            return results[0].access_status == 'Granted'
-        return False
-    except Exception as e:
-        logger.error(f"Error checking user access for {email}: {e}")
-        return False
 
 
 def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
@@ -267,64 +217,6 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
-
-# Add authentication middleware
-@app.middleware("http")
-async def authenticate_user(request: Request, call_next):
-    """Middleware to check authentication for protected endpoints"""
-    
-    # Skip authentication for these paths
-    skip_auth_paths = [
-        '/health',
-        '/docs', 
-        '/openapi.json',
-        '/favicon.ico',
-        '/static',
-        '/ws/',  # WebSocket endpoints
-    ]
-    
-    # Skip authentication for public paths
-    if any(request.url.path.startswith(path) for path in skip_auth_paths):
-        response = await call_next(request)
-        return response
-    
-    # For now, temporarily disable auth to allow existing functionality
-    # TODO: Enable authentication when frontend integration is complete
-    if os.getenv("DISABLE_AUTH", "false").lower() == "true":
-        response = await call_next(request)
-        return response
-    
-    # Check Authorization header
-    auth_header = request.headers.get('Authorization')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        raise HTTPException(
-            status_code=401, 
-            detail="Authentication required. Please sign in with Google."
-        )
-    
-    try:
-        # Extract and verify token
-        token = auth_header.split(' ')[1]
-        user_info = verify_google_token(token)
-        
-        # Check if user has access
-        if not check_user_access(user_info['email']):
-            raise HTTPException(
-                status_code=403, 
-                detail="Access denied. Please contact admin for approval."
-            )
-        
-        # Add user info to request state for use in endpoints
-        request.state.user = user_info
-        
-        response = await call_next(request)
-        return response
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Authentication error: {e}")
-        raise HTTPException(status_code=401, detail="Authentication failed")
 
 # Serve static files (React build)
 static_dir = os.path.join(os.path.dirname(__file__), "static")
