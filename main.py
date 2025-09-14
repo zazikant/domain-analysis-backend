@@ -50,419 +50,7 @@ def get_bigquery_client() -> BigQueryClient:
     return bigquery_client
 
 
-
-def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
-    """
-    Enhanced email cleaning from pandas DataFrame with comprehensive validation and BigQuery duplicate checking
-    
-    Args:
-        df: pandas DataFrame containing email data
-        bq_client: Optional BigQuery client for checking existing domains
-        
-    Returns:
-        tuple: (list of valid emails, cleaning stats dict)
-    """
-    stats = {
-        "total_rows": int(len(df)),
-        "email_column": None,
-        "valid_emails": 0,
-        "invalid_emails": 0,
-        "duplicates_removed": 0,
-        "empty_rows": 0,
-        "bigquery_duplicates": 0,
-        "new_emails": 0
-    }
-    
-    # Auto-detect email column
-    email_column = None
-    email_keywords = ['email', 'e-mail', 'mail', 'address', 'contact']
-    
-    # Try to find column with email-like name
-    for col in df.columns:
-        if any(keyword in col.lower() for keyword in email_keywords):
-            email_column = col
-            break
-    
-    # If no email-named column found, use first column
-    if email_column is None:
-        email_column = df.columns[0]
-    
-    stats["email_column"] = email_column
-    
-    # Extract and clean emails
-    emails_series = df[email_column].copy()
-    
-    # Convert to string and handle NaN values
-    emails_series = emails_series.astype(str)
-    
-    # Remove obvious non-email values
-    emails_series = emails_series.replace(['nan', 'NaN', 'None', 'null', ''], pd.NA)
-    
-    # Count empty rows
-    stats["empty_rows"] = int(emails_series.isna().sum())
-    
-    # Remove empty rows
-    emails_series = emails_series.dropna()
-    
-    # Comprehensive cleaning
-    emails_series = (emails_series
-                    .str.strip()                    # Remove leading/trailing spaces
-                    .str.replace(r'\s+', '', regex=True)  # Remove any internal spaces
-                    .str.lower()                    # Convert to lowercase
-                    .str.replace(r'^mailto:', '', regex=True)  # Remove mailto: prefix
-                    .str.replace(r'[<>]', '', regex=True)     # Remove angle brackets
-                    )
-    
-    # Email validation regex (more comprehensive)
-    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    
-    # Filter valid emails
-    valid_mask = emails_series.str.match(email_pattern, na=False)
-    valid_emails = emails_series[valid_mask].tolist()
-    
-    # Debug: Log invalid emails for troubleshooting
-    invalid_emails = emails_series[~valid_mask].tolist()
-    if invalid_emails:
-        logger.info(f"Invalid emails found: {invalid_emails}")
-    
-    logger.info(f"Email validation: {len(emails_series)} total → {len(valid_emails)} valid, {len(invalid_emails)} invalid")
-    
-    # Remove duplicates while preserving order
-    seen = set()
-    unique_emails = []
-    duplicates = 0
-    
-    for email in valid_emails:
-        if email not in seen:
-            seen.add(email)
-            unique_emails.append(email)
-        else:
-            duplicates += 1
-    
-    # Check BigQuery for existing domains if client provided
-    final_emails = unique_emails
-    bigquery_duplicates = 0
-    
-    if bq_client and unique_emails:
-        try:
-            # Check which specific EMAIL ADDRESSES exist in BigQuery (exact match, not domain similarity)
-            existing_emails = bq_client.check_multiple_emails_exist(unique_emails, max_age_hours=24)
-            
-            # Filter out emails that already exist (exact email match only)
-            new_emails = []
-            for email in unique_emails:
-                if not existing_emails.get(email, False):
-                    new_emails.append(email)
-                else:
-                    bigquery_duplicates += 1
-            
-            final_emails = new_emails
-            
-        except Exception as e:
-            logger.error(f"Error checking BigQuery duplicates: {str(e)}")
-            # On error, use all unique emails
-            final_emails = unique_emails
-    
-    # Update stats - Convert to Python native types for JSON serialization
-    stats["valid_emails"] = int(len(unique_emails))
-    stats["invalid_emails"] = int(len(emails_series) - len(valid_emails))
-    stats["duplicates_removed"] = int(duplicates)
-    stats["bigquery_duplicates"] = int(bigquery_duplicates)
-    stats["new_emails"] = int(len(final_emails))
-    
-    return final_emails, stats
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Application lifespan manager"""
-    global domain_analyzer, bigquery_client
-    
-    # Startup - Initialize clients
-    logger.info("Starting up Domain Analysis API...")
-    
-    # Get environment variables
-    serper_api_key = os.getenv("SERPER_API_KEY")
-    brightdata_api_token = os.getenv("BRIGHTDATA_API_TOKEN")
-    google_api_key = os.getenv("GOOGLE_API_KEY")
-    project_id = os.getenv("GCP_PROJECT_ID")
-    
-    if not all([serper_api_key, brightdata_api_token, google_api_key, project_id]):
-        logger.warning("Missing required environment variables:")
-        logger.warning(f"SERPER_API_KEY: {'✓' if serper_api_key else '✗'}")
-        logger.warning(f"BRIGHTDATA_API_TOKEN: {'✓' if brightdata_api_token else '✗'}")
-        logger.warning(f"GOOGLE_API_KEY: {'✓' if google_api_key else '✗'}")
-        logger.warning(f"GCP_PROJECT_ID: {'✓' if project_id else '✗'}")
-        
-        # Don't fail startup - allow container to start in degraded mode
-        logger.warning("Starting in degraded mode - API endpoints will return errors until env vars are set")
-        return  # Skip client initialization but don't fail
-    
-    # Initialize Domain Analyzer
-    domain_analyzer = DomainAnalyzer(
-        serper_api_key=serper_api_key,
-        brightdata_api_token=brightdata_api_token,
-        google_api_key=google_api_key
-    )
-    
-    # Initialize BigQuery Client
-    dataset_id = os.getenv("BIGQUERY_DATASET_ID", "advanced_csv_analysis")
-    table_id = os.getenv("BIGQUERY_TABLE_ID", "email_domain_results")
-    bigquery_client = create_bigquery_client(project_id, dataset_id, table_id)
-    
-    logger.info("Domain Analysis API started successfully")
-    
-    yield
-    
-    # Shutdown
-    logger.info("Shutting down Domain Analysis API...")
-
-
-# Initialize FastAPI app
-app = FastAPI(
-    title="Domain Analysis API",
-    description="Advanced RAG pipeline for email domain intelligence gathering",
-    version="1.0.0",
-    lifespan=lifespan
-)
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Temporary wildcard for debugging
-    allow_credentials=False,  # Must be False with wildcard origins
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-    expose_headers=["*"],
-)
-
-# Serve static files (React build)
-static_dir = os.path.join(os.path.dirname(__file__), "static")
-if os.path.exists(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
-
-# Massive Batch Processing Endpoints
-
-@app.post("/batch/upload-massive-csv", response_model=BatchStatus)
-async def upload_massive_csv(
-    file: UploadFile = File(...),
-    session_id: str = Form(...),
-    priority: int = Form(5),
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Upload massive CSV files (unlimited size) with immediate queue processing
-    """
-    logger.info(f"Massive CSV upload request received for session: {session_id}, file: {file.filename}")
-    try:
-        # Generate unique batch ID
-        batch_id = f"batch_{uuid.uuid4().hex[:12]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
-        # Validate file type
-        if not file.filename.endswith('.csv'):
-            raise HTTPException(status_code=400, detail="Please upload a CSV file.")
-        
-        # Read CSV file (no size limits)
-        contents = await file.read()
-        df = pd.read_csv(io.BytesIO(contents))
-        
-        # Enhanced email cleaning
-        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
-        
-        if not valid_emails:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"No valid email addresses found. Processed {cleaning_stats['total_rows']} rows from column '{cleaning_stats['email_column']}'"
-            )
-        
-        # Create batch record in BigQuery
-        success = bq_client.create_batch_record(
-            batch_id=batch_id,
-            total_emails=len(valid_emails),
-            user_session_id=session_id,
-            filename=file.filename
-        )
-        
-        if not success:
-            raise HTTPException(status_code=500, detail="Failed to create batch record")
-        
-        # Add all emails to processing queue
-        queue_success = bq_client.add_emails_to_queue(
-            emails=valid_emails,
-            batch_id=batch_id,
-            priority=priority
-        )
-        
-        if not queue_success:
-            raise HTTPException(status_code=500, detail="Failed to add emails to processing queue")
-        
-        # Update batch status to processing
-        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
-        
-        # Start distributed background processing
-        asyncio.create_task(process_massive_batch_background(batch_id, bq_client))
-        
-        logger.info(f"Successfully created massive batch {batch_id} with {len(valid_emails)} emails")
-        
-        # Return immediate batch status
-        batch_status = bq_client.get_batch_status(batch_id)
-        if batch_status:
-            return BatchStatus(**batch_status)
-        else:
-            raise HTTPException(status_code=500, detail="Failed to retrieve batch status")
-            
-    except Exception as e:
-        logger.error(f"Error in massive CSV upload: {str(e)}")
-        if isinstance(e, HTTPException):
-            raise e
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/batch/status/{batch_id}", response_model=BatchStatus)
-async def get_batch_status_endpoint(
-    batch_id: str,
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Get real-time batch processing status
-    """
-    try:
-        batch_status = bq_client.get_batch_status(batch_id)
-        
-        if not batch_status:
-            raise HTTPException(status_code=404, detail=f"Batch {batch_id} not found")
-        
-        return BatchStatus(**batch_status)
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting batch status: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/batch/results/{batch_id}", response_model=List[AnalysisResult])
-async def get_batch_results(
-    batch_id: str,
-    offset: int = 0,
-    limit: int = 100,
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Get completed results from a batch
-    """
-    try:
-        # Get batch info first to verify it exists
-        batch_status = bq_client.get_batch_status(batch_id)
-        if not batch_status:
-            raise HTTPException(status_code=404, detail=f"Batch {batch_id} not found")
-        
-        # Query results from main analysis table
-        query = f"""
-        SELECT da.*
-        FROM `{bq_client.project_id}.{bq_client.dataset_id}.domain_analysis` da
-        JOIN `{bq_client.project_id}.{bq_client.dataset_id}.email_processing_queue` epq
-        ON da.original_email = epq.email
-        WHERE epq.batch_id = @batch_id
-        AND epq.status = 'completed'
-        ORDER BY da.created_at DESC
-        LIMIT {limit} OFFSET {offset}
-        """
-        
-        from google.cloud import bigquery
-        job_config = bigquery.QueryJobConfig(
-            query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
-        )
-        
-        query_job = bq_client.client.query(query, job_config=job_config)
-        df = query_job.result().to_dataframe()
-        
-        if df.empty:
-            return []
-        
-        # Convert to analysis results
-        results = []
-        for _, row in df.iterrows():
-            result = AnalysisResult(
-                original_email=row.get('original_email', ''),
-                extracted_domain=row.get('extracted_domain', ''),
-                selected_url=row.get('selected_url', ''),
-                scraping_status=row.get('scraping_status', ''),
-                website_summary=row.get('website_summary', ''),
-                confidence_score=row.get('confidence_score', 0.0),
-                selection_reasoning=row.get('selection_reasoning', ''),
-                completed_timestamp=row.get('completed_timestamp', '').isoformat() if row.get('completed_timestamp') else None,
-                processing_time_seconds=row.get('processing_time_seconds', 0.0),
-                created_at=row.get('created_at', '').isoformat() if row.get('created_at') else None,
-                from_cache=False,
-                real_estate=row.get('real_estate', 'Can\'t Say'),
-                infrastructure=row.get('infrastructure', 'Can\'t Say'),
-                industrial=row.get('industrial', 'Can\'t Say'),
-            )
-            results.append(result)
-        
-        return results
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error getting batch results: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/batch/retry/{batch_id}")
-async def retry_failed_batch_items(
-    batch_id: str,
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Retry failed items in a batch
-    """
-    try:
-        # Reset failed items to pending
-        from google.cloud import bigquery
-        from datetime import datetime
-        
-        query = f"""
-        UPDATE `{bq_client.project_id}.{bq_client.dataset_id}.email_processing_queue`
-        SET status = 'pending',
-            retry_count = retry_count + 1,
-            error_message = NULL,
-            started_at = NULL,
-            completed_at = NULL
-        WHERE batch_id = @batch_id 
-        AND status = 'failed'
-        AND retry_count < 3
-        """
-        
-        job_config = bigquery.QueryJobConfig(
-            query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
-        )
-        
-        query_job = bq_client.client.query(query, job_config=job_config)
-        query_job.result()
-        
-        # Update batch status back to processing
-        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
-        
-        # Restart background processing
-        asyncio.create_task(process_massive_batch_background(batch_id, bq_client))
-        
-        return {"message": f"Retrying failed items for batch {batch_id}"}
-        
-    except Exception as e:
-        logger.error(f"Error retrying batch: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-# Serve favicon
-@app.get("/favicon.ico")
-async def favicon():
-    """Serve favicon to prevent 404 errors"""
-    return JSONResponse(content="", status_code=204)
-
-
-# Request/Response Models
+# Request/Response Models - MOVED UP BEFORE USAGE
 class AnalyzeEmailRequest(BaseModel):
     email: EmailStr = Field(..., description="Email address to analyze")
     force_refresh: bool = Field(False, description="Force new analysis even if cached result exists")
@@ -636,6 +224,128 @@ async def send_chat_message(session_id: str, content: str, metadata: Optional[Di
     return message
 
 
+def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
+    """
+    Enhanced email cleaning from pandas DataFrame with comprehensive validation and BigQuery duplicate checking
+    
+    Args:
+        df: pandas DataFrame containing email data
+        bq_client: Optional BigQuery client for checking existing domains
+        
+    Returns:
+        tuple: (list of valid emails, cleaning stats dict)
+    """
+    stats = {
+        "total_rows": int(len(df)),
+        "email_column": None,
+        "valid_emails": 0,
+        "invalid_emails": 0,
+        "duplicates_removed": 0,
+        "empty_rows": 0,
+        "bigquery_duplicates": 0,
+        "new_emails": 0
+    }
+    
+    # Auto-detect email column
+    email_column = None
+    email_keywords = ['email', 'e-mail', 'mail', 'address', 'contact']
+    
+    # Try to find column with email-like name
+    for col in df.columns:
+        if any(keyword in col.lower() for keyword in email_keywords):
+            email_column = col
+            break
+    
+    # If no email-named column found, use first column
+    if email_column is None:
+        email_column = df.columns[0]
+    
+    stats["email_column"] = email_column
+    
+    # Extract and clean emails
+    emails_series = df[email_column].copy()
+    
+    # Convert to string and handle NaN values
+    emails_series = emails_series.astype(str)
+    
+    # Remove obvious non-email values
+    emails_series = emails_series.replace(['nan', 'NaN', 'None', 'null', ''], pd.NA)
+    
+    # Count empty rows
+    stats["empty_rows"] = int(emails_series.isna().sum())
+    
+    # Remove empty rows
+    emails_series = emails_series.dropna()
+    
+    # Comprehensive cleaning
+    emails_series = (emails_series
+                    .str.strip()                    # Remove leading/trailing spaces
+                    .str.replace(r'\s+', '', regex=True)  # Remove any internal spaces
+                    .str.lower()                    # Convert to lowercase
+                    .str.replace(r'^mailto:', '', regex=True)  # Remove mailto: prefix
+                    .str.replace(r'[<>]', '', regex=True)     # Remove angle brackets
+                    )
+    
+    # Email validation regex (more comprehensive)
+    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    
+    # Filter valid emails
+    valid_mask = emails_series.str.match(email_pattern, na=False)
+    valid_emails = emails_series[valid_mask].tolist()
+    
+    # Debug: Log invalid emails for troubleshooting
+    invalid_emails = emails_series[~valid_mask].tolist()
+    if invalid_emails:
+        logger.info(f"Invalid emails found: {invalid_emails}")
+    
+    logger.info(f"Email validation: {len(emails_series)} total → {len(valid_emails)} valid, {len(invalid_emails)} invalid")
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_emails = []
+    duplicates = 0
+    
+    for email in valid_emails:
+        if email not in seen:
+            seen.add(email)
+            unique_emails.append(email)
+        else:
+            duplicates += 1
+    
+    # Check BigQuery for existing domains if client provided
+    final_emails = unique_emails
+    bigquery_duplicates = 0
+    
+    if bq_client and unique_emails:
+        try:
+            # Check which specific EMAIL ADDRESSES exist in BigQuery (exact match, not domain similarity)
+            existing_emails = bq_client.check_multiple_emails_exist(unique_emails, max_age_hours=24)
+            
+            # Filter out emails that already exist (exact email match only)
+            new_emails = []
+            for email in unique_emails:
+                if not existing_emails.get(email, False):
+                    new_emails.append(email)
+                else:
+                    bigquery_duplicates += 1
+            
+            final_emails = new_emails
+            
+        except Exception as e:
+            logger.error(f"Error checking BigQuery duplicates: {str(e)}")
+            # On error, use all unique emails
+            final_emails = unique_emails
+    
+    # Update stats - Convert to Python native types for JSON serialization
+    stats["valid_emails"] = int(len(unique_emails))
+    stats["invalid_emails"] = int(len(emails_series) - len(valid_emails))
+    stats["duplicates_removed"] = int(duplicates)
+    stats["bigquery_duplicates"] = int(bigquery_duplicates)
+    stats["new_emails"] = int(len(final_emails))
+    
+    return final_emails, stats
+
+
 # Utility functions
 def dataframe_to_analysis_result(df: pd.DataFrame, from_cache: bool = False) -> List[AnalysisResult]:
     """Convert DataFrame to AnalysisResult objects"""
@@ -711,499 +421,7 @@ async def process_email_analysis(
     return results[0]
 
 
-# API Endpoints
-
-@app.get("/", response_class=JSONResponse)
-async def root():
-    """Root endpoint with API information"""
-    return {
-        "name": "Domain Analysis API",
-        "version": "1.0.0",
-        "description": "Advanced RAG pipeline for email domain intelligence gathering",
-        "endpoints": {
-            "analyze": "POST /analyze - Analyze single email",
-            "batch_analyze": "POST /analyze/batch - Analyze multiple emails",
-            "domain": "GET /domain/{domain} - Get cached domain results",
-            "stats": "GET /stats - Get analysis statistics",
-            "health": "GET /health - Health check"
-        }
-    }
-
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    try:
-        # Test connections
-        analyzer = get_domain_analyzer()
-        bq_client = get_bigquery_client()
-        
-        return {
-            "status": "healthy",
-            "timestamp": datetime.utcnow().isoformat(),
-            "services": {
-                "domain_analyzer": "ready",
-                "bigquery": "ready"
-            }
-        }
-    except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Service unhealthy: {str(e)}")
-
-
-@app.post("/analyze", response_model=AnalysisResult)
-async def analyze_email(
-    request: AnalyzeEmailRequest,
-    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Analyze a single email address and return domain intelligence
-    """
-    try:
-        result = await process_email_analysis(
-            email=request.email,
-            analyzer=analyzer,
-            bq_client=bq_client,
-            force_refresh=request.force_refresh
-        )
-        
-        return result
-        
-    except Exception as e:
-        logger.error(f"Error analyzing email {request.email}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
-
-
-@app.post("/analyze/batch", response_model=BatchAnalysisResult)
-async def batch_analyze_emails(
-    request: BatchAnalyzeRequest,
-    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Analyze multiple email addresses in batch
-    """
-    try:
-        start_time = datetime.utcnow()
-        results = []
-        successful = 0
-        failed = 0
-        from_cache = 0
-        
-        # Process each email
-        for email in request.emails:
-            try:
-                result = await process_email_analysis(
-                    email=email,
-                    analyzer=analyzer,
-                    bq_client=bq_client,
-                    force_refresh=request.force_refresh
-                )
-                
-                results.append(result)
-                
-                if result.scraping_status in ['success', 'success_text', 'success_fallback']:
-                    successful += 1
-                else:
-                    failed += 1
-                
-                if result.from_cache:
-                    from_cache += 1
-                    
-            except Exception as e:
-                logger.error(f"Error processing email {email}: {str(e)}")
-                failed += 1
-                
-                # Add error result
-                error_result = AnalysisResult(
-                    original_email=email,
-                    extracted_domain="error",
-                    selected_url=None,
-                    scraping_status="error",
-                    website_summary=f"Error: {str(e)}",
-                    confidence_score=0.0,
-                    selection_reasoning="Processing failed",
-                    completed_timestamp=datetime.utcnow().isoformat(),
-                    processing_time_seconds=0.0,
-                    created_at=datetime.utcnow().isoformat(),
-                    from_cache=False,
-                    # New sector classification fields (error state)
-                    real_estate="Can't Say",
-                    infrastructure="Can't Say",
-                    industrial="Can't Say"
-                )
-                results.append(error_result)
-        
-        processing_time = (datetime.utcnow() - start_time).total_seconds()
-        
-        return BatchAnalysisResult(
-            results=results,
-            total_processed=len(request.emails),
-            successful=successful,
-            failed=failed,
-            from_cache=from_cache,
-            processing_time_seconds=processing_time
-        )
-        
-    except Exception as e:
-        logger.error(f"Error in batch analysis: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Batch analysis failed: {str(e)}")
-
-
-@app.get("/domain/{domain}", response_model=List[AnalysisResult])
-async def get_domain_results(
-    domain: str,
-    limit: int = 10,
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Get cached analysis results for a specific domain
-    """
-    try:
-        df = bq_client.query_domain_results(domain, limit=limit)
-        
-        if df.empty:
-            return []
-        
-        results = dataframe_to_analysis_result(df, from_cache=True)
-        return results
-        
-    except Exception as e:
-        logger.error(f"Error querying domain {domain}: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
-
-
-@app.get("/stats", response_model=StatsResponse)
-async def get_analysis_stats(
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Get analysis statistics
-    """
-    try:
-        stats = bq_client.get_analysis_stats()
-        
-        return StatsResponse(
-            total_analyses=stats.get('total_analyses', 0),
-            unique_domains=stats.get('unique_domains', 0),
-            avg_processing_time=stats.get('avg_processing_time', 0.0),
-            avg_confidence_score=stats.get('avg_confidence_score', 0.0),
-            successful_scrapes=stats.get('successful_scrapes', 0),
-            failed_scrapes=stats.get('failed_scrapes', 0)
-        )
-        
-    except Exception as e:
-        logger.error(f"Error getting stats: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Stats query failed: {str(e)}")
-
-
-@app.get("/recent", response_model=List[AnalysisResult])
-async def get_recent_results(
-    limit: int = 50,
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """
-    Get recent analysis results
-    """
-    try:
-        df = bq_client.get_recent_results(limit=limit)
-        
-        if df.empty:
-            return []
-        
-        results = dataframe_to_analysis_result(df, from_cache=True)
-        return results
-        
-    except Exception as e:
-        logger.error(f"Error getting recent results: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
-
-
-# Chat API Endpoints
-
-@app.websocket("/ws/{session_id}")
-async def websocket_endpoint(websocket: WebSocket, session_id: str):
-    """WebSocket endpoint for real-time chat updates"""
-    await websocket.accept()
-    
-    session = get_or_create_session(session_id)
-    session.websocket = websocket
-    
-    # Send welcome message
-    welcome_msg = "Welcome to Domain Analysis Chat! You can type email addresses or upload a CSV file."
-    await send_chat_message(session_id, welcome_msg)
-    
-    try:
-        while True:
-            data = await websocket.receive_json()
-            
-            # Handle different message types
-            if data.get("type") == "ping":
-                await websocket.send_json({"type": "pong"})
-            elif data.get("type") == "message":
-                # Store user message
-                session.add_message(data.get("content", ""), "user")
-                
-                # Process the message (will be handled by HTTP endpoints)
-                await send_chat_message(session_id, "Message received. Processing...")
-                
-    except WebSocketDisconnect:
-        logger.info(f"WebSocket disconnected for session {session_id}")
-        if session_id in chat_sessions:
-            chat_sessions[session_id].websocket = None
-
-
-@app.post("/chat/message", response_model=ChatResponse)
-async def send_chat_message_endpoint(
-    request: ChatRequest,
-    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """Handle chat messages (single email processing)"""
-    try:
-        session = get_or_create_session(request.session_id)
-        
-        # Store user message
-        session.add_message(request.message, request.message_type)
-        
-        # Check if message contains an email
-        email_match = re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', request.message)
-        
-        if email_match:
-            email = email_match.group().lower().strip()
-            
-            # Check for duplicates
-            domain_output = analyzer.extract_domain_from_email(email)
-            domain = domain_output.domain
-            
-            if bq_client.check_domain_exists(domain, max_age_hours=24):
-                response_content = f"Email {email} was already processed recently. Please share another email address."
-                await send_chat_message(request.session_id, response_content)
-                
-                return ChatResponse(
-                    message_id=str(uuid.uuid4()),
-                    session_id=request.session_id,
-                    message_type="system",
-                    content=response_content,
-                    timestamp=datetime.utcnow()
-                )
-            
-            # Process email
-            await send_chat_message(request.session_id, f"Processing email: {email}...")
-            
-            # Run analysis
-            result_df = await asyncio.get_event_loop().run_in_executor(
-                None, analyzer.analyze_email_domain, email
-            )
-            
-            # Save to BigQuery
-            bq_client.insert_dataframe(result_df)
-            
-            # Convert to result object
-            results = dataframe_to_analysis_result(result_df)
-            result = results[0]
-            
-            # Create response message
-            response_content = f"""Analysis complete for {email}!
-
-**Domain**: {result.extracted_domain}
-**Summary**: {result.website_summary}
-**Confidence**: {result.confidence_score:.2f if result.confidence_score else 0}
-
-**Sector Classifications**:
-- Real Estate: {result.real_estate}
-- Infrastructure: {result.infrastructure}  
-- Industrial: {result.industrial}
-
-Feel free to submit another email or upload a CSV file!"""
-
-            await send_chat_message(request.session_id, response_content, {"analysis_result": result.dict()})
-            
-            return ChatResponse(
-                message_id=str(uuid.uuid4()),
-                session_id=request.session_id,
-                message_type="system",
-                content=response_content,
-                timestamp=datetime.utcnow(),
-                metadata={"analysis_result": result.dict()}
-            )
-        
-        else:
-            response_content = "Please provide a valid email address or upload a CSV file for analysis."
-            await send_chat_message(request.session_id, response_content)
-            
-            return ChatResponse(
-                message_id=str(uuid.uuid4()),
-                session_id=request.session_id,
-                message_type="system",
-                content=response_content,
-                timestamp=datetime.utcnow()
-            )
-            
-    except Exception as e:
-        logger.error(f"Error processing chat message: {str(e)}")
-        error_msg = f"Sorry, there was an error processing your request: {str(e)}"
-        await send_chat_message(request.session_id, error_msg)
-        
-        return ChatResponse(
-            message_id=str(uuid.uuid4()),
-            session_id=request.session_id,
-            message_type="system",
-            content=error_msg,
-            timestamp=datetime.utcnow()
-        )
-
-
-@app.options("/chat/preview-csv")
-async def preview_csv_options():
-    """Handle CORS preflight for CSV preview endpoint"""
-    return JSONResponse(
-        content={"message": "OPTIONS OK"}, 
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "*",
-        }
-    )
-
-@app.post("/chat/preview-csv")
-async def preview_csv_file(
-    file: UploadFile = File(...),
-    session_id: str = Form(...),
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """Preview CSV file with BigQuery duplicate checking before processing"""
-    logger.info(f"CSV preview request received for session: {session_id}, file: {file.filename}")
-    try:
-        # Validate file type
-        if not file.filename.endswith('.csv'):
-            return {"error": "Please upload a CSV file."}
-        
-        # Read CSV file
-        contents = await file.read()
-        df = pd.read_csv(io.BytesIO(contents))
-        
-        # Clean emails and check BigQuery duplicates
-        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
-        
-        response_data = {
-            "valid_emails": valid_emails[:10],  # Preview first 10
-            "total_count": cleaning_stats['new_emails'],
-            "has_more": cleaning_stats['new_emails'] > 10,
-            "stats": cleaning_stats
-        }
-        
-        return JSONResponse(
-            content=response_data,
-            headers={
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST, OPTIONS",
-                "Access-Control-Allow-Headers": "*",
-            }
-        )
-        
-    except Exception as e:
-        logger.error(f"Error previewing CSV: {str(e)}")
-        return JSONResponse(
-            content={"error": f"Error processing CSV file: {str(e)}"},
-            headers={
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST, OPTIONS", 
-                "Access-Control-Allow-Headers": "*",
-            }
-        )
-
-
-@app.options("/chat/upload-csv")
-async def upload_csv_options():
-    """Handle CORS preflight for CSV upload endpoint"""
-    return JSONResponse(
-        content={"message": "OK"}, 
-        headers={
-            "Access-Control-Allow-Origin": "https://domain-analysis-frontend-456664817971.europe-west1.run.app",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "*",
-        }
-    )
-
-@app.post("/chat/upload-csv")
-async def upload_csv_file(
-    file: UploadFile = File(...),
-    session_id: str = Form(...),
-    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
-    bq_client: BigQueryClient = Depends(get_bigquery_client)
-):
-    """Handle CSV file upload and process emails in batch"""
-    logger.info(f"CSV upload request received for session: {session_id}, file: {file.filename}")
-    try:
-        session = get_or_create_session(session_id)
-        
-        # Validate file type
-        if not file.filename.endswith('.csv'):
-            error_msg = "Please upload a CSV file."
-            await send_chat_message(session_id, error_msg)
-            return {"error": error_msg}
-        
-        # Read CSV file
-        contents = await file.read()
-        df = pd.read_csv(io.BytesIO(contents))
-        
-        # Enhanced email cleaning using new function with BigQuery duplicate checking
-        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
-        
-        if not valid_emails:
-            error_msg = f"""No new email addresses found in the CSV file.
-            
-📊 Processing Summary:
-• Total rows: {cleaning_stats['total_rows']}
-• Email column used: '{cleaning_stats['email_column']}'
-• Valid emails found: {cleaning_stats['valid_emails']}
-• Invalid emails: {cleaning_stats['invalid_emails']}
-• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
-• Already in database: {cleaning_stats['bigquery_duplicates']}
-• New emails to process: {cleaning_stats['new_emails']}
-• Empty rows: {cleaning_stats['empty_rows']}
-
-All valid emails are already processed in our database. Please check with new email addresses."""
-            await send_chat_message(session_id, error_msg)
-            return {"error": error_msg}
-        
-        # Send detailed processing summary
-        summary_msg = f"""📁 CSV file processed successfully!
-
-📊 Processing Summary:
-• Total rows: {cleaning_stats['total_rows']}
-• Email column used: '{cleaning_stats['email_column']}'
-• Valid emails found: {cleaning_stats['valid_emails']}
-• Invalid emails: {cleaning_stats['invalid_emails']}
-• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
-• Already in database: {cleaning_stats['bigquery_duplicates']} ⚡
-• New emails to process: {cleaning_stats['new_emails']}
-• Empty rows skipped: {cleaning_stats['empty_rows']}
-
-🚀 Starting analysis for {len(valid_emails)} new emails..."""
-        await send_chat_message(session_id, summary_msg)
-        
-        # Process emails in background
-        logger.info(f"Starting background processing for {len(valid_emails)} emails")
-        task = asyncio.create_task(process_csv_emails_background(
-            session_id, valid_emails, analyzer, bq_client
-        ))
-        # Add exception handler to catch silent failures
-        task.add_done_callback(lambda t: logger.error(f"Background task error: {t.exception()}") if t.exception() else logger.info("Background task completed successfully"))
-        
-        return {
-            "message": f"Processing {len(valid_emails)} emails. You'll receive updates every 10 completions.",
-            "total_emails": len(valid_emails)
-        }
-        
-    except Exception as e:
-        logger.error(f"Error uploading CSV: {str(e)}")
-        error_msg = f"Error processing CSV file: {str(e)}"
-        await send_chat_message(session_id, error_msg)
-        return {"error": error_msg}
-
-
+# BACKGROUND PROCESSING FUNCTIONS - MOVED UP BEFORE USAGE
 async def process_massive_batch_background(batch_id: str, bq_client: BigQueryClient):
     """
     Distributed background processing for massive batches
@@ -1490,39 +708,627 @@ All results have been saved to the database. You can now submit more emails or u
             logger.error(f"Failed to send error message: {send_error}")
 
 
-# Serve React app for all non-API routes
-@app.get("/{path:path}")
-async def serve_react_app(path: str = ""):
-    """Serve React app for all non-API routes"""
-    static_dir = os.path.join(os.path.dirname(__file__), "static")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan manager"""
+    global domain_analyzer, bigquery_client
     
-    if os.path.exists(static_dir):
-        index_file = os.path.join(static_dir, "index.html")
-        if os.path.exists(index_file):
-            return FileResponse(index_file)
+    # Startup - Initialize clients
+    logger.info("Starting up Domain Analysis API...")
     
-    # Fallback if no static files
-    return {"message": "Domain Analysis API - React frontend not available"}
-
-
-# Error handlers
-@app.exception_handler(Exception)
-async def general_exception_handler(request, exc):
-    logger.error(f"Unhandled exception: {str(exc)}")
-    return JSONResponse(
-        status_code=500,
-        content={"detail": "Internal server error", "error": str(exc)}
+    # Get environment variables
+    serper_api_key = os.getenv("SERPER_API_KEY")
+    brightdata_api_token = os.getenv("BRIGHTDATA_API_TOKEN")
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    project_id = os.getenv("GCP_PROJECT_ID")
+    
+    if not all([serper_api_key, brightdata_api_token, google_api_key, project_id]):
+        logger.warning("Missing required environment variables:")
+        logger.warning(f"SERPER_API_KEY: {'✓' if serper_api_key else '✗'}")
+        logger.warning(f"BRIGHTDATA_API_TOKEN: {'✓' if brightdata_api_token else '✗'}")
+        logger.warning(f"GOOGLE_API_KEY: {'✓' if google_api_key else '✗'}")
+        logger.warning(f"GCP_PROJECT_ID: {'✓' if project_id else '✗'}")
+        
+        # Don't fail startup - allow container to start in degraded mode
+        logger.warning("Starting in degraded mode - API endpoints will return errors until env vars are set")
+        yield
+        return  # Skip client initialization but don't fail
+    
+    # Initialize Domain Analyzer
+    domain_analyzer = DomainAnalyzer(
+        serper_api_key=serper_api_key,
+        brightdata_api_token=brightdata_api_token,
+        google_api_key=google_api_key
     )
-
-
-if __name__ == "__main__":
-    # For local development
-    port = int(os.getenv("PORT", 8080))
     
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=port,
-        reload=True,
-        log_level="info"
-    )
+    # Initialize BigQuery Client
+    dataset_id = os.getenv("BIGQUERY_DATASET_ID", "advanced_csv_analysis")
+    table_id = os.getenv("BIGQUERY_TABLE_ID", "email_domain_results")
+    bigquery_client = create_bigquery_client(project_id, dataset_id, table_id)
+    
+    logger.info("Domain Analysis API started successfully")
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down Domain Analysis API...")
+
+
+# Initialize FastAPI app
+app = FastAPI(
+    title="Domain Analysis API",
+    description="Advanced RAG pipeline for email domain intelligence gathering",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Temporary wildcard for debugging
+    allow_credentials=False,  # Must be False with wildcard origins
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
+
+# Serve static files (React build)
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# Massive Batch Processing Endpoints
+
+@app.post("/batch/upload-massive-csv", response_model=BatchStatus)
+async def upload_massive_csv(
+    file: UploadFile = File(...),
+    session_id: str = Form(...),
+    priority: int = Form(5),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Upload massive CSV files (unlimited size) with immediate queue processing
+    """
+    logger.info(f"Massive CSV upload request received for session: {session_id}, file: {file.filename}")
+    try:
+        # Generate unique batch ID
+        batch_id = f"batch_{uuid.uuid4().hex[:12]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            raise HTTPException(status_code=400, detail="Please upload a CSV file.")
+        
+        # Read CSV file (no size limits)
+        contents = await file.read()
+        df = pd.read_csv(io.BytesIO(contents))
+        
+        # Enhanced email cleaning
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
+        
+        if not valid_emails:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"No valid email addresses found. Processed {cleaning_stats['total_rows']} rows from column '{cleaning_stats['email_column']}'"
+            )
+        
+        # Create batch record in BigQuery
+        success = bq_client.create_batch_record(
+            batch_id=batch_id,
+            total_emails=len(valid_emails),
+            user_session_id=session_id,
+            filename=file.filename
+        )
+        
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to create batch record")
+        
+        # Add all emails to processing queue
+        queue_success = bq_client.add_emails_to_queue(
+            emails=valid_emails,
+            batch_id=batch_id,
+            priority=priority
+        )
+        
+        if not queue_success:
+            raise HTTPException(status_code=500, detail="Failed to add emails to processing queue")
+        
+        # Update batch status to processing
+        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
+        
+        # Start distributed background processing
+        asyncio.create_task(process_massive_batch_background(batch_id, bq_client))
+        
+        logger.info(f"Successfully created massive batch {batch_id} with {len(valid_emails)} emails")
+        
+        # Return immediate batch status
+        batch_status = bq_client.get_batch_status(batch_id)
+        if batch_status:
+            return BatchStatus(**batch_status)
+        else:
+            raise HTTPException(status_code=500, detail="Failed to retrieve batch status")
+            
+    except Exception as e:
+        logger.error(f"Error in massive CSV upload: {str(e)}")
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/batch/status/{batch_id}", response_model=BatchStatus)
+async def get_batch_status_endpoint(
+    batch_id: str,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get real-time batch processing status
+    """
+    try:
+        batch_status = bq_client.get_batch_status(batch_id)
+        
+        if not batch_status:
+            raise HTTPException(status_code=404, detail=f"Batch {batch_id} not found")
+        
+        return BatchStatus(**batch_status)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting batch status: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/batch/results/{batch_id}", response_model=List[AnalysisResult])
+async def get_batch_results(
+    batch_id: str,
+    offset: int = 0,
+    limit: int = 100,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get completed results from a batch
+    """
+    try:
+        # Get batch info first to verify it exists
+        batch_status = bq_client.get_batch_status(batch_id)
+        if not batch_status:
+            raise HTTPException(status_code=404, detail=f"Batch {batch_id} not found")
+        
+        # Query results from main analysis table
+        query = f"""
+        SELECT da.*
+        FROM `{bq_client.project_id}.{bq_client.dataset_id}.domain_analysis` da
+        JOIN `{bq_client.project_id}.{bq_client.dataset_id}.email_processing_queue` epq
+        ON da.original_email = epq.email
+        WHERE epq.batch_id = @batch_id
+        AND epq.status = 'completed'
+        ORDER BY da.created_at DESC
+        LIMIT {limit} OFFSET {offset}
+        """
+        
+        from google.cloud import bigquery
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
+        )
+        
+        query_job = bq_client.client.query(query, job_config=job_config)
+        df = query_job.result().to_dataframe()
+        
+        if df.empty:
+            return []
+        
+        # Convert to analysis results
+        results = []
+        for _, row in df.iterrows():
+            result = AnalysisResult(
+                original_email=row.get('original_email', ''),
+                extracted_domain=row.get('extracted_domain', ''),
+                selected_url=row.get('selected_url', ''),
+                scraping_status=row.get('scraping_status', ''),
+                website_summary=row.get('website_summary', ''),
+                confidence_score=row.get('confidence_score', 0.0),
+                selection_reasoning=row.get('selection_reasoning', ''),
+                completed_timestamp=row.get('completed_timestamp', '').isoformat() if row.get('completed_timestamp') else None,
+                processing_time_seconds=row.get('processing_time_seconds', 0.0),
+                created_at=row.get('created_at', '').isoformat() if row.get('created_at') else None,
+                from_cache=False,
+                real_estate=row.get('real_estate', 'Can\'t Say'),
+                infrastructure=row.get('infrastructure', 'Can\'t Say'),
+                industrial=row.get('industrial', 'Can\'t Say'),
+            )
+            results.append(result)
+        
+        return results
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting batch results: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/batch/retry/{batch_id}")
+async def retry_failed_batch_items(
+    batch_id: str,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Retry failed items in a batch
+    """
+    try:
+        # Reset failed items to pending
+        from google.cloud import bigquery
+        
+        query = f"""
+        UPDATE `{bq_client.project_id}.{bq_client.dataset_id}.email_processing_queue`
+        SET status = 'pending',
+            retry_count = retry_count + 1,
+            error_message = NULL,
+            started_at = NULL,
+            completed_at = NULL
+        WHERE batch_id = @batch_id 
+        AND status = 'failed'
+        AND retry_count < 3
+        """
+        
+        job_config = bigquery.QueryJobConfig(
+            query_parameters=[bigquery.ScalarQueryParameter("batch_id", "STRING", batch_id)]
+        )
+        
+        query_job = bq_client.client.query(query, job_config=job_config)
+        query_job.result()
+        
+        # Update batch status back to processing
+        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
+        
+        # Restart background processing
+        asyncio.create_task(process_massive_batch_background(batch_id, bq_client))
+        
+        return {"message": f"Retrying failed items for batch {batch_id}"}
+        
+    except Exception as e:
+        logger.error(f"Error retrying batch: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# Serve favicon
+@app.get("/favicon.ico")
+async def favicon():
+    """Serve favicon to prevent 404 errors"""
+    return JSONResponse(content="", status_code=204)
+
+
+# API Endpoints
+@app.get("/", response_class=JSONResponse)
+async def root():
+    """Root endpoint with API information"""
+    return {
+        "name": "Domain Analysis API",
+        "version": "1.0.0",
+        "description": "Advanced RAG pipeline for email domain intelligence gathering",
+        "endpoints": {
+            "analyze": "POST /analyze - Analyze single email",
+            "batch_analyze": "POST /analyze/batch - Analyze multiple emails",
+            "domain": "GET /domain/{domain} - Get cached domain results",
+            "stats": "GET /stats - Get analysis statistics",
+            "health": "GET /health - Health check"
+        }
+    }
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    try:
+        # Test connections
+        analyzer = get_domain_analyzer()
+        bq_client = get_bigquery_client()
+        
+        return {
+            "status": "healthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "services": {
+                "domain_analyzer": "ready",
+                "bigquery": "ready"
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Service unhealthy: {str(e)}")
+
+
+@app.post("/analyze", response_model=AnalysisResult)
+async def analyze_email(
+    request: AnalyzeEmailRequest,
+    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Analyze a single email address and return domain intelligence
+    """
+    try:
+        result = await process_email_analysis(
+            email=request.email,
+            analyzer=analyzer,
+            bq_client=bq_client,
+            force_refresh=request.force_refresh
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error analyzing email {request.email}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+
+@app.post("/analyze/batch", response_model=BatchAnalysisResult)
+async def batch_analyze_emails(
+    request: BatchAnalyzeRequest,
+    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Analyze multiple email addresses in batch
+    """
+    try:
+        start_time = datetime.utcnow()
+        results = []
+        successful = 0
+        failed = 0
+        from_cache = 0
+        
+        # Process each email
+        for email in request.emails:
+            try:
+                result = await process_email_analysis(
+                    email=email,
+                    analyzer=analyzer,
+                    bq_client=bq_client,
+                    force_refresh=request.force_refresh
+                )
+                
+                results.append(result)
+                
+                if result.scraping_status in ['success', 'success_text', 'success_fallback']:
+                    successful += 1
+                else:
+                    failed += 1
+                
+                if result.from_cache:
+                    from_cache += 1
+                    
+            except Exception as e:
+                logger.error(f"Error processing email {email}: {str(e)}")
+                failed += 1
+                
+                # Add error result
+                error_result = AnalysisResult(
+                    original_email=email,
+                    extracted_domain="error",
+                    selected_url=None,
+                    scraping_status="error",
+                    website_summary=f"Error: {str(e)}",
+                    confidence_score=0.0,
+                    selection_reasoning="Processing failed",
+                    completed_timestamp=datetime.utcnow().isoformat(),
+                    processing_time_seconds=0.0,
+                    created_at=datetime.utcnow().isoformat(),
+                    from_cache=False,
+                    # New sector classification fields (error state)
+                    real_estate="Can't Say",
+                    infrastructure="Can't Say",
+                    industrial="Can't Say"
+                )
+                results.append(error_result)
+        
+        processing_time = (datetime.utcnow() - start_time).total_seconds()
+        
+        return BatchAnalysisResult(
+            results=results,
+            total_processed=len(request.emails),
+            successful=successful,
+            failed=failed,
+            from_cache=from_cache,
+            processing_time_seconds=processing_time
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in batch analysis: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Batch analysis failed: {str(e)}")
+
+
+@app.get("/domain/{domain}", response_model=List[AnalysisResult])
+async def get_domain_results(
+    domain: str,
+    limit: int = 10,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get cached analysis results for a specific domain
+    """
+    try:
+        df = bq_client.query_domain_results(domain, limit=limit)
+        
+        if df.empty:
+            return []
+        
+        results = dataframe_to_analysis_result(df, from_cache=True)
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error querying domain {domain}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
+
+
+@app.get("/stats", response_model=StatsResponse)
+async def get_analysis_stats(
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get analysis statistics
+    """
+    try:
+        stats = bq_client.get_analysis_stats()
+        
+        return StatsResponse(
+            total_analyses=stats.get('total_analyses', 0),
+            unique_domains=stats.get('unique_domains', 0),
+            avg_processing_time=stats.get('avg_processing_time', 0.0),
+            avg_confidence_score=stats.get('avg_confidence_score', 0.0),
+            successful_scrapes=stats.get('successful_scrapes', 0),
+            failed_scrapes=stats.get('failed_scrapes', 0)
+        )
+        
+    except Exception as e:
+        logger.error(f"Error getting stats: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Stats query failed: {str(e)}")
+
+
+@app.get("/recent", response_model=List[AnalysisResult])
+async def get_recent_results(
+    limit: int = 50,
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get recent analysis results
+    """
+    try:
+        df = bq_client.get_recent_results(limit=limit)
+        
+        if df.empty:
+            return []
+        
+        results = dataframe_to_analysis_result(df, from_cache=True)
+        return results
+        
+    except Exception as e:
+        logger.error(f"Error getting recent results: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
+
+
+# Chat API Endpoints
+@app.websocket("/ws/{session_id}")
+async def websocket_endpoint(websocket: WebSocket, session_id: str):
+    """WebSocket endpoint for real-time chat updates"""
+    await websocket.accept()
+    
+    session = get_or_create_session(session_id)
+    session.websocket = websocket
+    
+    # Send welcome message
+    welcome_msg = "Welcome to Domain Analysis Chat! You can type email addresses or upload a CSV file."
+    await send_chat_message(session_id, welcome_msg)
+    
+    try:
+        while True:
+            data = await websocket.receive_json()
+            
+            # Handle different message types
+            if data.get("type") == "ping":
+                await websocket.send_json({"type": "pong"})
+            elif data.get("type") == "message":
+                # Store user message
+                session.add_message(data.get("content", ""), "user")
+                
+                # Process the message (will be handled by HTTP endpoints)
+                await send_chat_message(session_id, "Message received. Processing...")
+                
+    except WebSocketDisconnect:
+        logger.info(f"WebSocket disconnected for session {session_id}")
+        if session_id in chat_sessions:
+            chat_sessions[session_id].websocket = None
+
+
+@app.post("/chat/message", response_model=ChatResponse)
+async def send_chat_message_endpoint(
+    request: ChatRequest,
+    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """Handle chat messages (single email processing)"""
+    try:
+        session = get_or_create_session(request.session_id)
+        
+        # Store user message
+        session.add_message(request.message, request.message_type)
+        
+        # Check if message contains an email
+        email_match = re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', request.message)
+        
+        if email_match:
+            email = email_match.group().lower().strip()
+            
+            # Check for duplicates
+            domain_output = analyzer.extract_domain_from_email(email)
+            domain = domain_output.domain
+            
+            if bq_client.check_domain_exists(domain, max_age_hours=24):
+                response_content = f"Email {email} was already processed recently. Please share another email address."
+                await send_chat_message(request.session_id, response_content)
+                
+                return ChatResponse(
+                    message_id=str(uuid.uuid4()),
+                    session_id=request.session_id,
+                    message_type="system",
+                    content=response_content,
+                    timestamp=datetime.utcnow()
+                )
+            
+            # Process email
+            await send_chat_message(request.session_id, f"Processing email: {email}...")
+            
+            # Run analysis
+            result_df = await asyncio.get_event_loop().run_in_executor(
+                None, analyzer.analyze_email_domain, email
+            )
+            
+            # Save to BigQuery
+            bq_client.insert_dataframe(result_df)
+            
+            # Convert to result object
+            results = dataframe_to_analysis_result(result_df)
+            result = results[0]
+            
+            # Create response message
+            response_content = f"""Analysis complete for {email}!
+
+**Domain**: {result.extracted_domain}
+**Summary**: {result.website_summary}
+**Confidence**: {result.confidence_score:.2f if result.confidence_score else 0}
+
+**Sector Classifications**:
+- Real Estate: {result.real_estate}
+- Infrastructure: {result.infrastructure}  
+- Industrial: {result.industrial}
+
+Feel free to submit another email or upload a CSV file!"""
+
+            await send_chat_message(request.session_id, response_content, {"analysis_result": result.dict()})
+            
+            return ChatResponse(
+                message_id=str(uuid.uuid4()),
+                session_id=request.session_id,
+                message_type="system",
+                content=response_content,
+                timestamp=datetime.utcnow(),
+                metadata={"analysis_result": result.dict()}
+            )
+        
+        else:
+            response_content = "Please provide a valid email address or upload a CSV file for analysis."
+            await send_chat_message(request.session_id, response_content)
+            
+            return ChatResponse(
+                message_id=str(uuid.uuid4()),
+                session_id=request.session_id,
+                message_type="system",
+                content=response_content,
+                timestamp=datetime.utcnow()
+            )
+            
+    except Exception as e:
+        logger.error(f"Error processing chat message: {str(e)}")
+        error_msg = f"Sorry, there was an error processing your request: {str(e)}"
+        await send_chat_message(request.session_id, error_msg)
+        
+        return ChatResponse(
+            message_id=str(uuid.uuid4()),
+ 
