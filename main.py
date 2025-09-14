@@ -1331,4 +1331,196 @@ Feel free to submit another email or upload a CSV file!"""
         
         return ChatResponse(
             message_id=str(uuid.uuid4()),
- 
+            session_id=request.session_id,
+            message_type="system",
+            content=error_msg,
+            timestamp=datetime.utcnow()
+        )
+
+
+@app.options("/chat/preview-csv")
+async def preview_csv_options():
+    """Handle CORS preflight for CSV preview endpoint"""
+    return JSONResponse(
+        content={"message": "OPTIONS OK"}, 
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
+
+@app.post("/chat/preview-csv")
+async def preview_csv_file(
+    file: UploadFile = File(...),
+    session_id: str = Form(...),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """Preview CSV file with BigQuery duplicate checking before processing"""
+    logger.info(f"CSV preview request received for session: {session_id}, file: {file.filename}")
+    try:
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            return {"error": "Please upload a CSV file."}
+        
+        # Read CSV file
+        contents = await file.read()
+        df = pd.read_csv(io.BytesIO(contents))
+        
+        # Clean emails and check BigQuery duplicates
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
+        
+        response_data = {
+            "valid_emails": valid_emails[:10],  # Preview first 10
+            "total_count": cleaning_stats['new_emails'],
+            "has_more": cleaning_stats['new_emails'] > 10,
+            "stats": cleaning_stats
+        }
+        
+        return JSONResponse(
+            content=response_data,
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS",
+                "Access-Control-Allow-Headers": "*",
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error previewing CSV: {str(e)}")
+        return JSONResponse(
+            content={"error": f"Error processing CSV file: {str(e)}"},
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS", 
+                "Access-Control-Allow-Headers": "*",
+            }
+        )
+
+
+@app.options("/chat/upload-csv")
+async def upload_csv_options():
+    """Handle CORS preflight for CSV upload endpoint"""
+    return JSONResponse(
+        content={"message": "OK"}, 
+        headers={
+            "Access-Control-Allow-Origin": "https://domain-analysis-frontend-456664817971.europe-west1.run.app",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
+
+@app.post("/chat/upload-csv")
+async def upload_csv_file(
+    file: UploadFile = File(...),
+    session_id: str = Form(...),
+    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """Handle CSV file upload and process emails in batch"""
+    logger.info(f"CSV upload request received for session: {session_id}, file: {file.filename}")
+    try:
+        session = get_or_create_session(session_id)
+        
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            error_msg = "Please upload a CSV file."
+            await send_chat_message(session_id, error_msg)
+            return {"error": error_msg}
+        
+        # Read CSV file
+        contents = await file.read()
+        df = pd.read_csv(io.BytesIO(contents))
+        
+        # Enhanced email cleaning using new function with BigQuery duplicate checking
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
+        
+        if not valid_emails:
+            error_msg = f"""No new email addresses found in the CSV file.
+            
+📊 Processing Summary:
+• Total rows: {cleaning_stats['total_rows']}
+• Email column used: '{cleaning_stats['email_column']}'
+• Valid emails found: {cleaning_stats['valid_emails']}
+• Invalid emails: {cleaning_stats['invalid_emails']}
+• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
+• Already in database: {cleaning_stats['bigquery_duplicates']}
+• New emails to process: {cleaning_stats['new_emails']}
+• Empty rows: {cleaning_stats['empty_rows']}
+
+All valid emails are already processed in our database. Please check with new email addresses."""
+            await send_chat_message(session_id, error_msg)
+            return {"error": error_msg}
+        
+        # Send detailed processing summary
+        summary_msg = f"""📁 CSV file processed successfully!
+
+📊 Processing Summary:
+• Total rows: {cleaning_stats['total_rows']}
+• Email column used: '{cleaning_stats['email_column']}'
+• Valid emails found: {cleaning_stats['valid_emails']}
+• Invalid emails: {cleaning_stats['invalid_emails']}
+• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
+• Already in database: {cleaning_stats['bigquery_duplicates']} ⚡
+• New emails to process: {cleaning_stats['new_emails']}
+• Empty rows skipped: {cleaning_stats['empty_rows']}
+
+🚀 Starting analysis for {len(valid_emails)} new emails..."""
+        await send_chat_message(session_id, summary_msg)
+        
+        # Process emails in background
+        logger.info(f"Starting background processing for {len(valid_emails)} emails")
+        task = asyncio.create_task(process_csv_emails_background(
+            session_id, valid_emails, analyzer, bq_client
+        ))
+        # Add exception handler to catch silent failures
+        task.add_done_callback(lambda t: logger.error(f"Background task error: {t.exception()}") if t.exception() else logger.info("Background task completed successfully"))
+        
+        return {
+            "message": f"Processing {len(valid_emails)} emails. You'll receive updates every 10 completions.",
+            "total_emails": len(valid_emails)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error uploading CSV: {str(e)}")
+        error_msg = f"Error processing CSV file: {str(e)}"
+        await send_chat_message(session_id, error_msg)
+        return {"error": error_msg}
+
+
+# Serve React app for all non-API routes
+@app.get("/{path:path}")
+async def serve_react_app(path: str = ""):
+    """Serve React app for all non-API routes"""
+    static_dir = os.path.join(os.path.dirname(__file__), "static")
+    
+    if os.path.exists(static_dir):
+        index_file = os.path.join(static_dir, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+    
+    # Fallback if no static files
+    return {"message": "Domain Analysis API - React frontend not available"}
+
+
+# Error handlers
+@app.exception_handler(Exception)
+async def general_exception_handler(request, exc):
+    logger.error(f"Unhandled exception: {str(exc)}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error", "error": str(exc)}
+    )
+
+
+if __name__ == "__main__":
+    # For local development
+    port = int(os.getenv("PORT", 8080))
+    
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=port,
+        reload=True,
+        log_level="info"
+    )
