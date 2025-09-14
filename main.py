@@ -606,25 +606,6 @@ class ChatSession:
 chat_sessions: Dict[str, ChatSession] = {}
 
 
-# Dependency to get clients
-def get_domain_analyzer() -> DomainAnalyzer:
-    if domain_analyzer is None:
-        raise HTTPException(
-            status_code=503, 
-            detail="Domain analyzer not initialized - check environment variables (SERPER_API_KEY, BRIGHTDATA_API_TOKEN, GOOGLE_API_KEY)"
-        )
-    return domain_analyzer
-
-
-def get_bigquery_client() -> BigQueryClient:
-    if bigquery_client is None:
-        raise HTTPException(
-            status_code=503, 
-            detail="BigQuery client not initialized - check environment variables (GCP_PROJECT_ID)"
-        )
-    return bigquery_client
-
-
 # Chat helper functions
 def get_or_create_session(session_id: str) -> ChatSession:
     """Get existing session or create new one"""
