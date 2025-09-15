@@ -1,0 +1,9 @@
+SELECT 
+  column_name, 
+  data_type, 
+  is_nullable,
+  column_default,
+  is_generated
+FROM `feisty-outrider-471302-k6.advanced_csv_analysis.INFORMATION_SCHEMA.COLUMNS`
+WHERE table_name = 'email_domain_results'
+ORDER BY ordinal_position;
