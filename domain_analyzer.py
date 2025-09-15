@@ -318,30 +318,20 @@ INDUSTRIAL SECTOR OPTIONS:
 - Consultant: Companies that provide advice, supervision, reporting, or consulting services
 - Use "Can't Say" if unclear or doesn't fit these categories
 
-4. ENHANCED COMPANY NAME EXTRACTION:
-- Look for company names in search result TITLES (e.g., "GEM Engserv | Construction Project Management" → "GEM Engserv")
-- Check search result SNIPPETS for company names and business descriptions
-- Extract company names from website content (headers, about sections, contact pages)
-- Look for variations like "Pvt Ltd", "Private Limited", "Inc", "Corp", "LLC", etc.
-- Remove common suffixes when extracting the core business name
-- Return the most formal/complete company name found
+4. COMPANY NAME EXTRACTION:
+- FIRST: Extract from search result TITLES (e.g., "GEM Engserv | Construction..." → "GEM Engserv")
+- SECOND: Check website headers/titles for business names
+- Look for "Pvt Ltd", "Inc", "Corp", "LLC" variations
+- Return the clearest business name found
 
-5. ENHANCED LOCATION EXTRACTION:
-- Search for registered office addresses in website content
-- Look for headquarters, head office, or main office locations
-- Check contact pages, footer information, and about sections
-- Extract city/state/country from address information
-- Look for phrases like "Based in", "Headquartered in", "Located in"
-- Return the most specific location found (City, State/Country format preferred)
+5. LOCATION EXTRACTION:
+- Look for addresses, contact info, "Based in", "Located in"
+- Return city/country format (e.g., "Mumbai, India")
 
-ANALYSIS GUIDELINES:
-- PRIORITIZE search result titles and snippets for company name extraction
-- Use multiple data sources to cross-verify company information
-- Look for structured data like addresses, phone numbers, and business registrations
-- Pay attention to official business names vs. trading names
-- Multiple selections allowed for sectors (comma-separated if multiple match)
-- Base decisions on semantic similarity to company's actual business
-- Use "Can't Say" when uncertain or no clear match
+ANALYSIS RULES:
+- Prioritize search titles for company names
+- Use "Can't Say" when uncertain
+- Be concise and accurate
 
 Return your response in this exact JSON format:
 {{
@@ -643,37 +633,21 @@ Return your response in this exact JSON format:
 
         results_text = ""
 
-        # Add knowledge graph information if available
+        # Add knowledge graph information if available (optimized)
         if hasattr(self, '_last_search_metadata') and self._last_search_metadata.get('knowledge_graph'):
             kg = self._last_search_metadata['knowledge_graph']
-            if kg.get('title') or kg.get('description'):
-                results_text += "KNOWLEDGE GRAPH INFORMATION:\n"
-                if kg.get('title'):
-                    results_text += f"Company Name: {kg['title']}\n"
-                if kg.get('description'):
-                    results_text += f"Description: {kg['description']}\n"
-                if kg.get('attributes'):
-                    for attr in kg['attributes']:
-                        results_text += f"{attr.get('name', '')}: {attr.get('value', '')}\n"
-                results_text += "\n"
+            if kg.get('title'):
+                results_text += f"COMPANY: {kg['title'][:100]}\n"  # Truncate for speed
+            if kg.get('description'):
+                results_text += f"DESC: {kg['description'][:200]}\n"  # Truncate for speed
 
-        # Add answer box information if available
-        if hasattr(self, '_last_search_metadata') and self._last_search_metadata.get('answer_box'):
-            ab = self._last_search_metadata['answer_box']
-            if ab.get('answer') or ab.get('snippet'):
-                results_text += "ANSWER BOX:\n"
-                if ab.get('answer'):
-                    results_text += f"Answer: {ab['answer']}\n"
-                if ab.get('snippet'):
-                    results_text += f"Info: {ab['snippet']}\n"
-                results_text += "\n"
+        # Skip answer box for performance (usually redundant with organic results)
 
-        # Add organic search results
-        results_text += "ORGANIC SEARCH RESULTS:\n"
-        for i, result in enumerate(search_results_output.results, 1):
-            results_text += f"{i}. Title: {result.title}\n"
-            results_text += f"   URL: {result.url}\n"
-            results_text += f"   Snippet: {result.snippet}\n\n"
+        # Add organic search results (optimized for speed)
+        results_text += "SEARCH RESULTS:\n"
+        for i, result in enumerate(search_results_output.results[:3], 1):  # Limit to top 3 for speed
+            results_text += f"{i}. {result.title[:80]}\n"  # Truncate titles
+            results_text += f"   {result.snippet[:120]}\n\n"  # Truncate snippets, skip URLs
 
         return results_text
     
@@ -717,11 +691,12 @@ Return your response in this exact JSON format:
             
             scraped_content = self.call_brightdata_api(root_url)
             
-            # Step 6: Summary Generation with Enhanced Data Sources
-            content = scraped_content.html_content[:2000] + "..." if len(scraped_content.html_content) > 2000 else scraped_content.html_content
+            # Step 6: Summary Generation with Enhanced Data Sources (Optimized)
+            # Truncate content more aggressively for faster processing
+            content = scraped_content.html_content[:1500] + "..." if len(scraped_content.html_content) > 1500 else scraped_content.html_content
 
-            # Include search results for enhanced company name and location extraction
-            search_results_text = self.format_search_results_for_prompt(search_results)
+            # Include search results for enhanced company name and location extraction (limited)
+            search_results_text = self.format_search_results_for_prompt(search_results)[:1000]  # Limit search results length
 
             summary_result = self.summary_chain({
                 'scraped_content': content,
