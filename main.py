@@ -17,7 +17,6 @@ from contextlib import asynccontextmanager
 import pandas as pd
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, WebSocket, WebSocketDisconnect, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, EmailStr
@@ -224,10 +223,11 @@ async def send_chat_message(session_id: str, content: str, metadata: Optional[Di
             
     return message
 
-#FIXED: Enhanced clean_email_dataframe to optionally skip BigQuery duplicate checking
+# FIXED PROCESSING FUNCTIONS - Addresses the 3 critical issues
+
 def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
     """
-    Enhanced email cleaning with optional BigQuery duplicate checking
+    Enhanced email cleaning from pandas DataFrame with EMAIL-BASED duplicate checking (FIXED)
     """
     stats = {
         "total_rows": int(len(df)),
@@ -292,17 +292,18 @@ def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] 
         else:
             duplicates += 1
     
-    # Optional BigQuery duplicate checking
+    # FIXED: Check BigQuery for EXACT EMAIL matches (not domain matches)
     final_emails = unique_emails
     bigquery_duplicates = 0
     
     if bq_client and unique_emails:
         try:
+            # Use EMAIL-based checking, not domain-based
             existing_emails = bq_client.check_multiple_emails_exist(unique_emails, max_age_hours=24)
             
             new_emails = []
             for email in unique_emails:
-                if not existing_emails.get(email, False):
+                if not existing_emails.get(email, False):  # Check exact email
                     new_emails.append(email)
                 else:
                     bigquery_duplicates += 1
@@ -487,17 +488,17 @@ All results have been saved to the database. You can now submit more emails or u
         except Exception as send_error:
             logger.error(f"Failed to send error message via WebSocket: {send_error}")
 
-# FIXED: Proper Batch Lifecycle Management
+
+# FIXED: Working BigQuery Queue Processor
 async def process_massive_batch_background_fixed(batch_id: str, bq_client: BigQueryClient):
-    """FIXED: Proper batch lifecycle: pending -> processing -> completed"""
-    logger.info(f"FIXED: Starting batch processing for {batch_id}")
+    """FIXED: Actually working queue processor"""
+    logger.info(f"FIXED: Starting queue processing for batch {batch_id}")
     
     try:
         analyzer = get_domain_analyzer()
         
-        # Step 1: Move batch from "pending" to "processing"
+        # Update batch status to processing
         bq_client.update_batch_progress(batch_id=batch_id, status="processing")
-        logger.info(f"Batch {batch_id} status updated to PROCESSING")
         
         # Get batch info
         batch_info = bq_client.get_batch_status(batch_id)
@@ -505,134 +506,118 @@ async def process_massive_batch_background_fixed(batch_id: str, bq_client: BigQu
             logger.error(f"Batch {batch_id} not found")
             return
         
-        total_emails_expected = batch_info['total_emails']
-        logger.info(f"Batch {batch_id} expects to process {total_emails_expected} emails")
+        total_emails = batch_info['total_emails']
+        processed = 0
+        successful = 0
+        failed = 0
+        duplicates = 0
         
-        # Step 2: Process all queue items until none remain
-        batch_stats = {
-            'processed': 0,
-            'successful': 0, 
-            'failed': 0,
-            'duplicates': 0
-        }
+        logger.info(f"Processing batch {batch_id} with {total_emails} emails")
         
-        # Continue processing until no more queue items exist for this batch
-        max_empty_polls = 5
-        empty_polls = 0
+        # Continuous processing loop
+        max_retries_without_items = 5
+        retries = 0
         
-        while empty_polls < max_empty_polls:
-            # Get ALL pending items for this specific batch
-            all_pending = bq_client.get_pending_queue_items(limit=100, priority_order=True)
-            batch_pending = [item for item in all_pending if item['batch_id'] == batch_id]
-            
-            if not batch_pending:
-                empty_polls += 1
-                logger.info(f"No pending items for batch {batch_id}, poll {empty_polls}/{max_empty_polls}")
-                await asyncio.sleep(3)
-                continue
-            
-            # Reset empty poll counter when we find items
-            empty_polls = 0
-            logger.info(f"Processing {len(batch_pending)} queue items for batch {batch_id}")
-            
-            # Process each queue item
-            for item in batch_pending:
-                queue_id = item['queue_id']
-                email = item['email']
+        while retries < max_retries_without_items:
+            try:
+                # Get pending queue items
+                queue_items = bq_client.get_pending_queue_items(limit=10, priority_order=True)
                 
-                try:
-                    logger.info(f"Processing queue item {queue_id}: {email}")
-                    
-                    # Mark item as processing
-                    bq_client.update_queue_item_status(queue_id, "processing")
-                    
-                    # Check for duplicates
-                    existing_emails = bq_client.check_multiple_emails_exist([email], max_age_hours=24)
-                    
-                    if existing_emails.get(email, False):
-                        # Duplicate found - mark as completed but count as duplicate
-                        logger.info(f"Email {email} is duplicate - marking as completed")
-                        bq_client.update_queue_item_status(queue_id, "completed")
-                        batch_stats['duplicates'] += 1
-                    else:
-                        # Process new email
-                        logger.info(f"Processing new email: {email}")
-                        result_df = await asyncio.get_event_loop().run_in_executor(
-                            None, analyzer.analyze_email_domain, email
-                        )
+                # Filter for this specific batch
+                batch_items = [item for item in queue_items if item['batch_id'] == batch_id]
+                
+                if not batch_items:
+                    retries += 1
+                    logger.info(f"No pending items for batch {batch_id}, retry {retries}/{max_retries_without_items}")
+                    await asyncio.sleep(5)
+                    continue
+                
+                retries = 0  # Reset retry counter
+                
+                # Process each item
+                for item in batch_items:
+                    try:
+                        queue_id = item['queue_id']
+                        email = item['email']
                         
-                        if not result_df.empty:
-                            scraping_status = result_df.iloc[0]['scraping_status']
+                        logger.info(f"Processing queue item {queue_id}: {email}")
+                        
+                        # Mark as processing
+                        bq_client.update_queue_item_status(queue_id, "processing")
+                        
+                        # FIXED: Check if EMAIL already processed (not domain)
+                        existing_emails = bq_client.check_multiple_emails_exist([email], max_age_hours=24)
+                        
+                        if existing_emails.get(email, False):
+                            logger.info(f"Email {email} already processed, marking as duplicate")
+                            bq_client.update_queue_item_status(queue_id, "completed")
+                            duplicates += 1
+                        else:
+                            # Perform actual domain analysis
+                            result_df = await asyncio.get_event_loop().run_in_executor(
+                                None, analyzer.analyze_email_domain, email
+                            )
                             
-                            if scraping_status in ['success', 'success_text', 'success_fallback']:
-                                # Successful processing
+                            if not result_df.empty and result_df.iloc[0]['scraping_status'] in ['success', 'success_text', 'success_fallback']:
+                                # Insert successful result
                                 insert_success = bq_client.insert_dataframe(result_df)
+                                
                                 if insert_success:
                                     bq_client.update_queue_item_status(queue_id, "completed")
-                                    batch_stats['successful'] += 1
+                                    successful += 1
                                     logger.info(f"Successfully processed {email}")
                                 else:
                                     bq_client.update_queue_item_status(queue_id, "failed", "Failed to insert result")
-                                    batch_stats['failed'] += 1
+                                    failed += 1
                             else:
-                                # Processing completed but scraping failed
-                                bq_client.insert_dataframe(result_df)  # Still save the result
-                                bq_client.update_queue_item_status(queue_id, "completed")
-                                batch_stats['failed'] += 1
-                                logger.info(f"Processed {email} but scraping failed: {scraping_status}")
-                        else:
-                            # Analysis completely failed
-                            bq_client.update_queue_item_status(queue_id, "failed", "Analysis returned empty result")
-                            batch_stats['failed'] += 1
-                    
-                    batch_stats['processed'] += 1
-                    
-                    # Update batch progress every 5 items
-                    if batch_stats['processed'] % 5 == 0:
-                        bq_client.update_batch_progress(
-                            batch_id=batch_id,
-                            processed=batch_stats['processed'],
-                            successful=batch_stats['successful'],
-                            failed=batch_stats['failed'],
-                            duplicates=batch_stats['duplicates']
-                        )
+                                bq_client.update_queue_item_status(queue_id, "failed", "Analysis failed")
+                                failed += 1
                         
-                        progress_pct = (batch_stats['processed'] / max(total_emails_expected, 1)) * 100
-                        logger.info(f"Batch {batch_id} progress: {batch_stats['processed']} items processed ({progress_pct:.1f}%)")
+                        processed += 1
+                        
+                        # Update progress every 10 items
+                        if processed % 10 == 0:
+                            bq_client.update_batch_progress(
+                                batch_id=batch_id,
+                                processed=processed,
+                                successful=successful,
+                                failed=failed,
+                                duplicates=duplicates
+                            )
+                            
+                            progress_pct = (processed / total_emails * 100) if total_emails > 0 else 0
+                            logger.info(f"Batch {batch_id} progress: {processed}/{total_emails} ({progress_pct:.1f}%)")
+                        
+                    except Exception as item_error:
+                        logger.error(f"Error processing queue item: {str(item_error)}")
+                        bq_client.update_queue_item_status(item['queue_id'], "failed", str(item_error))
+                        failed += 1
+                        processed += 1
                 
-                except Exception as item_error:
-                    logger.error(f"Error processing queue item {queue_id}: {str(item_error)}")
-                    bq_client.update_queue_item_status(queue_id, "failed", str(item_error))
-                    batch_stats['failed'] += 1
-                    batch_stats['processed'] += 1
-            
-            # Small delay between queue polling cycles
-            await asyncio.sleep(2)
+                # Small delay between batches
+                await asyncio.sleep(2)
+                
+            except Exception as loop_error:
+                logger.error(f"Error in processing loop: {str(loop_error)}")
+                await asyncio.sleep(10)
         
-        # Step 3: All queue items processed - move to completed
-        logger.info(f"No more queue items for batch {batch_id}. Processing complete.")
-        
-        # Final batch status update
-        final_status = "completed" if batch_stats['failed'] == 0 else "completed_with_errors"
-        
+        # Final status update
+        final_status = "completed" if failed == 0 else "completed_with_errors"
         bq_client.update_batch_progress(
             batch_id=batch_id,
-            processed=batch_stats['processed'],
-            successful=batch_stats['successful'],
-            failed=batch_stats['failed'],
-            duplicates=batch_stats['duplicates'],
+            processed=processed,
+            successful=successful,
+            failed=failed,
+            duplicates=duplicates,
             status=final_status
         )
         
-        logger.info(f"Batch {batch_id} COMPLETED. Final stats: {batch_stats}")
-        logger.info(f"Status: {final_status}")
+        logger.info(f"Batch {batch_id} processing completed: {processed} total, {successful} successful, {failed} failed, {duplicates} duplicates")
         
     except Exception as e:
-        logger.error(f"CRITICAL ERROR processing batch {batch_id}: {str(e)}")
+        logger.error(f"CRITICAL ERROR in massive batch processing: {str(e)}")
         import traceback
         logger.error(f"Full traceback: {traceback.format_exc()}")
-        
-        # Mark batch as failed
         bq_client.update_batch_progress(batch_id=batch_id, status="failed")
 
 
@@ -727,8 +712,6 @@ app = FastAPI(
 )
 
 # Add CORS middleware
-app.add_middleware(GZipMiddleware, minimum_size=1000)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -895,7 +878,8 @@ async def batch_analyze_emails(
         raise HTTPException(status_code=500, detail=f"Batch analysis failed: {str(e)}")
 
 
-# FIXED: Enhanced batch creation to ensure queue items are created properly
+# MASSIVE BATCH PROCESSING ENDPOINTS - FIXED
+
 @app.post("/batch/upload-massive-csv", response_model=BatchStatus)
 async def upload_massive_csv(
     file: UploadFile = File(...),
@@ -903,7 +887,9 @@ async def upload_massive_csv(
     priority: int = Form(5),
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
-    """Upload massive CSV files with FIXED queue processing"""
+    """
+    Upload massive CSV files with FIXED queue processing
+    """
     logger.info(f"Massive CSV upload request received for session: {session_id}, file: {file.filename}")
     try:
         # Generate unique batch ID
@@ -917,29 +903,27 @@ async def upload_massive_csv(
         contents = await file.read()
         df = pd.read_csv(io.BytesIO(contents))
         
-        # Clean emails - but don't filter duplicates yet, let the processor handle them
-        valid_emails, cleaning_stats = clean_email_dataframe(df, None)  # Pass None to skip BigQuery duplicate check
+        # FIXED: Enhanced email cleaning with EMAIL-based duplicate checking
+        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
         
         if not valid_emails:
             raise HTTPException(
                 status_code=400, 
-                detail=f"No valid email addresses found. Processed {cleaning_stats['total_rows']} rows"
+                detail=f"No valid email addresses found. Processed {cleaning_stats['total_rows']} rows from column '{cleaning_stats['email_column']}'"
             )
         
-        logger.info(f"Creating batch {batch_id} with {len(valid_emails)} emails")
-        
-        # Step 1: Create batch record with "pending" status
-        batch_success = bq_client.create_batch_record(
+        # Create batch record in BigQuery
+        success = bq_client.create_batch_record(
             batch_id=batch_id,
             total_emails=len(valid_emails),
             user_session_id=session_id,
             filename=file.filename
         )
         
-        if not batch_success:
+        if not success:
             raise HTTPException(status_code=500, detail="Failed to create batch record")
         
-        # Step 2: Add ALL emails to processing queue (let processor handle duplicates)
+        # Add all emails to processing queue
         queue_success = bq_client.add_emails_to_queue(
             emails=valid_emails,
             batch_id=batch_id,
@@ -949,13 +933,15 @@ async def upload_massive_csv(
         if not queue_success:
             raise HTTPException(status_code=500, detail="Failed to add emails to processing queue")
         
-        logger.info(f"Added {len(valid_emails)} emails to queue for batch {batch_id}")
+        # Update batch status to processing
+        bq_client.update_batch_progress(batch_id=batch_id, status="processing")
         
-        # Step 3: Start background processor
+        # Start FIXED background processing
         asyncio.create_task(process_massive_batch_background_fixed(batch_id, bq_client))
-        logger.info(f"Started background processor for batch {batch_id}")
         
-        # Return batch status (should be "processing" soon)
+        logger.info(f"Successfully created massive batch {batch_id} with {len(valid_emails)} emails")
+        
+        # Return immediate batch status
         batch_status = bq_client.get_batch_status(batch_id)
         if batch_status:
             return BatchStatus(**batch_status)
