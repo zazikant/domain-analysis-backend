@@ -312,11 +312,31 @@ INDUSTRIAL SECTOR OPTIONS:
 - Aerospace, Warehouse
 - Use "Can't Say" if no semantic match
 
-3. Determine the COMPANY TYPE based on their business activities:
-- Developer: Companies that develop, create, or build projects (real estate developers, software developers, etc.)
-- Contractor: Companies that execute work for others (construction contractors, service contractors, etc.)
-- Consultant: Companies that provide advice, supervision, reporting, or consulting services
-- Use "Can't Say" if unclear or doesn't fit these categories
+3. Determine the COMPANY TYPE by analyzing their PRIMARY business activities in construction/civil context:
+
+**Developer**: Companies that develop, create, or build physical projects:
+- Real estate developers (residential, commercial projects)
+- Property developers, land developers
+- Infrastructure project developers
+
+**Contractor**: Companies that execute construction/civil work for others:
+- General contractors, building contractors
+- Civil contractors (roads, bridges, utilities)
+- Specialized contractors (electrical, plumbing, etc.)
+- Construction service providers
+
+**Consultant**: Companies providing professional advice/services in construction/civil:
+- Engineering consultants, design consultants
+- Project management consultants
+- Construction advisory, supervision services
+- Technical consulting firms
+
+**IMPORTANT**: For non-construction businesses use "Can't Say":
+- Hospitals, schools, banks → "Can't Say"
+- Retail, manufacturing, IT companies → "Can't Say"
+- Government agencies → "Can't Say"
+
+CAREFULLY read the scraped content to understand if they're actually involved in construction/civil work before classifying.
 
 4. COMPANY NAME EXTRACTION:
 - FIRST: Extract from search result TITLES (e.g., "GEM Engserv | Construction..." → "GEM Engserv")
@@ -324,9 +344,22 @@ INDUSTRIAL SECTOR OPTIONS:
 - Look for "Pvt Ltd", "Inc", "Corp", "LLC" variations
 - Return the clearest business name found
 
-5. LOCATION EXTRACTION:
-- Look for addresses, contact info, "Based in", "Located in"
-- Return city/country format (e.g., "Mumbai, India")
+5. LOCATION EXTRACTION (Enhanced Address Parsing):
+**THOROUGHLY scan the scraped content for:**
+- Complete business addresses with city names
+- Registered office addresses (look for "Registered Office:", "Regd. Office:", "Corporate Office:")
+- Contact addresses in footer/contact sections
+- Address formats: "123 Street, City, State, Country" or "City - Pincode, State"
+- Location indicators: "Based in", "Located in", "Headquartered in", "Office at"
+
+**EXTRACTION RULES:**
+- ALWAYS extract the CITY name from full addresses
+- Look for patterns like: "Address: [Street], [CITY], [State/Country]"
+- Parse Indian addresses: "City - 400001, Maharashtra, India" → "City, India"
+- International addresses: "123 Main St, London, UK" → "London, UK"
+- If multiple addresses found, prioritize "Head Office" or "Corporate Office"
+
+**Return format**: "City, Country" (e.g., "Mumbai, India", "London, UK")
 
 ANALYSIS RULES:
 - Prioritize search titles for company names
