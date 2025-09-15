@@ -638,11 +638,10 @@ class BigQueryClient:
             from datetime import datetime
             
             # Build update fields based on status
-            updates = ["status = @status", "last_updated = @last_updated"]
+            updates = ["status = @status"]
             query_params = [
                 bigquery.ScalarQueryParameter("queue_id", "STRING", queue_id),
-                bigquery.ScalarQueryParameter("status", "STRING", status),
-                bigquery.ScalarQueryParameter("last_updated", "TIMESTAMP", datetime.utcnow())
+                bigquery.ScalarQueryParameter("status", "STRING", status)
             ]
             
             if status == "processing":
@@ -824,7 +823,7 @@ if __name__ == "__main__":
         'extracted_domain': ['example.com'],
         'selected_url': ['https://example.com'],
         'scraping_status': ['success'],
-        'website_summary': ['Example company website'],
+        'company_summary': ['Example company website'],
         'confidence_score': [0.95],
         'selection_reasoning': ['Official company website'],
         'completed_timestamp': [datetime.now()],
@@ -832,7 +831,10 @@ if __name__ == "__main__":
         'created_at': [datetime.utcnow()],
         'real_estate': ['Commercial'],
         'infrastructure': ["Can't Say"],
-        'industrial': ["Can't Say"]
+        'industrial': ["Can't Say"],
+        'company_type': ['Developer'],
+        'company_name': ['Example Company Inc'],
+        'base_location': ['New York, USA']
     }
     
     df = pd.DataFrame(sample_data)
