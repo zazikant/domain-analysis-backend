@@ -71,7 +71,7 @@ class FinalSummaryOutput(BaseModel):
 # Custom Gemini LLM Wrapper
 class GeminiLLM(LLM):
     model_name: str = "gemini-2.5-flash"
-    temperature: float = 0.1
+    temperature: float = 0.0
 
     @property
     def _llm_type(self) -> str:
@@ -258,106 +258,58 @@ Return your response in this exact JSON format:
         summary_prompt = PromptTemplate(
             input_variables=["scraped_content", "search_results", "url", "domain"],
             template="""
-You are tasked with creating a concise, one-line summary of a website and classifying it into business sectors and company information based on semantic similarity.
+Analyze this company website and extract business information. Be thorough and consistent.
 
-Website URL: {url}
+URL: {url}
 Domain: {domain}
 
-SEARCH RESULTS DATA (from Google via Serper API):
+COMPANY DATA FROM WEB:
 {search_results}
 
-SCRAPED WEBSITE CONTENT:
+WEBSITE CONTENT:
 {scraped_content}
 
-TASKS:
-1. Create a single, clear sentence that describes what this company/website does
-2. Classify the company into these THREE sectors based on semantic similarity:
+EXTRACT THE FOLLOWING:
 
-REAL ESTATE SECTOR OPTIONS:
-- Commercial, Data Center, Educational, Residential, Hospitality
-- Use "Can't Say" if no semantic match
+1. BUSINESS SUMMARY: One clear sentence about what this company does.
 
-INFRASTRUCTURE SECTOR OPTIONS:
-- Airport, Bridges, Hydro, Highway, Marine, Power, Railways
-- Use "Can't Say" if no semantic match
+2. SECTOR CLASSIFICATIONS (multiple allowed per category):
 
-INDUSTRIAL SECTOR OPTIONS:
-- Aerospace, Warehouse
-- Use "Can't Say" if no semantic match
+   REAL ESTATE: Commercial, Residential, Data Center, Educational, Hospitality
+   INFRASTRUCTURE: Airport, Bridges, Hydro, Highway, Marine, Power, Railways
+   INDUSTRIAL: Aerospace, Warehouse
 
-3. Determine the COMPANY TYPE by analyzing their PRIMARY business activities in construction/civil context:
+   Rules:
+   - List ALL relevant sectors per category (e.g., "Commercial, Residential")
+   - Use "Can't Say" only if absolutely no match
+   - Look for keywords like "construction", "development", "projects"
 
-**Developer**: Companies that develop, create, or build physical projects:
-- Real estate developers (residential, commercial projects)
-- Property developers, land developers
-- Infrastructure project developers
+3. COMPANY TYPE (construction/civil focus):
+   Developer: Develops/builds real estate, infrastructure projects
+   Contractor: Executes construction work, builds for others
+   Consultant: Engineering/design consulting, advisory services
+   Can't Say: Non-construction businesses
 
-**Contractor**: Companies that execute construction/civil work for others:
-- General contractors, building contractors
-- Civil contractors (roads, bridges, utilities)
-- Specialized contractors (electrical, plumbing, etc.)
-- Construction service providers
+4. COMPANY NAME: Extract from website title, headers, or search results
 
-**Consultant**: Companies providing professional advice/services in construction/civil:
-- Engineering consultants, design consultants
-- Project management consultants
-- Construction advisory, supervision services
-- Technical consulting firms
+5. LOCATION: Find company address/headquarters in website content
+   Format as "City, Country" (e.g., "Mumbai, India")
+   Look for: "Head Office", "Corporate Office", "Registered Office", contact pages
 
-**IMPORTANT**: For non-construction businesses use "Can't Say":
-- Hospitals, schools, banks → "Can't Say"
-- Retail, manufacturing, IT companies → "Can't Say"
-- Government agencies → "Can't Say"
+PRIORITY: Focus on SCRAPED WEBSITE CONTENT over search results for accuracy.
 
-CAREFULLY read the scraped content to understand if they're actually involved in construction/civil work before classifying.
-
-4. COMPANY NAME EXTRACTION:
-- FIRST: Extract from search result TITLES (e.g., "GEM Engserv | Construction..." → "GEM Engserv")
-- SECOND: Check website headers/titles for business names
-- Look for "Pvt Ltd", "Inc", "Corp", "LLC" variations
-- Return the clearest business name found
-
-5. LOCATION EXTRACTION (Prioritize Scraped Content):
-**FIRST: Scan the SCRAPED WEBSITE CONTENT thoroughly for addresses:**
-- Complete business addresses with city names
-- Registered office addresses: "Registered Office:", "Regd. Office:", "Corporate Office:"
-- Contact addresses in footer/contact sections
-- Address formats: "123 Street, City, State, Country" or "City - Pincode, State"
-- Location indicators: "Based in", "Located in", "Headquartered in", "Office at"
-
-**SECOND: If no address found in scraped content, check search results**
-
-**EXTRACTION RULES:**
-- ALWAYS prioritize addresses from SCRAPED CONTENT over search results
-- Extract CITY name from full addresses in scraped content
-- Look for patterns: "Address: [Street], [CITY], [State/Country]"
-- Parse Indian addresses: "Gurgaon - 122001, Haryana, India" → "Gurgaon, India"
-- International: "123 Main St, London, UK" → "London, UK"
-- If multiple addresses in scraped content, prioritize "Head Office" or "Corporate Office"
-
-**Return format**: "City, Country" (e.g., "Gurgaon, India", "London, UK")
-
-ANALYSIS RULES:
-- PRIORITIZE SCRAPED WEBSITE CONTENT for location extraction over search results
-- Prioritize search titles for company names
-- READ the scraped content carefully before making decisions
-- Use "Can't Say" when uncertain
-- Be concise and accurate
-
-**IMPORTANT**: The scraped website content contains the most accurate information. Always analyze it thoroughly before using search result data.
-
-Return your response in this exact JSON format:
+Return JSON format:
 {{
-    "summary": "One clear sentence describing what this company/website does",
+    "summary": "One sentence about company business",
     "url": "{url}",
     "domain": "{domain}",
     "timestamp": "{timestamp}",
-    "real_estate": "your classification or Can't Say",
-    "infrastructure": "your classification or Can't Say",
-    "industrial": "your classification or Can't Say",
-    "company_type": "Developer or Contractor or Consultant or Can't Say",
-    "company_name": "Actual company name or Can't Say",
-    "base_location": "Head office location or Can't Say"
+    "real_estate": "Commercial, Residential OR Can't Say",
+    "infrastructure": "Power, Hydro OR Can't Say",
+    "industrial": "Aerospace OR Can't Say",
+    "company_type": "Developer OR Contractor OR Consultant OR Can't Say",
+    "company_name": "Company Name OR Can't Say",
+    "base_location": "City, Country OR Can't Say"
 }}
 """
         )
