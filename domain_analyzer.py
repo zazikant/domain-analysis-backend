@@ -12,6 +12,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 from urllib.parse import urlparse
 import pandas as pd
+from bs4 import BeautifulSoup
 
 from langchain.chains import SequentialChain, LLMChain
 from langchain.prompts import PromptTemplate
@@ -292,11 +293,37 @@ EXTRACT THE FOLLOWING:
 
 4. COMPANY NAME: Extract from website title, headers, or search results
 
-5. LOCATION: Find company address/headquarters in website content
-   Format as "City, Country" (e.g., "Mumbai, India")
-   Look for: "Head Office", "Corporate Office", "Registered Office", contact pages
+5. LOCATION EXTRACTION (Check these sections in order):
 
-PRIORITY: Focus on SCRAPED WEBSITE CONTENT over search results for accuracy.
+   STEP 1 - FOOTER SECTIONS: Search for addresses in footer/bottom areas
+   - Look for: "Head Office:", "Corporate Office:", "Registered Office:"
+   - Address patterns: "Mumbai - 400001, Maharashtra, India"
+   - Contact footers: "123 Street Name, City, Country"
+   - Copyright notices: "© 2025 Company, Mumbai, India"
+
+   STEP 2 - HEADER/NAVIGATION: Check top sections
+   - Company taglines: "Mumbai-based construction leader"
+   - Navigation menus: "Our Offices" → city listings
+   - Contact headers with location info
+
+   STEP 3 - PHONE CODE HINTS: Indian phone patterns
+   - +91-22 = Mumbai, +91-11 = Delhi, +91-80 = Bangalore
+   - +91-40 = Hyderabad, +91-44 = Chennai, +91-79 = Ahmedabad
+
+   STEP 4 - CONTACT/ABOUT PAGES: Look for office addresses
+   - "Headquartered in", "Based in", "Located in"
+   - Multiple office listings with cities
+
+   FORMAT: Return as "City, Country" (e.g., "Mumbai, India", "London, UK")
+   If multiple offices, prioritize HEAD/CORPORATE office location.
+
+PRIORITY: Search FOOTER FIRST, then HEADER, then rest of content for accuracy.
+
+EXAMPLE LOCATION EXTRACTIONS:
+- "Head Office: Shapoorji Pallonji Tower, Mumbai 400001" → "Mumbai, India"
+- "© 2025 Larsen & Toubro Limited, Chennai" → "Chennai, India"
+- "Corporate Office: Gurgaon - 122001, Haryana" → "Gurgaon, India"
+- Phone: "+91-22-6615-8888" → "Mumbai, India" (based on +91-22 code)
 
 Return JSON format:
 {{
@@ -616,7 +643,122 @@ Return JSON format:
             results_text += f"   {result.snippet[:120]}\n\n"  # Truncate snippets
 
         return results_text
-    
+
+    def extract_priority_content(self, html_content: str) -> str:
+        """
+        Extract and prioritize content from HTML for comprehensive business analysis
+        Helps Gemini get better results for ALL fields: location, company name, sectors, etc.
+        """
+        try:
+            soup = BeautifulSoup(html_content, 'html.parser')
+
+            # Remove script, style, and other non-content elements
+            for element in soup(['script', 'style', 'meta', 'link', 'noscript']):
+                element.decompose()
+
+            priority_content = []
+
+            # PRIORITY 1: Page Title and Main Headings (company name, business description)
+            title = soup.find('title')
+            if title:
+                priority_content.append(f"=== PAGE TITLE ===\n{title.get_text(strip=True)}")
+
+            # Main headings (often contain company name and business focus)
+            headings = soup.find_all(['h1', 'h2', 'h3'], limit=5)
+            heading_texts = [h.get_text(strip=True) for h in headings if len(h.get_text(strip=True)) > 10]
+            if heading_texts:
+                priority_content.append("=== MAIN HEADINGS ===\n" + "\n".join(heading_texts))
+
+            # PRIORITY 2: Footer sections (best for addresses, company info)
+            footer_selectors = ['footer', '.footer', '#footer', '.contact-info', '.contact-footer',
+                              '.site-footer', '.page-footer', '.footer-content', '.contact-details']
+            footer_content = []
+            for selector in footer_selectors:
+                elements = soup.select(selector)
+                for elem in elements:
+                    text = elem.get_text(strip=True)
+                    if len(text) > 20:  # Skip very short elements
+                        footer_content.append(text)
+
+            if footer_content:
+                priority_content.append("=== FOOTER SECTIONS ===\n" + "\n".join(footer_content[:3]))
+
+            # PRIORITY 3: About/Services sections (business activities, sectors)
+            about_selectors = ['.about', '#about', '.services', '#services', '.what-we-do',
+                             '.business', '.company-profile', '.overview', '.industries',
+                             '.sectors', '.capabilities', '.expertise']
+            about_content = []
+            for selector in about_selectors:
+                elements = soup.select(selector)
+                for elem in elements:
+                    text = elem.get_text(strip=True)
+                    if len(text) > 50:  # Only substantial content
+                        about_content.append(text)
+
+            if about_content:
+                priority_content.append("=== BUSINESS/ABOUT SECTIONS ===\n" + "\n".join(about_content[:3]))
+
+            # PRIORITY 4: Header/Navigation (company taglines, business focus)
+            header_selectors = ['header', '.header', '#header', 'nav', '.navbar', '.navigation',
+                              '.hero', '.banner', '.intro', '.tagline', '.company-intro']
+            header_content = []
+            for selector in header_selectors:
+                elements = soup.select(selector)
+                for elem in elements:
+                    text = elem.get_text(strip=True)
+                    if len(text) > 30 and len(text) < 500:  # Skip very short/long navigation
+                        header_content.append(text)
+
+            if header_content:
+                priority_content.append("=== HEADER/HERO SECTIONS ===\n" + "\n".join(header_content[:2]))
+
+            # PRIORITY 5: Project/Portfolio sections (sector evidence)
+            project_selectors = ['.projects', '#projects', '.portfolio', '.work', '.case-studies',
+                               '.developments', '.construction', '.real-estate', '.infrastructure']
+            project_content = []
+            for selector in project_selectors:
+                elements = soup.select(selector)
+                for elem in elements:
+                    text = elem.get_text(strip=True)
+                    if len(text) > 50:
+                        project_content.append(text)
+
+            if project_content:
+                priority_content.append("=== PROJECTS/PORTFOLIO SECTIONS ===\n" + "\n".join(project_content[:2]))
+
+            # PRIORITY 6: Copyright and legal text (location hints)
+            copyright_text = soup.find_all(text=re.compile(r'copyright|©|®|pvt|ltd|limited|inc|corp', re.IGNORECASE))
+            copyright_content = [text.strip() for text in copyright_text if len(text.strip()) > 10][:3]
+            if copyright_content:
+                priority_content.append("=== COPYRIGHT/LEGAL INFO ===\n" + "\n".join(copyright_content))
+
+            # Combine all priority content
+            extracted_content = "\n\n".join(priority_content)
+
+            # Add broader page content for context (more generous now)
+            if extracted_content:
+                # Clean general text from entire page
+                general_text = soup.get_text(separator=' ')
+                general_text = re.sub(r'\s+', ' ', general_text).strip()
+
+                # More generous content limit since we have structured sections above
+                if len(general_text) > 2000:
+                    general_text = general_text[:2000] + "..."
+                extracted_content += f"\n\n=== ADDITIONAL PAGE CONTENT ===\n{general_text}"
+            else:
+                # Fallback: clean general content if no structured sections found
+                general_text = soup.get_text(separator=' ')
+                general_text = re.sub(r'\s+', ' ', general_text).strip()
+                extracted_content = general_text[:4000] + "..." if len(general_text) > 4000 else general_text
+
+            return extracted_content
+
+        except Exception as e:
+            # Fallback to original content if HTML parsing fails
+            clean_text = re.sub(r'<[^>]+>', '', html_content)  # Strip HTML tags
+            clean_text = re.sub(r'\s+', ' ', clean_text).strip()
+            return clean_text[:4000] + "..." if len(clean_text) > 4000 else clean_text
+
     def analyze_email_domain(self, email: str) -> pd.DataFrame:
         """
         Main function to analyze an email domain and return results as pandas DataFrame
@@ -666,12 +808,12 @@ Return JSON format:
             
             scraped_content = self.call_brightdata_api(root_url)
             
-            # Step 6: Summary Generation with Enhanced Data Sources (Optimized)
-            # Truncate content more aggressively for faster processing
-            content = scraped_content.html_content[:3000] + "..." if len(scraped_content.html_content) > 3000 else scraped_content.html_content
+            # Step 6: Enhanced Content Processing with Priority Section Extraction
+            # Use new method to extract and prioritize footer/header content for better location extraction
+            content = self.extract_priority_content(scraped_content.html_content)
 
             # Include search results for enhanced company name and location extraction (limited)
-            search_results_text = self.format_search_results_for_prompt(search_results)[:3000]  # Limit search results length
+            search_results_text = self.format_search_results_for_prompt(search_results)[:2000]  # Reduced for more focus
 
             summary_result = self.summary_chain({
                 'scraped_content': content,

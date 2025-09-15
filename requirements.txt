@@ -24,6 +24,7 @@ google-generativeai==0.3.2
 # HTTP requests and web scraping
 requests==2.31.0
 urllib3==2.1.0
+beautifulsoup4==4.12.2
 
 # Data validation and parsing
 pydantic==2.5.2
