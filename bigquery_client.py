@@ -280,12 +280,63 @@ class BigQueryClient:
             # Return all False on error
             return {email: False for email in emails}
 
+    def check_email_exists(self, email: str, max_age_hours: int = 87600) -> bool:
+        """
+        Check if a specific email address exists in the database
+
+        Args:
+            email: Email address to check
+            max_age_hours: Maximum age in hours for considering result fresh
+
+        Returns:
+            bool: True if email exists
+        """
+        result = self.check_multiple_emails_exist([email], max_age_hours)
+        return result.get(email, False)
+
+    def query_email_results(self, email: str, limit: int = 10) -> pd.DataFrame:
+        """
+        Query existing results for a specific email address
+
+        Args:
+            email: Email address to search for
+            limit: Maximum number of results to return
+
+        Returns:
+            pd.DataFrame: Existing analysis results for the email
+        """
+        try:
+            query = f"""
+            SELECT *
+            FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
+            WHERE original_email = @email
+            ORDER BY created_at DESC
+            LIMIT {limit}
+            """
+
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("email", "STRING", email)
+                ]
+            )
+
+            query_job = self.client.query(query, job_config=job_config)
+            results = query_job.result()
+
+            df = results.to_dataframe()
+            logger.info(f"Retrieved {len(df)} existing results for email {email}")
+            return df
+
+        except Exception as e:
+            logger.error(f"Error querying email results: {str(e)}")
+            return pd.DataFrame()
+
     # MASSIVE BATCH PROCESSING METHODS - COMMENTED OUT
     # def _ensure_queue_tables_exist(self):
     #     """Create processing queue tables if they don't exist"""
     #     self._create_processing_queue_table()
     #     self._create_batch_tracking_table()
-    
+
     # MASSIVE BATCH PROCESSING METHODS - REMOVED TO SIMPLIFY DEPLOYMENT
     pass
 

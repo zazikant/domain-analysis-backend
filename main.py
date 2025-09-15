@@ -712,11 +712,11 @@ async def process_email_analysis(
     domain_output = analyzer.extract_domain_from_email(email)
     domain = domain_output.domain
     
-    # Check if we have any previous results (unless force refresh)
-    if not force_refresh and bq_client.check_domain_exists(domain, max_age_hours=525600):  # 10 years
-        logger.info(f"Using cached result for domain: {domain}")
-        
-        cached_df = bq_client.query_domain_results(domain, limit=1)
+    # Check if we have any previous results for this specific email (unless force refresh)
+    if not force_refresh and bq_client.check_email_exists(email, max_age_hours=525600):  # 10 years
+        logger.info(f"Using cached result for email: {email}")
+
+        cached_df = bq_client.query_email_results(email, limit=1)
         if not cached_df.empty:
             results = dataframe_to_analysis_result(cached_df, from_cache=True)
             return results[0]
@@ -1003,11 +1003,8 @@ async def send_chat_message_endpoint(
         if email_match:
             email = email_match.group().lower().strip()
             
-            # Check for duplicates
-            domain_output = analyzer.extract_domain_from_email(email)
-            domain = domain_output.domain
-            
-            if bq_client.check_domain_exists(domain, max_age_hours=24):
+            # Check for duplicates - check specific email, not domain
+            if bq_client.check_email_exists(email, max_age_hours=24):
                 response_content = f"Email {email} was already processed recently. Please share another email address."
                 await send_chat_message(request.session_id, response_content)
                 
@@ -1456,13 +1453,11 @@ async def process_csv_emails_background(
         
         for i, email in enumerate(emails):
             try:
-                # Check for duplicates
-                domain_output = analyzer.extract_domain_from_email(email)
-                domain = domain_output.domain
-                
-                if bq_client.check_domain_exists(domain, max_age_hours=24):
+                # Check for duplicates - check specific email, not domain
+                if bq_client.check_email_exists(email, max_age_hours=24):
                     duplicates += 1
                     processed += 1
+                    logger.info(f"Email {email} is duplicate - marking as completed")
                     continue
                 
                 # Process email
