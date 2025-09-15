@@ -637,7 +637,7 @@ Return JSON format:
 
         # Add organic search results (optimized for speed)
         results_text += "SEARCH RESULTS:\n"
-        for i, result in enumerate(search_results_output.results[:3], 1):  # Limit to top 3 for speed
+        for i, result in enumerate(search_results_output.results[:5], 1):  # Limit to top 5 for better options
             results_text += f"{i}. {result.title[:80]}\n"  # Truncate titles
             results_text += f"   URL: {result.url}\n"  # Keep URLs for URL selection
             results_text += f"   {result.snippet[:120]}\n\n"  # Truncate snippets
@@ -726,7 +726,23 @@ Return JSON format:
             if project_content:
                 priority_content.append("=== PROJECTS/PORTFOLIO SECTIONS ===\n" + "\n".join(project_content[:2]))
 
-            # PRIORITY 6: Copyright and legal text (location hints)
+            # PRIORITY 6: All paragraph content (detailed business descriptions, activities, locations)
+            # This gives Gemini access to ALL detailed content as you suggested
+            paragraphs = soup.find_all('p')
+            paragraph_texts = []
+            for p in paragraphs:
+                p_text = p.get_text(strip=True)
+                # Filter meaningful paragraphs (avoid navigation, buttons, etc.)
+                if len(p_text) > 30 and not p_text.lower().startswith(('click', 'read more', 'learn more', 'contact us')):
+                    paragraph_texts.append(p_text)
+
+            # Include substantial paragraphs that often contain detailed business info
+            if paragraph_texts:
+                # Take first 8 substantial paragraphs for comprehensive analysis
+                substantial_paragraphs = paragraph_texts[:8]
+                priority_content.append("=== DETAILED PARAGRAPH CONTENT ===\n" + "\n\n".join(substantial_paragraphs))
+
+            # PRIORITY 7: Copyright and legal text (location hints)
             copyright_text = soup.find_all(text=re.compile(r'copyright|©|®|pvt|ltd|limited|inc|corp', re.IGNORECASE))
             copyright_content = [text.strip() for text in copyright_text if len(text.strip()) > 10][:3]
             if copyright_content:
@@ -735,16 +751,16 @@ Return JSON format:
             # Combine all priority content
             extracted_content = "\n\n".join(priority_content)
 
-            # Add broader page content for context (more generous now)
+            # Add broader page content for final context (less needed now with comprehensive paragraphs)
             if extracted_content:
                 # Clean general text from entire page
                 general_text = soup.get_text(separator=' ')
                 general_text = re.sub(r'\s+', ' ', general_text).strip()
 
-                # More generous content limit since we have structured sections above
-                if len(general_text) > 2000:
-                    general_text = general_text[:2000] + "..."
-                extracted_content += f"\n\n=== ADDITIONAL PAGE CONTENT ===\n{general_text}"
+                # Smaller limit since we already have detailed paragraphs
+                if len(general_text) > 1000:
+                    general_text = general_text[:1000] + "..."
+                extracted_content += f"\n\n=== ADDITIONAL CONTEXT ===\n{general_text}"
             else:
                 # Fallback: clean general content if no structured sections found
                 general_text = soup.get_text(separator=' ')
