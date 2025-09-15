@@ -38,7 +38,7 @@ class BigQueryClient:
         # Ensure dataset and table exist
         self._ensure_dataset_exists()
         self._ensure_table_exists()
-        self._ensure_queue_tables_exist()
+        # self._ensure_queue_tables_exist()  # COMMENTED OUT - massive batch processing disabled
     
     def _ensure_dataset_exists(self):
         """Create dataset if it doesn't exist"""
@@ -280,13 +280,16 @@ class BigQueryClient:
             # Return all False on error
             return {email: False for email in emails}
 
-    def _ensure_queue_tables_exist(self):
-        """Create processing queue tables if they don't exist"""
-        self._create_processing_queue_table()
-        self._create_batch_tracking_table()
+    # MASSIVE BATCH PROCESSING METHODS - COMMENTED OUT
+    # def _ensure_queue_tables_exist(self):
+    #     """Create processing queue tables if they don't exist"""
+    #     self._create_processing_queue_table()
+    #     self._create_batch_tracking_table()
     
+    # MASSIVE BATCH PROCESSING METHODS - ALL COMMENTED OUT BELOW
+    """
     def _create_processing_queue_table(self):
-        """Create email processing queue table"""
+        \"\"\"Create email processing queue table\"\"\"
         queue_table_ref = self.dataset_ref.table("email_processing_queue")
         
         try:
@@ -753,7 +756,9 @@ class BigQueryClient:
         except Exception as e:
             logger.error(f"Error getting recent results: {str(e)}")
             return pd.DataFrame()
-    
+    """
+    # END OF MASSIVE BATCH PROCESSING METHODS COMMENT BLOCK
+
     def get_analysis_stats(self) -> dict:
         """
         Get basic statistics about the analysis results
