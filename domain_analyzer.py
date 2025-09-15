@@ -57,10 +57,14 @@ class FinalSummaryOutput(BaseModel):
     url: str = Field(description="URL of the summarized website")
     domain: str = Field(description="Domain of the website")
     timestamp: str = Field(description="When the analysis was completed")
-    # New sector classification fields
+    # Sector classification fields
     real_estate: str = Field(description="Real Estate sector classification")
     infrastructure: str = Field(description="Infrastructure sector classification")
     industrial: str = Field(description="Industrial sector classification")
+    # New company information fields
+    company_type: str = Field(description="Company type: Developer, Contractor, or Consultant")
+    company_name: str = Field(description="Company name extracted from content")
+    base_location: str = Field(description="Head office or base location of company")
 
 # New models for batch processing
 class BatchProcessingRequest(BaseModel):
@@ -190,7 +194,10 @@ class FinalSummaryOutputParser(BaseOutputParser):
                 timestamp=datetime.now().isoformat(),
                 real_estate="Can't Say",
                 infrastructure="Can't Say",
-                industrial="Can't Say"
+                industrial="Can't Say",
+                company_type="Can't Say",
+                company_name="Can't Say",
+                base_location="Can't Say"
             )
 
 
@@ -274,7 +281,7 @@ Return your response in this exact JSON format:
         summary_prompt = PromptTemplate(
             input_variables=["scraped_content", "url", "domain"],
             template="""
-You are tasked with creating a concise, one-line summary of a website and classifying it into business sectors based on semantic similarity.
+You are tasked with creating a concise, one-line summary of a website and classifying it into business sectors and company information based on semantic similarity.
 
 Website URL: {url}
 Domain: {domain}
@@ -296,8 +303,17 @@ INDUSTRIAL SECTOR OPTIONS:
 - Aerospace, Warehouse
 - Use "Can't Say" if no semantic match
 
+3. Determine the COMPANY TYPE based on their business activities:
+- Developer: Companies that develop, create, or build projects (real estate developers, software developers, etc.)
+- Contractor: Companies that execute work for others (construction contractors, service contractors, etc.)
+- Consultant: Companies that provide advice, supervision, reporting, or consulting services
+- Use "Can't Say" if unclear or doesn't fit these categories
+
+4. Extract the COMPANY NAME from the content (the actual business name, not domain)
+5. Identify the BASE LOCATION (head office, headquarters, or primary business location)
+
 CLASSIFICATION RULES:
-- Multiple selections allowed (comma-separated if multiple match)
+- Multiple selections allowed for sectors (comma-separated if multiple match)
 - Base decisions on semantic similarity to company's actual business
 - Use "Can't Say" when uncertain or no clear match
 - Consider the company's primary business activities
@@ -310,7 +326,10 @@ Return your response in this exact JSON format:
     "timestamp": "{timestamp}",
     "real_estate": "your classification or Can't Say",
     "infrastructure": "your classification or Can't Say", 
-    "industrial": "your classification or Can't Say"
+    "industrial": "your classification or Can't Say",
+    "company_type": "Developer or Contractor or Consultant or Can't Say",
+    "company_name": "Actual company name or Can't Say",
+    "base_location": "Head office location or Can't Say"
 }}
 """
         )
@@ -655,16 +674,20 @@ Return your response in this exact JSON format:
                 'extracted_domain': [domain],
                 'selected_url': [url_selection_output.selected_url],
                 'scraping_status': [scraped_content.scrape_status],
-                'website_summary': [final_summary.summary],
+                'company_summary': [final_summary.summary],
                 'confidence_score': [url_selection_output.confidence_score],
                 'selection_reasoning': [url_selection_output.reasoning],
                 'completed_timestamp': [final_summary.timestamp],
                 'processing_time_seconds': [processing_time],
                 'created_at': [datetime.utcnow().isoformat()],
-                # New sector classification columns
+                # Sector classification columns
                 'real_estate': [final_summary.real_estate],
                 'infrastructure': [final_summary.infrastructure],
-                'industrial': [final_summary.industrial]
+                'industrial': [final_summary.industrial],
+                # New company information columns
+                'company_type': [final_summary.company_type],
+                'company_name': [final_summary.company_name],
+                'base_location': [final_summary.base_location]
             })
             
             return df
@@ -678,16 +701,20 @@ Return your response in this exact JSON format:
                 'extracted_domain': ['error'],
                 'selected_url': [''],
                 'scraping_status': ['error'],
-                'website_summary': [f'Error: {str(e)}'],
+                'company_summary': [f'Error: {str(e)}'],
                 'confidence_score': [0.0],
                 'selection_reasoning': ['Processing failed'],
                 'completed_timestamp': [datetime.now().isoformat()],
                 'processing_time_seconds': [processing_time],
                 'created_at': [datetime.utcnow().isoformat()],
-                # New sector classification columns (error state)
+                # Sector classification columns (error state)
                 'real_estate': ["Can't Say"],
                 'infrastructure': ["Can't Say"],
-                'industrial': ["Can't Say"]
+                'industrial': ["Can't Say"],
+                # New company information columns (error state)
+                'company_type': ["Can't Say"],
+                'company_name': ["Can't Say"],
+                'base_location': ["Can't Say"]
             })
             
             return df

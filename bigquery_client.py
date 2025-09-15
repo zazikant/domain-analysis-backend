@@ -65,16 +65,20 @@ class BigQueryClient:
                 bigquery.SchemaField("extracted_domain", "STRING", mode="REQUIRED"),
                 bigquery.SchemaField("selected_url", "STRING", mode="NULLABLE"),
                 bigquery.SchemaField("scraping_status", "STRING", mode="REQUIRED"),
-                bigquery.SchemaField("website_summary", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("company_summary", "STRING", mode="NULLABLE"),
                 bigquery.SchemaField("confidence_score", "FLOAT64", mode="NULLABLE"),
                 bigquery.SchemaField("selection_reasoning", "STRING", mode="NULLABLE"),
                 bigquery.SchemaField("completed_timestamp", "TIMESTAMP", mode="NULLABLE"),
                 bigquery.SchemaField("processing_time_seconds", "FLOAT64", mode="NULLABLE"),
                 bigquery.SchemaField("created_at", "TIMESTAMP", mode="REQUIRED"),
-                # New sector classification columns
+                # Sector classification columns
                 bigquery.SchemaField("real_estate", "STRING", mode="NULLABLE"),
                 bigquery.SchemaField("infrastructure", "STRING", mode="NULLABLE"),
                 bigquery.SchemaField("industrial", "STRING", mode="NULLABLE"),
+                # New company information columns
+                bigquery.SchemaField("company_type", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("company_name", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("base_location", "STRING", mode="NULLABLE"),
             ]
             
             table = bigquery.Table(self.table_ref, schema=schema)
