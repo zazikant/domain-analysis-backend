@@ -33,6 +33,25 @@ domain_analyzer: Optional[DomainAnalyzer] = None
 bigquery_client: Optional[BigQueryClient] = None
 
 
+# Dependency injection functions for FastAPI
+def get_domain_analyzer() -> DomainAnalyzer:
+    if domain_analyzer is None:
+        raise HTTPException(
+            status_code=503, 
+            detail="Domain analyzer not initialized - check environment variables (SERPER_API_KEY, BRIGHTDATA_API_TOKEN, GOOGLE_API_KEY)"
+        )
+    return domain_analyzer
+
+
+def get_bigquery_client() -> BigQueryClient:
+    if bigquery_client is None:
+        raise HTTPException(
+            status_code=503, 
+            detail="BigQuery client not initialized - check environment variables (GCP_PROJECT_ID)"
+        )
+    return bigquery_client
+
+
 def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
     """
     Enhanced email cleaning from pandas DataFrame with comprehensive validation and BigQuery duplicate checking
@@ -372,12 +391,15 @@ async def get_batch_results(
         # Convert to analysis results
         results = []
         for _, row in df.iterrows():
+            # Handle both old and new column names for backward compatibility
+            company_summary = row.get('company_summary') or row.get('website_summary', '')
+            
             result = AnalysisResult(
                 original_email=row.get('original_email', ''),
                 extracted_domain=row.get('extracted_domain', ''),
                 selected_url=row.get('selected_url', ''),
                 scraping_status=row.get('scraping_status', ''),
-                website_summary=row.get('website_summary', ''),
+                company_summary=company_summary,
                 confidence_score=row.get('confidence_score', 0.0),
                 selection_reasoning=row.get('selection_reasoning', ''),
                 completed_timestamp=row.get('completed_timestamp', '').isoformat() if row.get('completed_timestamp') else None,
@@ -387,6 +409,9 @@ async def get_batch_results(
                 real_estate=row.get('real_estate', 'Can\'t Say'),
                 infrastructure=row.get('infrastructure', 'Can\'t Say'),
                 industrial=row.get('industrial', 'Can\'t Say'),
+                company_type=row.get('company_type', 'Can\'t Say'),
+                company_name=row.get('company_name', 'Can\'t Say'),
+                base_location=row.get('base_location', 'Can\'t Say'),
             )
             results.append(result)
         
@@ -597,25 +622,6 @@ class ChatSession:
 
 # Global session storage (in production, use Redis or similar)
 chat_sessions: Dict[str, ChatSession] = {}
-
-
-# Dependency to get clients
-def get_domain_analyzer() -> DomainAnalyzer:
-    if domain_analyzer is None:
-        raise HTTPException(
-            status_code=503, 
-            detail="Domain analyzer not initialized - check environment variables (SERPER_API_KEY, BRIGHTDATA_API_TOKEN, GOOGLE_API_KEY)"
-        )
-    return domain_analyzer
-
-
-def get_bigquery_client() -> BigQueryClient:
-    if bigquery_client is None:
-        raise HTTPException(
-            status_code=503, 
-            detail="BigQuery client not initialized - check environment variables (GCP_PROJECT_ID)"
-        )
-    return bigquery_client
 
 
 # Chat helper functions
@@ -1311,7 +1317,7 @@ async def process_massive_batch_background(batch_id: str, bq_client: BigQueryCli
                                     'extracted_domain': result.extracted_domain,
                                     'selected_url': result.selected_url,
                                     'scraping_status': result.scraping_status,
-                                    'website_summary': result.website_summary,
+                                    'company_summary': result.company_summary,
                                     'confidence_score': result.confidence_score,
                                     'selection_reasoning': result.selection_reasoning,
                                     'completed_timestamp': result.completed_timestamp,
@@ -1320,6 +1326,9 @@ async def process_massive_batch_background(batch_id: str, bq_client: BigQueryCli
                                     'real_estate': getattr(result, 'real_estate', 'Can\'t Say'),
                                     'infrastructure': getattr(result, 'infrastructure', 'Can\'t Say'),
                                     'industrial': getattr(result, 'industrial', 'Can\'t Say'),
+                                    'company_type': getattr(result, 'company_type', 'Can\'t Say'),
+                                    'company_name': getattr(result, 'company_name', 'Can\'t Say'),
+                                    'base_location': getattr(result, 'base_location', 'Can\'t Say'),
                                 }
                                 
                                 success = bq_client.insert_single_result(result_dict)
