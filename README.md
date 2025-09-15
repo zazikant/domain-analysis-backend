@@ -1,3 +1,8 @@
+
+read schema reference folder to see instructions fo rupdating table/ fields. and also query to be used on big query table online
+
+
+
 VERY IMPORTANT TO KNOW 
 
 - THEIR WILL BE 2 SERIVCES IN GOOGLE CLOUD RUN. (BACKEND AND FRONTEND INDIVIDUALLY)
