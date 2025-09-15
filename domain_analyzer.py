@@ -208,11 +208,14 @@ class DomainAnalyzer:
     def __init__(self, serper_api_key: str, brightdata_api_token: str, google_api_key: str):
         self.serper_api_key = serper_api_key
         self.brightdata_api_token = brightdata_api_token
-        
+
         # Configure Google AI
         genai.configure(api_key=google_api_key)
         self.gemini_llm = GeminiLLM(temperature=0.1)
-        
+
+        # Initialize search metadata storage
+        self._last_search_metadata = {}
+
         # Initialize chains
         self._setup_chains()
     
@@ -280,13 +283,18 @@ Return your response in this exact JSON format:
         
         # Summary Generation Chain
         summary_prompt = PromptTemplate(
-            input_variables=["scraped_content", "url", "domain"],
+            input_variables=["scraped_content", "search_results", "url", "domain"],
             template="""
 You are tasked with creating a concise, one-line summary of a website and classifying it into business sectors and company information based on semantic similarity.
 
 Website URL: {url}
 Domain: {domain}
-Scraped Content: {scraped_content}
+
+SEARCH RESULTS DATA (from Google via Serper API):
+{search_results}
+
+SCRAPED WEBSITE CONTENT:
+{scraped_content}
 
 TASKS:
 1. Create a single, clear sentence that describes what this company/website does
@@ -310,14 +318,30 @@ INDUSTRIAL SECTOR OPTIONS:
 - Consultant: Companies that provide advice, supervision, reporting, or consulting services
 - Use "Can't Say" if unclear or doesn't fit these categories
 
-4. Extract the COMPANY NAME from the content (the actual business name, not domain)
-5. Identify the BASE LOCATION (head office, headquarters, or primary business location)
+4. ENHANCED COMPANY NAME EXTRACTION:
+- Look for company names in search result TITLES (e.g., "GEM Engserv | Construction Project Management" → "GEM Engserv")
+- Check search result SNIPPETS for company names and business descriptions
+- Extract company names from website content (headers, about sections, contact pages)
+- Look for variations like "Pvt Ltd", "Private Limited", "Inc", "Corp", "LLC", etc.
+- Remove common suffixes when extracting the core business name
+- Return the most formal/complete company name found
 
-CLASSIFICATION RULES:
+5. ENHANCED LOCATION EXTRACTION:
+- Search for registered office addresses in website content
+- Look for headquarters, head office, or main office locations
+- Check contact pages, footer information, and about sections
+- Extract city/state/country from address information
+- Look for phrases like "Based in", "Headquartered in", "Located in"
+- Return the most specific location found (City, State/Country format preferred)
+
+ANALYSIS GUIDELINES:
+- PRIORITIZE search result titles and snippets for company name extraction
+- Use multiple data sources to cross-verify company information
+- Look for structured data like addresses, phone numbers, and business registrations
+- Pay attention to official business names vs. trading names
 - Multiple selections allowed for sectors (comma-separated if multiple match)
 - Base decisions on semantic similarity to company's actual business
 - Use "Can't Say" when uncertain or no clear match
-- Consider the company's primary business activities
 
 Return your response in this exact JSON format:
 {{
@@ -326,7 +350,7 @@ Return your response in this exact JSON format:
     "domain": "{domain}",
     "timestamp": "{timestamp}",
     "real_estate": "your classification or Can't Say",
-    "infrastructure": "your classification or Can't Say", 
+    "infrastructure": "your classification or Can't Say",
     "industrial": "your classification or Can't Say",
     "company_type": "Developer or Contractor or Consultant or Can't Say",
     "company_name": "Actual company name or Can't Say",
@@ -365,7 +389,9 @@ Return your response in this exact JSON format:
         
         payload = {
             "q": query,
-            "num": 5
+            "num": 5,
+            "gl": "us",  # Global location for better results
+            "hl": "en"   # Language for results
         }
         
         try:
@@ -374,7 +400,7 @@ Return your response in this exact JSON format:
             if response.status_code == 200:
                 data = response.json()
                 organic_results = data.get('organic', [])[:5]
-                
+
                 results = []
                 for result in organic_results:
                     results.append(SearchResult(
@@ -382,7 +408,15 @@ Return your response in this exact JSON format:
                         url=result.get('link', ''),
                         snippet=result.get('snippet', '')
                     ))
-                
+
+                # Store additional data for enhanced analysis (knowledge graph, etc.)
+                self._last_search_metadata = {
+                    'knowledge_graph': data.get('knowledgeGraph', {}),
+                    'answer_box': data.get('answerBox', {}),
+                    'people_also_ask': data.get('peopleAlsoAsk', []),
+                    'related_searches': data.get('relatedSearches', [])
+                }
+
                 return SearchResultsOutput(results=results, query_used=query)
             else:
                 return SearchResultsOutput(results=[], query_used=query)
@@ -605,13 +639,42 @@ Return your response in this exact JSON format:
             )
     
     def format_search_results_for_prompt(self, search_results_output):
-        """Format search results for LLM processing"""
-        
+        """Format search results for LLM processing with enhanced metadata"""
+
         results_text = ""
+
+        # Add knowledge graph information if available
+        if hasattr(self, '_last_search_metadata') and self._last_search_metadata.get('knowledge_graph'):
+            kg = self._last_search_metadata['knowledge_graph']
+            if kg.get('title') or kg.get('description'):
+                results_text += "KNOWLEDGE GRAPH INFORMATION:\n"
+                if kg.get('title'):
+                    results_text += f"Company Name: {kg['title']}\n"
+                if kg.get('description'):
+                    results_text += f"Description: {kg['description']}\n"
+                if kg.get('attributes'):
+                    for attr in kg['attributes']:
+                        results_text += f"{attr.get('name', '')}: {attr.get('value', '')}\n"
+                results_text += "\n"
+
+        # Add answer box information if available
+        if hasattr(self, '_last_search_metadata') and self._last_search_metadata.get('answer_box'):
+            ab = self._last_search_metadata['answer_box']
+            if ab.get('answer') or ab.get('snippet'):
+                results_text += "ANSWER BOX:\n"
+                if ab.get('answer'):
+                    results_text += f"Answer: {ab['answer']}\n"
+                if ab.get('snippet'):
+                    results_text += f"Info: {ab['snippet']}\n"
+                results_text += "\n"
+
+        # Add organic search results
+        results_text += "ORGANIC SEARCH RESULTS:\n"
         for i, result in enumerate(search_results_output.results, 1):
             results_text += f"{i}. Title: {result.title}\n"
             results_text += f"   URL: {result.url}\n"
             results_text += f"   Snippet: {result.snippet}\n\n"
+
         return results_text
     
     def analyze_email_domain(self, email: str) -> pd.DataFrame:
@@ -654,11 +717,15 @@ Return your response in this exact JSON format:
             
             scraped_content = self.call_brightdata_api(root_url)
             
-            # Step 6: Summary Generation
+            # Step 6: Summary Generation with Enhanced Data Sources
             content = scraped_content.html_content[:2000] + "..." if len(scraped_content.html_content) > 2000 else scraped_content.html_content
-            
+
+            # Include search results for enhanced company name and location extraction
+            search_results_text = self.format_search_results_for_prompt(search_results)
+
             summary_result = self.summary_chain({
                 'scraped_content': content,
+                'search_results': search_results_text,
                 'url': url_selection_output.selected_url,
                 'domain': domain,
                 'timestamp': datetime.now().isoformat()
