@@ -265,9 +265,12 @@ Analyze these search results and select the BEST URL that represents the officia
 - Credibility and authority of the source
 - Relevance to the original domain
 
+IMPORTANT: Only select URLs that are complete and valid (starting with http:// or https://)
+If no valid URLs are available, use "https://www.example.com" as a fallback.
+
 Return your response in this exact JSON format:
 {{
-    "selected_url": "the best URL from the results",
+    "selected_url": "the best complete URL from the results",
     "reasoning": "brief explanation of why you chose this URL",
     "confidence_score": 0.95
 }}
@@ -344,27 +347,34 @@ CAREFULLY read the scraped content to understand if they're actually involved in
 - Look for "Pvt Ltd", "Inc", "Corp", "LLC" variations
 - Return the clearest business name found
 
-5. LOCATION EXTRACTION (Enhanced Address Parsing):
-**THOROUGHLY scan the scraped content for:**
+5. LOCATION EXTRACTION (Prioritize Scraped Content):
+**FIRST: Scan the SCRAPED WEBSITE CONTENT thoroughly for addresses:**
 - Complete business addresses with city names
-- Registered office addresses (look for "Registered Office:", "Regd. Office:", "Corporate Office:")
+- Registered office addresses: "Registered Office:", "Regd. Office:", "Corporate Office:"
 - Contact addresses in footer/contact sections
 - Address formats: "123 Street, City, State, Country" or "City - Pincode, State"
 - Location indicators: "Based in", "Located in", "Headquartered in", "Office at"
 
-**EXTRACTION RULES:**
-- ALWAYS extract the CITY name from full addresses
-- Look for patterns like: "Address: [Street], [CITY], [State/Country]"
-- Parse Indian addresses: "City - 400001, Maharashtra, India" → "City, India"
-- International addresses: "123 Main St, London, UK" → "London, UK"
-- If multiple addresses found, prioritize "Head Office" or "Corporate Office"
+**SECOND: If no address found in scraped content, check search results**
 
-**Return format**: "City, Country" (e.g., "Mumbai, India", "London, UK")
+**EXTRACTION RULES:**
+- ALWAYS prioritize addresses from SCRAPED CONTENT over search results
+- Extract CITY name from full addresses in scraped content
+- Look for patterns: "Address: [Street], [CITY], [State/Country]"
+- Parse Indian addresses: "Gurgaon - 122001, Haryana, India" → "Gurgaon, India"
+- International: "123 Main St, London, UK" → "London, UK"
+- If multiple addresses in scraped content, prioritize "Head Office" or "Corporate Office"
+
+**Return format**: "City, Country" (e.g., "Gurgaon, India", "London, UK")
 
 ANALYSIS RULES:
+- PRIORITIZE SCRAPED WEBSITE CONTENT for location extraction over search results
 - Prioritize search titles for company names
+- READ the scraped content carefully before making decisions
 - Use "Can't Say" when uncertain
 - Be concise and accurate
+
+**IMPORTANT**: The scraped website content contains the most accurate information. Always analyze it thoroughly before using search result data.
 
 Return your response in this exact JSON format:
 {{
@@ -680,7 +690,8 @@ Return your response in this exact JSON format:
         results_text += "SEARCH RESULTS:\n"
         for i, result in enumerate(search_results_output.results[:3], 1):  # Limit to top 3 for speed
             results_text += f"{i}. {result.title[:80]}\n"  # Truncate titles
-            results_text += f"   {result.snippet[:120]}\n\n"  # Truncate snippets, skip URLs
+            results_text += f"   URL: {result.url}\n"  # Keep URLs for URL selection
+            results_text += f"   {result.snippet[:120]}\n\n"  # Truncate snippets
 
         return results_text
     
@@ -714,13 +725,22 @@ Return your response in this exact JSON format:
             url_selection_result = self.url_selection_chain({"search_results": formatted_results})
             url_selection_output = url_selection_result['url_selection_output']
             
-            # Step 5: Content Scraping
+            # Step 5: Content Scraping with URL validation
             selected_url = url_selection_output.selected_url
+
+            # Validate URL format
+            if not selected_url or not selected_url.startswith(('http://', 'https://')):
+                logger.warning(f"Invalid URL received: '{selected_url}', using fallback")
+                selected_url = f"https://www.{domain}"  # Fallback to domain
+
             try:
                 parsed = urlparse(selected_url)
+                if not parsed.scheme or not parsed.netloc:
+                    raise ValueError("Invalid URL structure")
                 root_url = f"{parsed.scheme}://{parsed.netloc}"
-            except:
-                root_url = selected_url
+            except Exception as e:
+                logger.error(f"URL parsing failed for {selected_url}: {e}")
+                root_url = f"https://www.{domain}"  # Fallback
             
             scraped_content = self.call_brightdata_api(root_url)
             
