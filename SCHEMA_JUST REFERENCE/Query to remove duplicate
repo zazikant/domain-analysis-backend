@@ -1,0 +1,128 @@
+1. removes duplicate columns with can't say
+2. retains max comma values 
+
+-- Email Domain Results Deduplication Query
+-- This query creates one optimized record per email by combining the best data from duplicates
+
+WITH 
+-- Step 1: Calculate scoring for target columns
+scored_records AS (
+  SELECT *,
+    -- Score each target column (lower score = better quality)
+    CASE 
+      WHEN real_estate = "Can't Say" OR real_estate IS NULL THEN 1000
+      ELSE 1000 - (LENGTH(real_estate) - LENGTH(REPLACE(real_estate, ',', '')))
+    END AS real_estate_score,
+    
+    CASE 
+      WHEN infrastructure = "Can't Say" OR infrastructure IS NULL THEN 1000
+      ELSE 1000 - (LENGTH(infrastructure) - LENGTH(REPLACE(infrastructure, ',', '')))
+    END AS infrastructure_score,
+    
+    CASE 
+      WHEN industrial = "Can't Say" OR industrial IS NULL THEN 1000
+      ELSE 1000 - (LENGTH(industrial) - LENGTH(REPLACE(industrial, ',', '')))
+    END AS industrial_score,
+    
+    CASE 
+      WHEN company_type = "Can't Say" OR company_type IS NULL THEN 1000
+      ELSE 1000 - (LENGTH(company_type) - LENGTH(REPLACE(company_type, ',', '')))
+    END AS company_type_score,
+    
+    CASE 
+      WHEN company_name = "Can't Say" OR company_name IS NULL THEN 1000
+      ELSE 1000 - (LENGTH(company_name) - LENGTH(REPLACE(company_name, ',', '')))
+    END AS company_name_score,
+    
+    CASE 
+      WHEN base_location = "Can't Say" OR base_location IS NULL THEN 1000
+      ELSE 1000 - (LENGTH(base_location) - LENGTH(REPLACE(base_location, ',', '')))
+    END AS base_location_score,
+    
+    -- Add row number for breaking ties (earliest record wins)
+    ROW_NUMBER() OVER (PARTITION BY original_email ORDER BY created_at ASC) as row_rank
+  FROM `feisty-outrider-471302-k6.advanced_csv_analysis.email_domain_results`
+),
+
+-- Step 2: Get the best value for each target column per email
+optimized_columns AS (
+  SELECT 
+    original_email,
+    
+    -- Get best value for each target column using FIRST_VALUE with proper ordering
+    FIRST_VALUE(real_estate) OVER (
+      PARTITION BY original_email 
+      ORDER BY real_estate_score ASC, row_rank ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as best_real_estate,
+    
+    FIRST_VALUE(infrastructure) OVER (
+      PARTITION BY original_email 
+      ORDER BY infrastructure_score ASC, row_rank ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as best_infrastructure,
+    
+    FIRST_VALUE(industrial) OVER (
+      PARTITION BY original_email 
+      ORDER BY industrial_score ASC, row_rank ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as best_industrial,
+    
+    FIRST_VALUE(company_type) OVER (
+      PARTITION BY original_email 
+      ORDER BY company_type_score ASC, row_rank ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as best_company_type,
+    
+    FIRST_VALUE(company_name) OVER (
+      PARTITION BY original_email 
+      ORDER BY company_name_score ASC, row_rank ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as best_company_name,
+    
+    FIRST_VALUE(base_location) OVER (
+      PARTITION BY original_email 
+      ORDER BY base_location_score ASC, row_rank ASC
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) as best_base_location,
+    
+    -- Keep metadata from the earliest record (lowest row_rank)
+    row_rank
+  FROM scored_records
+),
+
+-- Step 3: Get base record (earliest) for each email for metadata preservation
+base_records AS (
+  SELECT *
+  FROM scored_records
+  WHERE row_rank = 1
+)
+
+-- Step 4: Final result combining optimized target columns with base metadata
+SELECT 
+  -- Metadata from earliest record
+  br.original_email,
+  br.extracted_domain,
+  br.selected_url,
+  br.scraping_status,
+  br.company_summary,
+  br.confidence_score,
+  br.selection_reasoning,
+  br.completed_timestamp,
+  br.processing_time_seconds,
+  br.created_at,
+  
+  -- Optimized target columns
+  oc.best_real_estate as real_estate,
+  oc.best_infrastructure as infrastructure,
+  oc.best_industrial as industrial,
+  oc.best_company_type as company_type,
+  oc.best_company_name as company_name,
+  oc.best_base_location as base_location
+
+FROM base_records br
+JOIN optimized_columns oc 
+  ON br.original_email = oc.original_email 
+  AND oc.row_rank = 1
+
+ORDER BY br.original_email;
