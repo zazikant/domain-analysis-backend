@@ -71,7 +71,7 @@ class FinalSummaryOutput(BaseModel):
 
 # Custom Gemini LLM Wrapper
 class GeminiLLM(LLM):
-    model_name: str = "gemini-2.5-flash"
+    model_name: str = "gemini-2.5-flash-lite"
     temperature: float = 0.0
 
     @property
