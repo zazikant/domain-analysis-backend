@@ -6,4 +6,13 @@ SELECT
   is_generated
 FROM `feisty-outrider-471302-k6.advanced_csv_analysis.INFORMATION_SCHEMA.COLUMNS`
 WHERE table_name = 'email_domain_results'
+
 ORDER BY ordinal_position;
+
+
+==============
+
+To delete all records, use:
+
+DELETE FROM `feisty-outrider-471302-k6.advanced_csv_analysis.email_domain_results`
+WHERE TRUE;
