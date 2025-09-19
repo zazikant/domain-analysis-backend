@@ -16,3 +16,10 @@ To delete all records, use:
 
 DELETE FROM `feisty-outrider-471302-k6.advanced_csv_analysis.email_domain_results`
 WHERE TRUE;
+
+==========
+
+To download all csv records:
+
+SELECT * FROM `feisty-outrider-471302-k6.advanced_csv_analysis.email_domain_results`;
+
