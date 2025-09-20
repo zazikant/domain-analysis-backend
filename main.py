@@ -2240,7 +2240,7 @@ def cleanup_inactive_sessions(max_age_hours: int = 24):
         
     except Exception as e:
         logger.error(f"Error cleaning up sessions: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to cleanup sessions: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to cleanup sessions: {str(e)}"): {str(e)}")
 
 
 def get_session_messages(session_id: str, limit: int = 50, message_type: str = None):
