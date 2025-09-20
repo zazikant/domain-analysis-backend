@@ -184,6 +184,23 @@ class BatchAnalyzeRequest(BaseModel):
 
 
 # Response Models
+# Models will be defined after imports
+
+"""
+Utility functions for data processing and analysis
+Handles CSV cleaning, data conversion, and helper functions
+"""
+
+import re
+import logging
+from typing import List, Dict, Any, Optional
+import pandas as pd
+
+from models import AnalysisResult, ChatSession, ChatMessage, ChatResponse
+from bigquery_client import BigQueryClient
+
+logger = logging.getLogger(__name__)
+
 # Additional models not in models.py module
 class BatchAnalysisResult(BaseModel):
     results: List[AnalysisResult]
@@ -209,21 +226,6 @@ class StatsResponse(BaseModel):
     avg_confidence_score: float
     successful_scrapes: int
     failed_scrapes: int
-
-"""
-Utility functions for data processing and analysis
-Handles CSV cleaning, data conversion, and helper functions
-"""
-
-import re
-import logging
-from typing import List, Dict, Any, Optional
-import pandas as pd
-
-from models import AnalysisResult, ChatSession, ChatMessage, ChatResponse
-from bigquery_client import BigQueryClient
-
-logger = logging.getLogger(__name__)
 
 # Global session storage (in production, use Redis or similar)
 chat_sessions: Dict[str, ChatSession] = {}
