@@ -637,7 +637,7 @@ from datetime import datetime
 from domain_analyzer import DomainAnalyzer
 from bigquery_client import BigQueryClient
 from config import settings
-from single_processing import process_single_email_for_job
+# process_single_email_for_job function needed here
 
 logger = logging.getLogger(__name__)
 
@@ -770,7 +770,7 @@ async def process_small_batch_sequential(
     Returns:
         tuple: (results list, stats dict)
     """
-    from single_processing import process_email_analysis, create_error_analysis_result
+    # process_email_analysis and create_error_analysis_result are defined above
     from datetime import datetime
     
     start_time = datetime.utcnow()
@@ -831,7 +831,7 @@ from typing import List
 from domain_analyzer import DomainAnalyzer
 from bigquery_client import BigQueryClient
 # dataframe_to_analysis_result is defined below, format_progress_message, format_final_summary
-from single_processing import process_email_analysis
+# process_email_analysis is defined above
 
 logger = logging.getLogger(__name__)
 
@@ -1041,8 +1041,8 @@ from fastapi import HTTPException, Depends
 
 from config import get_domain_analyzer, get_bigquery_client
 # dataframe_to_analysis_result is defined below
-from single_processing import process_email_analysis
-from batch_processing import process_small_batch_sequential
+# process_email_analysis is defined above
+# batch processing function needed
 
 logger = logging.getLogger(__name__)
 
@@ -1230,7 +1230,7 @@ from fastapi import HTTPException, Depends, UploadFile, File, Form
 
 from config import get_domain_analyzer, get_bigquery_client
 # utility functions are defined above
-from batch_processing import process_batch_job
+# batch processing function needed
 
 logger = logging.getLogger(__name__)
 
@@ -1474,7 +1474,7 @@ from fastapi import HTTPException, Depends
 from google.cloud import bigquery
 
 from config import get_domain_analyzer, get_bigquery_client
-from batch_processing import process_batch_job
+# batch processing function needed
 
 logger = logging.getLogger(__name__)
 
@@ -1706,10 +1706,7 @@ from fastapi import Depends, WebSocket, WebSocketDisconnect
 
 from config import get_domain_analyzer, get_bigquery_client
 # utility functions are defined above
-from legacy_processing import (
-    process_single_chat_email, extract_email_from_chat_message, 
-    format_single_email_result
-)
+# legacy processing functions needed
 
 logger = logging.getLogger(__name__)
 
@@ -1864,7 +1861,7 @@ from fastapi import Depends, UploadFile, File, Form
 
 from config import get_domain_analyzer, get_bigquery_client
 # utility functions are defined above
-from legacy_processing import process_csv_emails_background
+# legacy processing function needed
 
 logger = logging.getLogger(__name__)
 
