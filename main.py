@@ -184,30 +184,7 @@ class BatchAnalyzeRequest(BaseModel):
 
 
 # Response Models
-class AnalysisResult(BaseModel):
-    original_email: str
-    extracted_domain: str
-    selected_url: Optional[str]
-    scraping_status: str
-    company_summary: Optional[str]  # Updated field name
-    confidence_score: Optional[float]
-    selection_reasoning: Optional[str]
-    completed_timestamp: Optional[str]
-    processing_time_seconds: Optional[float]
-    created_at: str
-    from_cache: bool = Field(default=False, description="Whether result was retrieved from cache")
-    
-    # Sector classification fields
-    real_estate: Optional[str] = Field(default="Can't Say", description="Real Estate sector classification")
-    infrastructure: Optional[str] = Field(default="Can't Say", description="Infrastructure sector classification")
-    industrial: Optional[str] = Field(default="Can't Say", description="Industrial sector classification")
-    
-    # Company information fields
-    company_type: Optional[str] = Field(default="Can't Say", description="Company type")
-    company_name: Optional[str] = Field(default="Can't Say", description="Company name")
-    base_location: Optional[str] = Field(default="Can't Say", description="Base location")
-
-
+# Additional models not in models.py module
 class BatchAnalysisResult(BaseModel):
     results: List[AnalysisResult]
     total_processed: int
@@ -215,17 +192,6 @@ class BatchAnalysisResult(BaseModel):
     failed: int
     from_cache: int
     processing_time_seconds: float
-
-
-# Job Management Models
-class JobStatus(BaseModel):
-    job_id: str
-    session_id: Optional[str]
-    filename: Optional[str]
-    status: str  # "pending", "processing", "completed", "failed"
-    progress: Dict[str, Any]
-    timestamps: Dict[str, Optional[str]]
-    error_message: Optional[str] = None
 
 
 class JobCreateResponse(BaseModel):
@@ -243,52 +209,6 @@ class StatsResponse(BaseModel):
     avg_confidence_score: float
     successful_scrapes: int
     failed_scrapes: int
-
-
-# Chat Models (for backward compatibility)
-class ChatMessage(BaseModel):
-    message_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    session_id: str
-    message_type: str = Field(description="'user' or 'system'")
-    content: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
-    metadata: Optional[Dict[str, Any]] = None
-
-
-class ChatRequest(BaseModel):
-    session_id: str
-    message: str
-    message_type: str = "user"
-
-
-class ChatResponse(BaseModel):
-    message_id: str
-    session_id: str
-    message_type: str = "system"
-    content: str
-    timestamp: datetime
-    metadata: Optional[Dict[str, Any]] = None
-
-
-# Session Management (simplified)
-class ChatSession:
-    def __init__(self, session_id: str):
-        self.session_id = session_id
-        self.messages: List[ChatMessage] = []
-        self.created_at = datetime.utcnow()
-        self.last_activity = datetime.utcnow()
-        self.websocket = None  # WebSocket connection
-    
-    def add_message(self, content: str, message_type: str, metadata: Optional[Dict] = None):
-        message = ChatMessage(
-            session_id=self.session_id,
-            message_type=message_type,
-            content=content,
-            metadata=metadata
-        )
-        self.messages.append(message)
-        self.last_activity = datetime.utcnow()
-        return message
 
 """
 Utility functions for data processing and analysis
