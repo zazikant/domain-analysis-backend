@@ -484,7 +484,7 @@ from datetime import datetime
 
 from domain_analyzer import DomainAnalyzer
 from bigquery_client import BigQueryClient
-from utils import dataframe_to_analysis_result
+# dataframe_to_analysis_result is defined below
 
 logger = logging.getLogger(__name__)
 
@@ -597,7 +597,7 @@ def create_error_analysis_result(email: str, error: str):
     from datetime import datetime
     
     # Import here to avoid circular imports
-    from utils import dataframe_to_analysis_result
+    # dataframe_to_analysis_result is defined below
     import pandas as pd
     
     # Create error DataFrame
@@ -830,7 +830,7 @@ from typing import List
 
 from domain_analyzer import DomainAnalyzer
 from bigquery_client import BigQueryClient
-from utils import dataframe_to_analysis_result, format_progress_message, format_final_summary
+# dataframe_to_analysis_result is defined below, format_progress_message, format_final_summary
 from single_processing import process_email_analysis
 
 logger = logging.getLogger(__name__)
@@ -852,7 +852,7 @@ async def process_csv_emails_background(
         analyzer: Domain analyzer instance
         bq_client: BigQuery client
     """
-    from utils import send_chat_message
+    # send_chat_message is defined above
     
     logger.info(f"Background processing started for session {session_id} with {len(emails)} emails")
     
@@ -946,7 +946,7 @@ async def process_single_chat_email(
     Returns:
         AnalysisResult: Processing result
     """
-    from utils import send_chat_message
+    # send_chat_message is defined above
     
     try:
         # Check for duplicates first
@@ -1040,7 +1040,7 @@ from datetime import datetime
 from fastapi import HTTPException, Depends
 
 from config import get_domain_analyzer, get_bigquery_client
-from utils import dataframe_to_analysis_result
+# dataframe_to_analysis_result is defined below
 from single_processing import process_email_analysis
 from batch_processing import process_small_batch_sequential
 
@@ -1229,7 +1229,7 @@ import pandas as pd
 from fastapi import HTTPException, Depends, UploadFile, File, Form
 
 from config import get_domain_analyzer, get_bigquery_client
-from utils import clean_email_dataframe, validate_file_upload
+# utility functions are defined above
 from batch_processing import process_batch_job
 
 logger = logging.getLogger(__name__)
@@ -1301,7 +1301,7 @@ from fastapi import HTTPException, Depends
 from google.cloud import bigquery
 
 from config import get_bigquery_client
-from utils import dataframe_to_analysis_result
+# dataframe_to_analysis_result is defined below
 
 logger = logging.getLogger(__name__)
 
@@ -1705,7 +1705,7 @@ from datetime import datetime
 from fastapi import Depends, WebSocket, WebSocketDisconnect
 
 from config import get_domain_analyzer, get_bigquery_client
-from utils import get_or_create_session, send_chat_message
+# utility functions are defined above
 from legacy_processing import (
     process_single_chat_email, extract_email_from_chat_message, 
     format_single_email_result
@@ -1811,7 +1811,7 @@ async def broadcast_message_to_all_sessions(message: str, message_type: str = "s
     """
     Broadcast a message to all active WebSocket sessions
     """
-    from utils import chat_sessions
+    # chat_sessions is defined above
     
     disconnected_sessions = []
     
@@ -1838,7 +1838,7 @@ def get_active_websocket_connections():
     """
     Get count of active WebSocket connections
     """
-    from utils import chat_sessions
+    # chat_sessions is defined above
     
     active_connections = 0
     for session in chat_sessions.values():
@@ -1863,10 +1863,7 @@ import pandas as pd
 from fastapi import Depends, UploadFile, File, Form
 
 from config import get_domain_analyzer, get_bigquery_client
-from utils import (
-    clean_email_dataframe, get_or_create_session, send_chat_message,
-    format_processing_summary, validate_file_upload
-)
+# utility functions are defined above
 from legacy_processing import process_csv_emails_background
 
 logger = logging.getLogger(__name__)
@@ -2081,7 +2078,7 @@ from datetime import datetime, timedelta
 
 from fastapi import HTTPException
 
-from utils import get_or_create_session
+# utility functions are defined above
 
 logger = logging.getLogger(__name__)
 
@@ -2131,7 +2128,7 @@ def get_all_chat_sessions():
     Get information about all active chat sessions
     """
     try:
-        from utils import chat_sessions
+        # chat_sessions is defined above
         
         sessions_info = []
         for session_id, session in chat_sessions.items():
@@ -2158,7 +2155,7 @@ def cleanup_inactive_sessions(max_age_hours: int = 24):
     Clean up inactive chat sessions older than specified hours
     """
     try:
-        from utils import chat_sessions
+        # chat_sessions is defined above
         
         cutoff_time = datetime.utcnow() - timedelta(hours=max_age_hours)
         sessions_to_remove = []
@@ -2246,7 +2243,7 @@ def get_session_statistics():
     Get overall session statistics
     """
     try:
-        from utils import chat_sessions
+        # chat_sessions is defined above
         
         if not chat_sessions:
             return {
@@ -2296,7 +2293,7 @@ def delete_session(session_id: str):
     Completely delete a chat session
     """
     try:
-        from utils import chat_sessions
+        # chat_sessions is defined above
         
         if session_id not in chat_sessions:
             raise HTTPException(status_code=404, detail=f"Session {session_id} not found")
