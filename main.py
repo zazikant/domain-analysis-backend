@@ -1070,6 +1070,7 @@ def format_single_email_result(result) -> str:
     # Handle both old and new field names for backward compatibility
     summary = getattr(result, 'company_summary', None) or getattr(result, 'website_summary', 'No summary available')
     
+    cant_say = "Can't Say"
     return f"""Analysis complete for {result.original_email}!
 
 **Domain**: {result.extracted_domain}
@@ -1077,14 +1078,14 @@ def format_single_email_result(result) -> str:
 **Confidence**: {result.confidence_score:.2f if result.confidence_score else 0}
 
 **Company Information**:
-- Company Name: {getattr(result, 'company_name', 'Can\'t Say')}
-- Company Type: {getattr(result, 'company_type', 'Can\'t Say')}
-- Base Location: {getattr(result, 'base_location', 'Can\'t Say')}
+- Company Name: {getattr(result, 'company_name', cant_say)}
+- Company Type: {getattr(result, 'company_type', cant_say)}
+- Base Location: {getattr(result, 'base_location', cant_say)}
 
 **Sector Classifications**:
-- Real Estate: {getattr(result, 'real_estate', 'Can\'t Say')}
-- Infrastructure: {getattr(result, 'infrastructure', 'Can\'t Say')}
-- Industrial: {getattr(result, 'industrial', 'Can\'t Say')}
+- Real Estate: {getattr(result, 'real_estate', cant_say)}
+- Infrastructure: {getattr(result, 'infrastructure', cant_say)}
+- Industrial: {getattr(result, 'industrial', cant_say)}
 
 Feel free to submit another email or upload a CSV file!"""
 
@@ -2256,7 +2257,7 @@ def cleanup_inactive_sessions(max_age_hours: int = 24):
         
     except Exception as e:
         logger.error(f"Error cleaning up sessions: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to cleanup sessions: {str(e)}"): {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to cleanup sessions: {str(e)}")
 
 
 def get_session_messages(session_id: str, limit: int = 50, message_type: str = None):
