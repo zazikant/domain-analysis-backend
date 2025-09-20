@@ -661,7 +661,7 @@ async def process_single_email_for_job(email_data: Dict, analyzer: DomainAnalyze
             return {"status": "failed", "email": email, "error": error_msg}
 
 
-def create_error_analysis_result(email: str, error: str) -> AnalysisResult:
+def create_error_analysis_result(email: str, error: str):
     """
     Create an error result for failed email processing
     
@@ -674,26 +674,33 @@ def create_error_analysis_result(email: str, error: str) -> AnalysisResult:
     """
     from datetime import datetime
     
-    return AnalysisResult(
-        original_email=email,
-        extracted_domain="error",
-        selected_url=None,
-        scraping_status="error",
-        company_summary=f"Error: {error}",
-        confidence_score=0.0,
-        selection_reasoning="Processing failed",
-        completed_timestamp=datetime.utcnow().isoformat(),
-        processing_time_seconds=0.0,
-        created_at=datetime.utcnow().isoformat(),
-        from_cache=False,
-        # Sector classification fields (error state)
-        real_estate="Can't Say",
-        infrastructure="Can't Say",
-        industrial="Can't Say",
-        company_type="Can't Say",
-        company_name="Can't Say",
-        base_location="Can't Say"
-    )
+    # Import here to avoid circular imports
+    from utils import dataframe_to_analysis_result
+    import pandas as pd
+    
+    # Create error DataFrame
+    error_data = {
+        'original_email': [email],
+        'extracted_domain': ['error'],
+        'selected_url': [None],
+        'scraping_status': ['error'],
+        'company_summary': [f"Error: {error}"],
+        'confidence_score': [0.0],
+        'selection_reasoning': ['Processing failed'],
+        'completed_timestamp': [datetime.utcnow().isoformat()],
+        'processing_time_seconds': [0.0],
+        'created_at': [datetime.utcnow().isoformat()],
+        'real_estate': ["Can't Say"],
+        'infrastructure': ["Can't Say"],
+        'industrial': ["Can't Say"],
+        'company_type': ["Can't Say"],
+        'company_name': ["Can't Say"],
+        'base_location': ["Can't Say"]
+    }
+    
+    df = pd.DataFrame(error_data)
+    results = dataframe_to_analysis_result(df, from_cache=False)
+    return results[0]
     
 """
 Parallel batch processing engine
@@ -2004,19 +2011,28 @@ async def upload_csv_file_legacy(
         valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
         
         if not valid_emails:
-            error_msg = f"""No new email addresses found in the CSV file.
+            error_msg = """No new email addresses found in the CSV file.
             
 📊 Processing Summary:
-• Total rows: {cleaning_stats['total_rows']}
-• Email column used: '{cleaning_stats['email_column']}'
-• Valid emails found: {cleaning_stats['valid_emails']}
-• Invalid emails: {cleaning_stats['invalid_emails']}
-• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
-• Already in database: {cleaning_stats['bigquery_duplicates']}
-• New emails to process: {cleaning_stats['new_emails']}
-• Empty rows: {cleaning_stats['empty_rows']}
+• Total rows: {total_rows}
+• Email column used: '{email_column}'
+• Valid emails found: {valid_emails}
+• Invalid emails: {invalid_emails}
+• CSV duplicates removed: {duplicates_removed}
+• Already in database: {bigquery_duplicates}
+• New emails to process: {new_emails}
+• Empty rows: {empty_rows}
 
-All valid emails are already processed in our database. Please check with new email addresses."""
+All valid emails are already processed in our database. Please check with new email addresses.""".format(
+                total_rows=cleaning_stats['total_rows'],
+                email_column=cleaning_stats['email_column'],
+                valid_emails=cleaning_stats['valid_emails'],
+                invalid_emails=cleaning_stats['invalid_emails'],
+                duplicates_removed=cleaning_stats['duplicates_removed'],
+                bigquery_duplicates=cleaning_stats['bigquery_duplicates'],
+                new_emails=cleaning_stats['new_emails'],
+                empty_rows=cleaning_stats['empty_rows']
+            )
             await send_chat_message(session_id, error_msg)
             return {"error": error_msg}
         
@@ -2131,7 +2147,7 @@ def validate_csv_format(df: pd.DataFrame):
         validation_results["valid"] = False
         validation_results["errors"].append(f"Error validating CSV: {str(e)}")
         return validation_results
-    
+        
 """
 Session management endpoints for chat interface
 Handles session information, cleanup, and management operations
