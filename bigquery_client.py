@@ -1,6 +1,6 @@
 """
-BigQuery Client Module
-Handles DataFrame to BigQuery integration for domain analysis results
+BigQuery Client Module - Updated with Job Processing Tables
+Handles DataFrame to BigQuery integration for domain analysis results + job management
 """
 
 import os
@@ -10,6 +10,7 @@ import pandas as pd
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 from datetime import datetime
+import uuid
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 class BigQueryClient:
     """Client for handling BigQuery operations"""
     
-    def __init__(self, project_id: str, dataset_id: str = "domain_intelligence", table_id: str = "domain_analysis"):
+    def __init__(self, project_id: str, dataset_id: str = "advanced_csv_analysis", table_id: str = "email_domain_results"):
         """
         Initialize BigQuery client
         
@@ -35,10 +36,17 @@ class BigQueryClient:
         self.dataset_ref = self.client.dataset(dataset_id)
         self.table_ref = self.dataset_ref.table(table_id)
         
-        # Ensure dataset and table exist
+        # Table references for new job tables
+        self.batch_jobs_table_ref = self.dataset_ref.table("batch_jobs")
+        self.email_queue_table_ref = self.dataset_ref.table("email_queue")
+        self.job_progress_table_ref = self.dataset_ref.table("job_progress")
+        
+        # Ensure dataset and tables exist
         self._ensure_dataset_exists()
         self._ensure_table_exists()
-        # self._ensure_queue_tables_exist()  # COMMENTED OUT - massive batch processing disabled
+        self._ensure_batch_jobs_table_exists()
+        self._ensure_email_queue_table_exists()
+        self._ensure_job_progress_table_exists()
     
     def _ensure_dataset_exists(self):
         """Create dataset if it doesn't exist"""
@@ -54,7 +62,7 @@ class BigQueryClient:
             logger.info(f"Created dataset {self.dataset_id}")
     
     def _ensure_table_exists(self):
-        """Create table if it doesn't exist"""
+        """Create main analysis table if it doesn't exist"""
         try:
             self.client.get_table(self.table_ref)
             logger.info(f"Table {self.table_id} already exists")
@@ -95,6 +103,351 @@ class BigQueryClient:
             
             table = self.client.create_table(table, timeout=30)
             logger.info(f"Created table {self.table_id}")
+
+    def _ensure_batch_jobs_table_exists(self):
+        """Create batch jobs tracking table if it doesn't exist"""
+        try:
+            self.client.get_table(self.batch_jobs_table_ref)
+            logger.info("Table batch_jobs already exists")
+        except NotFound:
+            schema = [
+                bigquery.SchemaField("job_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("session_id", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("filename", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("total_emails", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("processed_emails", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("successful_emails", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("failed_emails", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("duplicate_emails", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("status", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("created_at", "TIMESTAMP", mode="REQUIRED"),
+                bigquery.SchemaField("started_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("completed_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("last_updated", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("error_message", "STRING", mode="NULLABLE"),
+            ]
+            
+            table = bigquery.Table(self.batch_jobs_table_ref, schema=schema)
+            table.description = "Batch job tracking for CSV email processing"
+            
+            # Add partitioning and clustering
+            table.time_partitioning = bigquery.TimePartitioning(
+                type_=bigquery.TimePartitioningType.DAY,
+                field="created_at"
+            )
+            table.clustering_fields = ["status", "job_id"]
+            
+            table = self.client.create_table(table, timeout=30)
+            logger.info("Created table batch_jobs")
+
+    def _ensure_email_queue_table_exists(self):
+        """Create email processing queue table if it doesn't exist"""
+        try:
+            self.client.get_table(self.email_queue_table_ref)
+            logger.info("Table email_queue already exists")
+        except NotFound:
+            schema = [
+                bigquery.SchemaField("queue_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("job_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("email", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("extracted_domain", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("position", "INTEGER", mode="REQUIRED"),
+                bigquery.SchemaField("status", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("started_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("completed_at", "TIMESTAMP", mode="NULLABLE"),
+                bigquery.SchemaField("created_at", "TIMESTAMP", mode="REQUIRED"),
+                bigquery.SchemaField("retry_count", "INTEGER", mode="NULLABLE"),
+                bigquery.SchemaField("error_message", "STRING", mode="NULLABLE"),
+            ]
+            
+            table = bigquery.Table(self.email_queue_table_ref, schema=schema)
+            table.description = "Email processing queue for batch jobs"
+            
+            # Add partitioning and clustering
+            table.time_partitioning = bigquery.TimePartitioning(
+                type_=bigquery.TimePartitioningType.DAY,
+                field="created_at"
+            )
+            table.clustering_fields = ["job_id", "status", "extracted_domain"]
+            
+            table = self.client.create_table(table, timeout=30)
+            logger.info("Created table email_queue")
+
+    def _ensure_job_progress_table_exists(self):
+        """Create job progress tracking table if it doesn't exist"""
+        try:
+            self.client.get_table(self.job_progress_table_ref)
+            logger.info("Table job_progress already exists")
+        except NotFound:
+            schema = [
+                bigquery.SchemaField("job_id", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("progress_message", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("progress_percentage", "FLOAT64", mode="NULLABLE"),
+                bigquery.SchemaField("current_email", "STRING", mode="NULLABLE"),
+                bigquery.SchemaField("timestamp", "TIMESTAMP", mode="REQUIRED"),
+            ]
+            
+            table = bigquery.Table(self.job_progress_table_ref, schema=schema)
+            table.description = "Real-time progress tracking for batch jobs"
+            
+            # Add partitioning and clustering
+            table.time_partitioning = bigquery.TimePartitioning(
+                type_=bigquery.TimePartitioningType.DAY,
+                field="timestamp"
+            )
+            table.clustering_fields = ["job_id"]
+            
+            table = self.client.create_table(table, timeout=30)
+            logger.info("Created table job_progress")
+
+    # NEW METHODS FOR JOB MANAGEMENT
+
+    def create_batch_job(self, session_id: str, emails: List[str], filename: str) -> str:
+        """Create a persistent batch job"""
+        
+        job_id = f"batch_{uuid.uuid4().hex[:12]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        # Create batch job record
+        job_data = {
+            'job_id': [job_id],
+            'session_id': [session_id],
+            'filename': [filename],
+            'total_emails': [len(emails)],
+            'processed_emails': [0],
+            'successful_emails': [0],
+            'failed_emails': [0],
+            'duplicate_emails': [0],
+            'status': ['pending'],
+            'created_at': [datetime.utcnow()],
+            'started_at': [None],
+            'completed_at': [None],
+            'last_updated': [datetime.utcnow()],
+            'error_message': [None]
+        }
+        
+        # Insert job record
+        try:
+            df = pd.DataFrame(job_data)
+            job_config = bigquery.LoadJobConfig(
+                write_disposition="WRITE_APPEND",
+                autodetect=False
+            )
+            
+            job = self.client.load_table_from_dataframe(
+                df, self.batch_jobs_table_ref, job_config=job_config
+            )
+            job.result()
+            
+            # Store individual emails in processing queue
+            email_queue = []
+            for i, email in enumerate(emails):
+                email_queue.append({
+                    'queue_id': str(uuid.uuid4()),
+                    'job_id': job_id,
+                    'email': email,
+                    'extracted_domain': email.split('@')[1] if '@' in email else None,
+                    'position': i,
+                    'status': 'pending',
+                    'started_at': None,
+                    'completed_at': None,
+                    'created_at': datetime.utcnow(),
+                    'retry_count': 0,
+                    'error_message': None
+                })
+            
+            queue_df = pd.DataFrame(email_queue)
+            queue_job = self.client.load_table_from_dataframe(
+                queue_df, self.email_queue_table_ref, job_config=job_config
+            )
+            queue_job.result()
+            
+            logger.info(f"Created batch job {job_id} with {len(emails)} emails")
+            return job_id
+            
+        except Exception as e:
+            logger.error(f"Failed to create batch job: {e}")
+            raise
+
+    def get_job_status(self, job_id: str) -> Optional[Dict]:
+        """Get current job status"""
+        try:
+            query = f"""
+            SELECT 
+                job_id,
+                session_id,
+                filename,
+                total_emails,
+                processed_emails,
+                successful_emails,
+                failed_emails,
+                duplicate_emails,
+                status,
+                created_at,
+                started_at,
+                completed_at,
+                last_updated,
+                error_message
+            FROM `{self.project_id}.{self.dataset_id}.batch_jobs`
+            WHERE job_id = @job_id
+            """
+            
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[bigquery.ScalarQueryParameter("job_id", "STRING", job_id)]
+            )
+            
+            query_job = self.client.query(query, job_config=job_config)
+            results = query_job.result()
+            
+            for row in results:
+                return {
+                    "job_id": row.job_id,
+                    "session_id": row.session_id,
+                    "filename": row.filename,
+                    "total_emails": row.total_emails,
+                    "processed_emails": row.processed_emails or 0,
+                    "successful_emails": row.successful_emails or 0,
+                    "failed_emails": row.failed_emails or 0,
+                    "duplicate_emails": row.duplicate_emails or 0,
+                    "status": row.status,
+                    "created_at": row.created_at.isoformat() if row.created_at else None,
+                    "started_at": row.started_at.isoformat() if row.started_at else None,
+                    "completed_at": row.completed_at.isoformat() if row.completed_at else None,
+                    "last_updated": row.last_updated.isoformat() if row.last_updated else None,
+                    "error_message": row.error_message
+                }
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting job status: {e}")
+            return None
+
+    def update_job_status(self, job_id: str, status: str, **kwargs):
+        """Update job status and statistics"""
+        try:
+            # Build UPDATE query dynamically
+            update_fields = [f"status = '{status}'", "last_updated = CURRENT_TIMESTAMP()"]
+            
+            if 'processed_emails' in kwargs:
+                update_fields.append(f"processed_emails = {kwargs['processed_emails']}")
+            if 'successful_emails' in kwargs:
+                update_fields.append(f"successful_emails = {kwargs['successful_emails']}")
+            if 'failed_emails' in kwargs:
+                update_fields.append(f"failed_emails = {kwargs['failed_emails']}")
+            if 'duplicate_emails' in kwargs:
+                update_fields.append(f"duplicate_emails = {kwargs['duplicate_emails']}")
+            if 'error_message' in kwargs:
+                update_fields.append(f"error_message = '{kwargs['error_message']}'")
+            
+            if status == 'processing' and 'started_at' not in kwargs:
+                update_fields.append("started_at = CURRENT_TIMESTAMP()")
+            elif status in ['completed', 'failed'] and 'completed_at' not in kwargs:
+                update_fields.append("completed_at = CURRENT_TIMESTAMP()")
+            
+            query = f"""
+            UPDATE `{self.project_id}.{self.dataset_id}.batch_jobs`
+            SET {', '.join(update_fields)}
+            WHERE job_id = @job_id
+            """
+            
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[bigquery.ScalarQueryParameter("job_id", "STRING", job_id)]
+            )
+            
+            query_job = self.client.query(query, job_config=job_config)
+            query_job.result()
+            
+            logger.info(f"Updated job {job_id} status to {status}")
+            
+        except Exception as e:
+            logger.error(f"Error updating job status: {e}")
+
+    def get_pending_emails(self, job_id: str, limit: int = 10) -> List[Dict]:
+        """Get pending emails from queue for processing"""
+        try:
+            query = f"""
+            SELECT queue_id, email, extracted_domain, position
+            FROM `{self.project_id}.{self.dataset_id}.email_queue`
+            WHERE job_id = @job_id 
+            AND status = 'pending'
+            ORDER BY position
+            LIMIT {limit}
+            """
+            
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[bigquery.ScalarQueryParameter("job_id", "STRING", job_id)]
+            )
+            
+            query_job = self.client.query(query, job_config=job_config)
+            results = query_job.result()
+            
+            return [
+                {
+                    "queue_id": row.queue_id,
+                    "email": row.email,
+                    "extracted_domain": row.extracted_domain,
+                    "position": row.position
+                }
+                for row in results
+            ]
+            
+        except Exception as e:
+            logger.error(f"Error getting pending emails: {e}")
+            return []
+
+    def update_email_status(self, queue_id: str, status: str, error_message: str = None):
+        """Update individual email processing status"""
+        try:
+            update_fields = [f"status = '{status}'"]
+            
+            if status == 'processing':
+                update_fields.append("started_at = CURRENT_TIMESTAMP()")
+            elif status in ['completed', 'failed']:
+                update_fields.append("completed_at = CURRENT_TIMESTAMP()")
+            
+            if error_message:
+                update_fields.append(f"error_message = '{error_message}'")
+                update_fields.append("retry_count = retry_count + 1")
+            
+            query = f"""
+            UPDATE `{self.project_id}.{self.dataset_id}.email_queue`
+            SET {', '.join(update_fields)}
+            WHERE queue_id = @queue_id
+            """
+            
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[bigquery.ScalarQueryParameter("queue_id", "STRING", queue_id)]
+            )
+            
+            query_job = self.client.query(query, job_config=job_config)
+            query_job.result()
+            
+        except Exception as e:
+            logger.error(f"Error updating email status: {e}")
+
+    def log_progress(self, job_id: str, message: str, percentage: float = None, current_email: str = None):
+        """Log progress update"""
+        try:
+            progress_data = {
+                'job_id': [job_id],
+                'progress_message': [message],
+                'progress_percentage': [percentage],
+                'current_email': [current_email],
+                'timestamp': [datetime.utcnow()]
+            }
+            
+            df = pd.DataFrame(progress_data)
+            job_config = bigquery.LoadJobConfig(write_disposition="WRITE_APPEND")
+            
+            job = self.client.load_table_from_dataframe(
+                df, self.job_progress_table_ref, job_config=job_config
+            )
+            job.result()
+            
+        except Exception as e:
+            logger.error(f"Error logging progress: {e}")
+
+    # EXISTING METHODS (keep all the original methods)
     
     def insert_dataframe(self, df: pd.DataFrame) -> bool:
         """
@@ -294,52 +647,6 @@ class BigQueryClient:
         result = self.check_multiple_emails_exist([email], max_age_hours)
         return result.get(email, False)
 
-    def query_email_results(self, email: str, limit: int = 10) -> pd.DataFrame:
-        """
-        Query existing results for a specific email address
-
-        Args:
-            email: Email address to search for
-            limit: Maximum number of results to return
-
-        Returns:
-            pd.DataFrame: Existing analysis results for the email
-        """
-        try:
-            query = f"""
-            SELECT *
-            FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
-            WHERE original_email = @email
-            ORDER BY created_at DESC
-            LIMIT {limit}
-            """
-
-            job_config = bigquery.QueryJobConfig(
-                query_parameters=[
-                    bigquery.ScalarQueryParameter("email", "STRING", email)
-                ]
-            )
-
-            query_job = self.client.query(query, job_config=job_config)
-            results = query_job.result()
-
-            df = results.to_dataframe()
-            logger.info(f"Retrieved {len(df)} existing results for email {email}")
-            return df
-
-        except Exception as e:
-            logger.error(f"Error querying email results: {str(e)}")
-            return pd.DataFrame()
-
-    # MASSIVE BATCH PROCESSING METHODS - COMMENTED OUT
-    # def _ensure_queue_tables_exist(self):
-    #     """Create processing queue tables if they don't exist"""
-    #     self._create_processing_queue_table()
-    #     self._create_batch_tracking_table()
-
-    # MASSIVE BATCH PROCESSING METHODS - REMOVED TO SIMPLIFY DEPLOYMENT
-    pass
-
     def get_analysis_stats(self) -> dict:
         """
         Get basic statistics about the analysis results
@@ -378,7 +685,7 @@ class BigQueryClient:
             return {}
 
 
-def create_bigquery_client(project_id: str, dataset_id: str = "domain_intelligence", table_id: str = "domain_analysis") -> BigQueryClient:
+def create_bigquery_client(project_id: str, dataset_id: str = "advanced_csv_analysis", table_id: str = "email_domain_results") -> BigQueryClient:
     """
     Factory function to create BigQuery client
     
@@ -391,48 +698,3 @@ def create_bigquery_client(project_id: str, dataset_id: str = "domain_intelligen
         BigQueryClient: Initialized BigQuery client
     """
     return BigQueryClient(project_id, dataset_id, table_id)
-
-
-# Example usage for testing
-if __name__ == "__main__":
-    import logging
-    logging.basicConfig(level=logging.INFO)
-    
-    # Test with sample data
-    project_id = "your-project-id"  # Replace with actual project ID
-    
-    client = create_bigquery_client(project_id)
-    
-    # Create sample DataFrame
-    sample_data = {
-        'original_email': ['test@example.com'],
-        'extracted_domain': ['example.com'],
-        'selected_url': ['https://example.com'],
-        'scraping_status': ['success'],
-        'company_summary': ['Example company website'],
-        'confidence_score': [0.95],
-        'selection_reasoning': ['Official company website'],
-        'completed_timestamp': [datetime.now()],
-        'processing_time_seconds': [120.5],
-        'created_at': [datetime.utcnow()],
-        'real_estate': ['Commercial'],
-        'infrastructure': ["Can't Say"],
-        'industrial': ["Can't Say"],
-        'company_type': ['Developer'],
-        'company_name': ['Example Company Inc'],
-        'base_location': ['New York, USA']
-    }
-    
-    df = pd.DataFrame(sample_data)
-    
-    # Test insertion
-    success = client.insert_dataframe(df)
-    print(f"Insertion successful: {success}")
-    
-    # Test querying
-    results = client.query_domain_results('example.com')
-    print(f"Found {len(results)} results for example.com")
-    
-    # Test stats
-    stats = client.get_analysis_stats()
-    print(f"Analysis stats: {stats}")
