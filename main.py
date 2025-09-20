@@ -53,6 +53,70 @@ def get_bigquery_client() -> BigQueryClient:
     return bigquery_client
 
 
+def extract_emails_from_dataframe(df: pd.DataFrame) -> List[str]:
+    """
+    Simple email extraction from pandas DataFrame - no BigQuery checking
+
+    Args:
+        df: pandas DataFrame containing email data
+
+    Returns:
+        List[str]: List of valid, unique emails
+    """
+    # Auto-detect email column
+    email_column = None
+    email_keywords = ['email', 'e-mail', 'mail', 'address', 'contact']
+
+    # Try to find column with email-like name
+    for col in df.columns:
+        if any(keyword in col.lower() for keyword in email_keywords):
+            email_column = col
+            break
+
+    # If no email-named column found, use first column
+    if email_column is None:
+        email_column = df.columns[0]
+
+    # Extract and clean emails
+    emails_series = df[email_column].copy()
+
+    # Convert to string and handle NaN values
+    emails_series = emails_series.astype(str)
+
+    # Remove obvious non-email values
+    emails_series = emails_series.replace(['nan', 'NaN', 'None', 'null', ''], pd.NA)
+
+    # Remove empty rows
+    emails_series = emails_series.dropna()
+
+    # Comprehensive cleaning
+    emails_series = (emails_series
+                    .str.strip()                    # Remove leading/trailing spaces
+                    .str.replace(r'\s+', '', regex=True)  # Remove any internal spaces
+                    .str.lower()                    # Convert to lowercase
+                    .str.replace(r'^mailto:', '', regex=True)  # Remove mailto: prefix
+                    .str.replace(r'[<>]', '', regex=True)     # Remove angle brackets
+                    )
+
+    # Email validation regex
+    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+    # Filter valid emails
+    valid_mask = emails_series.str.match(email_pattern, na=False)
+    valid_emails = emails_series[valid_mask].tolist()
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_emails = []
+
+    for email in valid_emails:
+        if email not in seen:
+            seen.add(email)
+            unique_emails.append(email)
+
+    return unique_emails
+
+
 def clean_email_dataframe(df: pd.DataFrame, bq_client: Optional[BigQueryClient] = None) -> tuple[List[str], Dict[str, Any]]:
     """
     Enhanced email cleaning from pandas DataFrame with comprehensive validation and BigQuery duplicate checking
@@ -220,7 +284,13 @@ async def lifespan(app: FastAPI):
         bigquery_client = None
     
     logger.info("🚀 Domain Analysis API started successfully")
-    
+
+    # Start background email processor
+    if domain_analyzer and bigquery_client:
+        logger.info("Starting background email processor...")
+        asyncio.create_task(background_email_processor())
+        logger.info("Background email processor started")
+
     yield
     
     # Shutdown
@@ -744,16 +814,21 @@ async def process_email_analysis(
 async def root():
     """Root endpoint with API information"""
     return {
-        "name": "Domain Analysis API",
-        "version": "1.0.0",
-        "description": "Advanced RAG pipeline for email domain intelligence gathering",
+        "name": "Domain Analysis API - Fire and Forget Edition",
+        "version": "2.0.0",
+        "description": "Queue-based email domain intelligence with BigQuery background processing",
+        "architecture": "Fire and Forget - Upload CSV and sleep peacefully while BigQuery handles everything",
         "endpoints": {
-            "analyze": "POST /analyze - Analyze single email",
-            "batch_analyze": "POST /analyze/batch - Analyze multiple emails",
+            "analyze": "POST /analyze - Analyze single email (original endpoint)",
+            "chat_message": "POST /chat/message - Add email to queue via chat",
+            "upload_csv": "POST /chat/upload-csv - Upload CSV and add all emails to queue",
+            "queue_status": "GET /queue/status - Check background processing queue",
             "domain": "GET /domain/{domain} - Get cached domain results",
+            "recent": "GET /recent - Get recent analysis results",
             "stats": "GET /stats - Get analysis statistics",
             "health": "GET /health - Health check"
-        }
+        },
+        "background_processor": "Continuously running - feeds emails from queue to analysis pipeline"
     }
 
 
@@ -938,16 +1013,36 @@ async def get_recent_results(
     """
     try:
         df = bq_client.get_recent_results(limit=limit)
-        
+
         if df.empty:
             return []
-        
+
         results = dataframe_to_analysis_result(df, from_cache=True)
         return results
-        
+
     except Exception as e:
         logger.error(f"Error getting recent results: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
+
+
+@app.get("/queue/status")
+async def get_queue_status(
+    bq_client: BigQueryClient = Depends(get_bigquery_client)
+):
+    """
+    Get current queue status
+    """
+    try:
+        queue_count = bq_client.get_queue_count()
+
+        return {
+            "emails_in_queue": queue_count,
+            "status": "processing" if queue_count > 0 else "empty"
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting queue status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Queue status query failed: {str(e)}")
 
 
 # Chat API Endpoints
@@ -987,84 +1082,35 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
 @app.post("/chat/message", response_model=ChatResponse)
 async def send_chat_message_endpoint(
     request: ChatRequest,
-    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
-    """Handle chat messages (single email processing)"""
+    """Handle chat messages - add emails to queue"""
     try:
         session = get_or_create_session(request.session_id)
-        
+
         # Store user message
         session.add_message(request.message, request.message_type)
-        
+
         # Check if message contains an email
         email_match = re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', request.message)
-        
+
         if email_match:
             email = email_match.group().lower().strip()
-            
-            # Check for duplicates - check specific email, not domain
-            if bq_client.check_email_exists(email, max_age_hours=24):
-                response_content = f"Email {email} was already processed recently. Please share another email address."
-                await send_chat_message(request.session_id, response_content)
-                
-                return ChatResponse(
-                    message_id=str(uuid.uuid4()),
-                    session_id=request.session_id,
-                    message_type="system",
-                    content=response_content,
-                    timestamp=datetime.utcnow()
-                )
-            
-            # Process email
-            await send_chat_message(request.session_id, f"Processing email: {email}...")
-            
-            # Run analysis
-            result_df = await asyncio.get_event_loop().run_in_executor(
-                None, analyzer.analyze_email_domain, email
-            )
-            
-            # Save to BigQuery
-            bq_client.insert_dataframe(result_df)
-            
-            # Convert to result object
-            results = dataframe_to_analysis_result(result_df)
-            result = results[0]
-            
-            # Create response message
-            response_content = f"""Analysis complete for {email}!
 
-**Domain**: {result.extracted_domain}
-**Summary**: {result.company_summary}
-**Confidence**: {result.confidence_score:.2f if result.confidence_score else 0}
+            # Check if email already exists in BigQuery
+            if bq_client.check_email_exists(email, max_age_hours=87600):  # 10 years
+                response_content = f"📊 Email {email} is already in the database. No need to process again."
+            else:
+                # Add email to queue
+                success = bq_client.insert_emails_to_queue([email])
 
-**Company Information**:
-- Company Name: {result.company_name}
-- Company Type: {result.company_type}
-- Base Location: {result.base_location}
+                if success:
+                    response_content = f"✅ Email {email} added to processing queue. Background system will analyze it shortly."
+                else:
+                    response_content = f"❌ Failed to add {email} to processing queue. Please try again."
 
-**Sector Classifications**:
-- Real Estate: {result.real_estate}
-- Infrastructure: {result.infrastructure}  
-- Industrial: {result.industrial}
-
-Feel free to submit another email or upload a CSV file!"""
-
-            await send_chat_message(request.session_id, response_content, {"analysis_result": result.dict()})
-            
-            return ChatResponse(
-                message_id=str(uuid.uuid4()),
-                session_id=request.session_id,
-                message_type="system",
-                content=response_content,
-                timestamp=datetime.utcnow(),
-                metadata={"analysis_result": result.dict()}
-            )
-        
-        else:
-            response_content = "Please provide a valid email address or upload a CSV file for analysis."
             await send_chat_message(request.session_id, response_content)
-            
+
             return ChatResponse(
                 message_id=str(uuid.uuid4()),
                 session_id=request.session_id,
@@ -1072,12 +1118,24 @@ Feel free to submit another email or upload a CSV file!"""
                 content=response_content,
                 timestamp=datetime.utcnow()
             )
-            
+
+        else:
+            response_content = "Please provide a valid email address or upload a CSV file for analysis."
+            await send_chat_message(request.session_id, response_content)
+
+            return ChatResponse(
+                message_id=str(uuid.uuid4()),
+                session_id=request.session_id,
+                message_type="system",
+                content=response_content,
+                timestamp=datetime.utcnow()
+            )
+
     except Exception as e:
         logger.error(f"Error processing chat message: {str(e)}")
         error_msg = f"Sorry, there was an error processing your request: {str(e)}"
         await send_chat_message(request.session_id, error_msg)
-        
+
         return ChatResponse(
             message_id=str(uuid.uuid4()),
             session_id=request.session_id,
@@ -1115,15 +1173,56 @@ async def preview_csv_file(
         # Read CSV file
         contents = await file.read()
         df = pd.read_csv(io.BytesIO(contents))
-        
-        # Clean emails and check BigQuery duplicates
-        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
-        
+
+        # Simple email extraction
+        valid_emails = extract_emails_from_dataframe(df)
+
+        if not valid_emails:
+            return JSONResponse(
+                content={"error": "No valid email addresses found in the CSV file."},
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "POST, OPTIONS",
+                    "Access-Control-Allow-Headers": "*",
+                }
+            )
+
+        # Check BigQuery for duplicates
+        existing_emails = bq_client.check_multiple_emails_exist(valid_emails, max_age_hours=87600)
+
+        # Filter out emails that already exist
+        new_emails = []
+        duplicate_count = 0
+        for email in valid_emails:
+            if not existing_emails.get(email, False):
+                new_emails.append(email)
+            else:
+                duplicate_count += 1
+
+        # Auto-detect email column
+        email_column = None
+        email_keywords = ['email', 'e-mail', 'mail', 'address', 'contact']
+        for col in df.columns:
+            if any(keyword in col.lower() for keyword in email_keywords):
+                email_column = col
+                break
+        if email_column is None:
+            email_column = df.columns[0]
+
         response_data = {
-            "valid_emails": valid_emails[:10],  # Preview first 10
-            "total_count": cleaning_stats['new_emails'],
-            "has_more": cleaning_stats['new_emails'] > 10,
-            "stats": cleaning_stats
+            "valid_emails": new_emails[:10],  # Preview first 10 new emails
+            "total_count": len(new_emails),
+            "has_more": len(new_emails) > 10,
+            "stats": {
+                "total_rows": len(df),
+                "email_column": email_column,
+                "valid_emails": len(valid_emails),
+                "invalid_emails": len(df) - len(valid_emails),
+                "duplicates_removed": 0,  # CSV internal duplicates (if any)
+                "empty_rows": 0,
+                "bigquery_duplicates": duplicate_count,
+                "new_emails": len(new_emails)
+            }
         }
         
         return JSONResponse(
@@ -1163,73 +1262,74 @@ async def upload_csv_options():
 async def upload_csv_file(
     file: UploadFile = File(...),
     session_id: str = Form(...),
-    analyzer: DomainAnalyzer = Depends(get_domain_analyzer),
     bq_client: BigQueryClient = Depends(get_bigquery_client)
 ):
-    """Handle CSV file upload and process emails in batch"""
+    """Handle CSV file upload - fire and forget style"""
     logger.info(f"CSV upload request received for session: {session_id}, file: {file.filename}")
     try:
-        session = get_or_create_session(session_id)
-        
         # Validate file type
         if not file.filename.endswith('.csv'):
             error_msg = "Please upload a CSV file."
             await send_chat_message(session_id, error_msg)
             return {"error": error_msg}
-        
+
         # Read CSV file
         contents = await file.read()
         df = pd.read_csv(io.BytesIO(contents))
-        
-        # Enhanced email cleaning using new function with BigQuery duplicate checking
-        valid_emails, cleaning_stats = clean_email_dataframe(df, bq_client)
-        
-        if not valid_emails:
-            error_msg = f"""No new email addresses found in the CSV file.
-            
-📊 Processing Summary:
-• Total rows: {cleaning_stats['total_rows']}
-• Email column used: '{cleaning_stats['email_column']}'
-• Valid emails found: {cleaning_stats['valid_emails']}
-• Invalid emails: {cleaning_stats['invalid_emails']}
-• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
-• Already in database: {cleaning_stats['bigquery_duplicates']}
-• New emails to process: {cleaning_stats['new_emails']}
-• Empty rows: {cleaning_stats['empty_rows']}
 
-All valid emails are already processed in our database. Please check with new email addresses."""
+        # Simple email extraction
+        valid_emails = extract_emails_from_dataframe(df)
+
+        if not valid_emails:
+            error_msg = "No valid email addresses found in the CSV file."
             await send_chat_message(session_id, error_msg)
             return {"error": error_msg}
-        
-        # Send detailed processing summary
-        summary_msg = f"""📁 CSV file processed successfully!
 
-📊 Processing Summary:
-• Total rows: {cleaning_stats['total_rows']}
-• Email column used: '{cleaning_stats['email_column']}'
-• Valid emails found: {cleaning_stats['valid_emails']}
-• Invalid emails: {cleaning_stats['invalid_emails']}
-• CSV duplicates removed: {cleaning_stats['duplicates_removed']}
-• Already in database: {cleaning_stats['bigquery_duplicates']} ⚡
-• New emails to process: {cleaning_stats['new_emails']}
-• Empty rows skipped: {cleaning_stats['empty_rows']}
+        # Check BigQuery for duplicates before queuing
+        existing_emails = bq_client.check_multiple_emails_exist(valid_emails, max_age_hours=87600)  # 10 years
 
-🚀 Starting analysis for {len(valid_emails)} new emails..."""
-        await send_chat_message(session_id, summary_msg)
-        
-        # Process emails in background
-        logger.info(f"Starting background processing for {len(valid_emails)} emails")
-        task = asyncio.create_task(process_csv_emails_background(
-            session_id, valid_emails, analyzer, bq_client
-        ))
-        # Add exception handler to catch silent failures
-        task.add_done_callback(lambda t: logger.error(f"Background task error: {t.exception()}") if t.exception() else logger.info("Background task completed successfully"))
-        
+        # Filter out emails that already exist
+        new_emails = []
+        duplicate_count = 0
+        for email in valid_emails:
+            if not existing_emails.get(email, False):
+                new_emails.append(email)
+            else:
+                duplicate_count += 1
+
+        if not new_emails:
+            duplicate_msg = f"📊 CSV processed: {len(valid_emails)} valid emails found, but all {duplicate_count} are already in the database. No new emails to process."
+            await send_chat_message(session_id, duplicate_msg)
+            return {
+                "message": duplicate_msg,
+                "total_emails": len(valid_emails),
+                "new_emails": 0,
+                "duplicates": duplicate_count
+            }
+
+        # Insert only new emails to queue
+        success = bq_client.insert_emails_to_queue(new_emails)
+
+        if not success:
+            error_msg = "Failed to add emails to processing queue."
+            await send_chat_message(session_id, error_msg)
+            return {"error": error_msg}
+
+        # Send detailed success message
+        if duplicate_count > 0:
+            success_msg = f"✅ CSV processed successfully!\n\n📊 Summary:\n• {len(valid_emails)} valid emails found\n• {duplicate_count} already in database (skipped)\n• {len(new_emails)} new emails queued for processing\n\nBackground system will analyze the new emails while you sleep! 💤"
+        else:
+            success_msg = f"✅ CSV processed successfully! {len(new_emails)} new emails queued for processing. Background system will handle the analysis while you sleep! 💤"
+
+        await send_chat_message(session_id, success_msg)
+
         return {
-            "message": f"Processing {len(valid_emails)} emails. You'll receive updates every 10 completions.",
-            "total_emails": len(valid_emails)
+            "message": f"Successfully queued {len(new_emails)} new emails for processing.",
+            "total_emails": len(valid_emails),
+            "new_emails": len(new_emails),
+            "duplicates": duplicate_count
         }
-        
+
     except Exception as e:
         logger.error(f"Error uploading CSV: {str(e)}")
         error_msg = f"Error processing CSV file: {str(e)}"
@@ -1434,95 +1534,50 @@ All valid emails are already processed in our database. Please check with new em
 #         bq_client.update_batch_progress(batch_id=batch_id, status="failed")
 
 
-async def process_csv_emails_background(
-    session_id: str, 
-    emails: List[str], 
-    analyzer: DomainAnalyzer, 
-    bq_client: BigQueryClient
-):
-    """Process emails in background with progress updates"""
-    logger.info(f"Background processing started for session {session_id} with {len(emails)} emails")
-    try:
-        session = get_or_create_session(session_id)
-        total_emails = len(emails)
-        processed = 0
-        successful = 0
-        duplicates = 0
-        failed = 0
-        all_results = []
-        
-        for i, email in enumerate(emails):
-            try:
-                # Check for duplicates - check specific email, not domain
-                if bq_client.check_email_exists(email, max_age_hours=24):
-                    duplicates += 1
-                    processed += 1
-                    logger.info(f"Email {email} is duplicate - marking as completed")
-                    continue
-                
-                # Process email
-                result_df = await asyncio.get_event_loop().run_in_executor(
-                    None, analyzer.analyze_email_domain, email
-                )
-                
-                # Save to BigQuery
-                bq_client.insert_dataframe(result_df)
-                
-                # Convert to result object
-                results = dataframe_to_analysis_result(result_df)
-                all_results.extend(results)
-                
-                if results[0].scraping_status in ['success', 'success_text', 'success_fallback']:
-                    successful += 1
-                else:
-                    failed += 1
-                
-                processed += 1
-                
-                # Send progress update every 10 completions
-                if processed % 10 == 0 or processed == total_emails:
-                    progress_msg = f"Progress: {processed}/{total_emails} emails processed. "
-                    progress_msg += f"✅ {successful} successful, ❌ {failed} failed, 🔄 {duplicates} duplicates."
-                    
-                    await send_chat_message(session_id, progress_msg)
-                
-            except Exception as e:
-                logger.error(f"Error processing email {email}: {str(e)}")
-                failed += 1
-                processed += 1
-        
-        # Send final summary
-        final_msg = f"""🎉 Batch processing complete!
+async def background_email_processor():
+    """
+    Continuous background processor that feeds emails from queue to analyze endpoint
+    """
+    logger.info("Starting background email processor...")
 
-📊 **Final Results:**
-- Total processed: {processed}/{total_emails}
-- ✅ Successful: {successful}
-- ❌ Failed: {failed}  
-- 🔄 Duplicates skipped: {duplicates}
-
-All results have been saved to the database. You can now submit more emails or upload another CSV file!"""
-
-        await send_chat_message(session_id, final_msg, {
-            "batch_results": {
-                "total": total_emails,
-                "processed": processed,
-                "successful": successful,
-                "failed": failed,
-                "duplicates": duplicates,
-                "results": [r.dict() for r in all_results[-10:]]  # Last 10 results
-            }
-        })
-        
-    except Exception as e:
-        logger.error(f"Error in background processing: {str(e)}")
-        logger.error(f"Exception details: {type(e).__name__}: {e}")
-        import traceback
-        logger.error(f"Full traceback: {traceback.format_exc()}")
-        error_msg = f"Batch processing failed: {str(e)}"
+    while True:
         try:
-            await send_chat_message(session_id, error_msg)
-        except Exception as send_error:
-            logger.error(f"Failed to send error message: {send_error}")
+            # Get clients
+            bq_client = get_bigquery_client()
+            analyzer = get_domain_analyzer()
+
+            # Get next email from queue
+            email = bq_client.get_next_email_from_queue()
+
+            if email:
+                logger.info(f"Processing email from queue: {email}")
+
+                try:
+                    # Use existing analyze endpoint logic
+                    result = await process_email_analysis(
+                        email=email,
+                        analyzer=analyzer,
+                        bq_client=bq_client,
+                        force_refresh=False
+                    )
+
+                    # Remove from queue after successful processing
+                    bq_client.remove_email_from_queue(email)
+                    logger.info(f"Successfully processed and removed email {email} from queue")
+
+                except Exception as e:
+                    logger.error(f"Error processing email {email}: {str(e)}")
+                    # Remove from queue even if processing fails to avoid infinite retries
+                    bq_client.remove_email_from_queue(email)
+                    logger.warning(f"Removed failed email {email} from queue")
+            else:
+                # No emails in queue, wait before checking again
+                await asyncio.sleep(10)
+
+        except Exception as e:
+            logger.error(f"Error in background email processor: {str(e)}")
+            # Wait longer on errors to avoid spam
+            await asyncio.sleep(30)
 
 
 # Serve React app for all non-API routes

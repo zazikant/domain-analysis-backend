@@ -38,7 +38,7 @@ class BigQueryClient:
         # Ensure dataset and table exist
         self._ensure_dataset_exists()
         self._ensure_table_exists()
-        # self._ensure_queue_tables_exist()  # COMMENTED OUT - massive batch processing disabled
+        self._ensure_email_queue_table_exists()
     
     def _ensure_dataset_exists(self):
         """Create dataset if it doesn't exist"""
@@ -331,14 +331,174 @@ class BigQueryClient:
             logger.error(f"Error querying email results: {str(e)}")
             return pd.DataFrame()
 
-    # MASSIVE BATCH PROCESSING METHODS - COMMENTED OUT
-    # def _ensure_queue_tables_exist(self):
-    #     """Create processing queue tables if they don't exist"""
-    #     self._create_processing_queue_table()
-    #     self._create_batch_tracking_table()
+    def _ensure_email_queue_table_exists(self):
+        """Create simple email queue table if it doesn't exist"""
+        try:
+            queue_table_ref = self.dataset_ref.table("email_queue")
+            self.client.get_table(queue_table_ref)
+            logger.info("Email queue table already exists")
+        except NotFound:
+            # Simple schema with single Email column
+            schema = [
+                bigquery.SchemaField("Email", "STRING", mode="REQUIRED"),
+            ]
 
-    # MASSIVE BATCH PROCESSING METHODS - REMOVED TO SIMPLIFY DEPLOYMENT
-    pass
+            table = bigquery.Table(queue_table_ref, schema=schema)
+            table.description = "Simple email queue for background processing"
+
+            table = self.client.create_table(table, timeout=30)
+            logger.info("Created email_queue table")
+
+    def insert_emails_to_queue(self, emails: List[str]) -> bool:
+        """
+        Insert emails into the queue table
+
+        Args:
+            emails: List of email addresses to add to queue
+
+        Returns:
+            bool: True if successful
+        """
+        try:
+            queue_table_ref = self.dataset_ref.table("email_queue")
+
+            # Create DataFrame with emails
+            df = pd.DataFrame({"Email": emails})
+
+            # Configure job to append data
+            job_config = bigquery.LoadJobConfig(
+                write_disposition="WRITE_APPEND",
+                autodetect=False
+            )
+
+            # Load DataFrame to BigQuery
+            job = self.client.load_table_from_dataframe(
+                df,
+                queue_table_ref,
+                job_config=job_config
+            )
+
+            # Wait for the job to complete
+            job.result()
+
+            logger.info(f"Successfully inserted {len(emails)} emails into queue")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error inserting emails to queue: {str(e)}")
+            return False
+
+    def get_next_email_from_queue(self) -> Optional[str]:
+        """
+        Get next email from queue for processing
+
+        Returns:
+            str: Email address or None if queue is empty
+        """
+        try:
+            query = f"""
+            SELECT Email
+            FROM `{self.project_id}.{self.dataset_id}.email_queue`
+            LIMIT 1
+            """
+
+            query_job = self.client.query(query)
+            results = query_job.result()
+
+            for row in results:
+                return row.Email
+
+            return None
+
+        except Exception as e:
+            logger.error(f"Error getting next email from queue: {str(e)}")
+            return None
+
+    def remove_email_from_queue(self, email: str) -> bool:
+        """
+        Remove processed email from queue
+
+        Args:
+            email: Email address to remove
+
+        Returns:
+            bool: True if successful
+        """
+        try:
+            query = f"""
+            DELETE FROM `{self.project_id}.{self.dataset_id}.email_queue`
+            WHERE Email = @email
+            """
+
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("email", "STRING", email)
+                ]
+            )
+
+            query_job = self.client.query(query, job_config=job_config)
+            query_job.result()
+
+            logger.info(f"Removed email {email} from queue")
+            return True
+
+        except Exception as e:
+            logger.error(f"Error removing email from queue: {str(e)}")
+            return False
+
+    def get_queue_count(self) -> int:
+        """
+        Get count of emails in queue
+
+        Returns:
+            int: Number of emails in queue
+        """
+        try:
+            query = f"""
+            SELECT COUNT(*) as count
+            FROM `{self.project_id}.{self.dataset_id}.email_queue`
+            """
+
+            query_job = self.client.query(query)
+            results = query_job.result()
+
+            for row in results:
+                return row.count
+
+            return 0
+
+        except Exception as e:
+            logger.error(f"Error getting queue count: {str(e)}")
+            return 0
+
+    def get_recent_results(self, limit: int = 50) -> pd.DataFrame:
+        """
+        Get recent analysis results
+
+        Args:
+            limit: Maximum number of results to return
+
+        Returns:
+            pd.DataFrame: Recent analysis results
+        """
+        try:
+            query = f"""
+            SELECT *
+            FROM `{self.project_id}.{self.dataset_id}.{self.table_id}`
+            ORDER BY created_at DESC
+            LIMIT {limit}
+            """
+
+            query_job = self.client.query(query)
+            results = query_job.result()
+
+            df = results.to_dataframe()
+            logger.info(f"Retrieved {len(df)} recent results")
+            return df
+
+        except Exception as e:
+            logger.error(f"Error getting recent results: {str(e)}")
+            return pd.DataFrame()
 
     def get_analysis_stats(self) -> dict:
         """
