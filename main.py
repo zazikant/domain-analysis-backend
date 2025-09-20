@@ -1300,7 +1300,7 @@ from typing import Optional
 from fastapi import HTTPException, Depends
 from google.cloud import bigquery
 
-from config import get_bigquery_client
+# get_bigquery_client is defined above
 # dataframe_to_analysis_result is defined below
 
 logger = logging.getLogger(__name__)
@@ -2334,19 +2334,10 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 # Import configuration and lifespan
-from config import lifespan
+# lifespan is defined above
 
 # Import all endpoint handlers from modular files
-from core_endpoints import (
-    analyze_single_email, batch_analyze_emails, get_domain_results,
-    get_analysis_stats, get_recent_results, health_check, get_api_info
-)
-from csv_upload_endpoint import upload_csv_for_processing
-from job_status_endpoints import get_job_status_endpoint, get_job_results, get_recent_jobs
-from job_control_endpoints import restart_failed_job, cancel_job
-from websocket_endpoints import websocket_endpoint, send_chat_message_endpoint
-from csv_chat_endpoints import preview_csv_file, upload_csv_file_legacy
-from session_management_endpoints import get_chat_session_info, clear_chat_session
+# All endpoint functions are defined above in this file
 
 # Import models for response typing
 from models import (
@@ -2496,19 +2487,19 @@ async def clear_session(session_id: str):
 @app.get("/system/sessions")
 async def system_sessions():
     """Get all chat sessions (admin endpoint)"""
-    from session_management_endpoints import get_all_chat_sessions
+    # get_all_chat_sessions is defined above
     return get_all_chat_sessions()
 
 @app.post("/system/cleanup")
 async def system_cleanup(max_age_hours: int = 24):
     """Clean up inactive sessions (admin endpoint)"""
-    from session_management_endpoints import cleanup_inactive_sessions
+    # cleanup_inactive_sessions is defined above
     return cleanup_inactive_sessions(max_age_hours)
 
 @app.get("/system/stats")
 async def system_stats():
     """Get system statistics (admin endpoint)"""
-    from session_management_endpoints import get_session_statistics
+    # get_session_statistics is defined above
     return get_session_statistics()
 
 
