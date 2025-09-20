@@ -1039,7 +1039,7 @@ from datetime import datetime
 
 from fastapi import HTTPException, Depends
 
-from config import get_domain_analyzer, get_bigquery_client
+# get_domain_analyzer and get_bigquery_client are defined above
 # dataframe_to_analysis_result is defined below
 # process_email_analysis is defined above
 # batch processing function needed
@@ -1228,7 +1228,7 @@ import pandas as pd
 
 from fastapi import HTTPException, Depends, UploadFile, File, Form
 
-from config import get_domain_analyzer, get_bigquery_client
+# get_domain_analyzer and get_bigquery_client are defined above
 # utility functions are defined above
 # batch processing function needed
 
@@ -1473,7 +1473,7 @@ import logging
 from fastapi import HTTPException, Depends
 from google.cloud import bigquery
 
-from config import get_domain_analyzer, get_bigquery_client
+# get_domain_analyzer and get_bigquery_client are defined above
 # batch processing function needed
 
 logger = logging.getLogger(__name__)
@@ -1704,7 +1704,7 @@ from datetime import datetime
 
 from fastapi import Depends, WebSocket, WebSocketDisconnect
 
-from config import get_domain_analyzer, get_bigquery_client
+# get_domain_analyzer and get_bigquery_client are defined above
 # utility functions are defined above
 # legacy processing functions needed
 
@@ -1859,7 +1859,7 @@ import pandas as pd
 
 from fastapi import Depends, UploadFile, File, Form
 
-from config import get_domain_analyzer, get_bigquery_client
+# get_domain_analyzer and get_bigquery_client are defined above
 # utility functions are defined above
 # legacy processing function needed
 
