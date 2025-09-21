@@ -1,0 +1,14 @@
+to update partition table after you have a working sql query, here's a simple query to get both partition and cluster info:
+
+-- Get partition and clustering info
+SELECT 
+  table_name,
+  ddl
+FROM `feisty-outrider-471302-k6.advanced_csv_analysis.INFORMATION_SCHEMA.TABLES`
+WHERE table_name = 'email_domain_results';
+
+
+
+
+(check json for output)
+The ddl field will show you the complete table definition including:PARTITION BY DATE(created_at)CLUSTER BY extracted_domain, scraping_status, real_estate, infrastructure
