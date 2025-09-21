@@ -9,6 +9,38 @@ WHERE table_name = 'email_domain_results';
 
 
 
-
 (check json for output)
 The ddl field will show you the complete table definition including:PARTITION BY DATE(created_at)CLUSTER BY extracted_domain, scraping_status, real_estate, infrastructure
+
+===== what is clustering? =====
+
+
+**What clustering does:**
+- **Physically reorganizes data** within each partition based on the clustered columns
+- **Groups similar values together** on disk (e.g., all "gmail.com" domains stored near each other)
+- **Speeds up queries** that filter, group, or join on those specific columns
+
+**Key points:**
+1. **Not related to number of columns** - You could have 400 columns, but clustering only affects how data is physically stored based on the clustered columns
+
+2. **Choose columns you filter/group by most often** - For example:
+   ```sql
+   WHERE extracted_domain = 'gmail.com'  -- Fast with clustering
+   WHERE scraping_status = 'success'     -- Fast with clustering  
+   WHERE real_estate LIKE '%commercial%' -- Fast with clustering
+   WHERE company_summary LIKE '%tech%'   -- Slow (not clustered)
+   ```
+
+3. **Order matters** - BigQuery clusters first by `extracted_domain`, then `scraping_status`, then `real_estate`, then `infrastructure`
+
+4. **Limits** - Max 4 clustering columns in BigQuery
+
+**Example:**
+If your app mostly queries:
+```sql
+SELECT * FROM table 
+WHERE extracted_domain = 'company.com' 
+  AND scraping_status = 'success'
+```
+
+Then `CLUSTER BY extracted_domain, scraping_status` would be perfect because BigQuery can quickly jump to the physical location where that data is stored together.
