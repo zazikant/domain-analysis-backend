@@ -44,3 +44,11 @@ WHERE extracted_domain = 'company.com'
 ```
 
 Then `CLUSTER BY extracted_domain, scraping_status` would be perfect because BigQuery can quickly jump to the physical location where that data is stored together.
+
+Cost Impact:
+
+Reduced scanning - Instead of scanning the entire table (all 400 columns × millions of rows), BigQuery can skip large chunks of data
+
+Lower costs - You'll pay for less data scanned
+
+Faster results - Queries return much quicker
