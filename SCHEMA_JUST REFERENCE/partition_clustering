@@ -52,3 +52,87 @@ Reduced scanning - Instead of scanning the entire table (all 400 columns × mill
 Lower costs - You'll pay for less data scanned
 
 Faster results - Queries return much quicker
+
+
+**How to identify what to cluster - analyze your app's queries:**
+
+**Step 1: Look at your most common WHERE clauses**
+```sql
+-- If your app frequently runs these queries:
+SELECT * FROM users WHERE email = 'john@company.com'
+SELECT * FROM users WHERE department = 'sales' AND status = 'active'
+SELECT * FROM users WHERE location = 'NYC' AND role = 'manager'
+
+-- Then cluster on: email, department, status, location
+CLUSTER BY email, department, status, location
+```
+
+**Step 2: Check your JOIN conditions**
+```sql
+-- If you often join tables like this:
+SELECT u.*, o.* 
+FROM users u 
+JOIN orders o ON u.customer_id = o.customer_id
+WHERE u.region = 'US'
+
+-- Then cluster the users table on: customer_id, region
+-- And cluster the orders table on: customer_id
+```
+
+**Step 3: Look at GROUP BY patterns**
+```sql
+-- If you frequently aggregate like this:
+SELECT department, COUNT(*) 
+FROM users 
+GROUP BY department, location
+
+-- Consider clustering on: department, location
+```
+
+---
+
+**When NOT to cluster / Illegal examples:**
+
+**❌ Don't cluster on:**
+
+1. **High cardinality columns (too many unique values):**
+```sql
+-- BAD - timestamp has millions of unique values
+CLUSTER BY created_timestamp, email, name, id
+-- Each "cluster" would have just 1-2 rows, no benefit
+```
+
+2. **Columns you never filter on:**
+```sql
+-- BAD - if you never query these columns
+CLUSTER BY description, comments, notes, metadata
+-- Waste of clustering, slows down maintenance
+```
+
+3. **More than 4 columns (BigQuery limit):**
+```sql
+-- ILLEGAL - BigQuery allows max 4 clustering columns
+CLUSTER BY col1, col2, col3, col4, col5  -- ❌ ERROR
+```
+
+4. **Wrong data types:**
+```sql
+-- ILLEGAL - can't cluster on ARRAY, STRUCT, JSON
+CLUSTER BY tags_array, user_struct, json_data  -- ❌ ERROR
+```
+
+5. **Frequently changing columns:**
+```sql
+-- BAD - if last_login_time changes constantly
+CLUSTER BY last_login_time, email
+-- Constant re-clustering overhead
+```
+
+**✅ Good clustering example:**
+```sql
+-- Your app queries: WHERE email = ? AND status = ? AND department = ?
+CLUSTER BY email, status, department, location
+-- Low-medium cardinality, frequently filtered, stable values
+```
+
+**Pro tip:** Start with your most selective filters first in the cluster order!
