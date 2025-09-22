@@ -1,0 +1,9 @@
+1. You need to upload csv in "google cloud storage" platform. copy gsutil URI looks like: "gs://cloud-ai-platform-0ffa93a6-ef53-4b3d-a206-5189c6a86aaa/A.csv"
+2. open google cloud shell and cd to project directory
+3. open big query... you will see cloud shell cli in bottom. run this: bq load --autodetect --source_format=CSV --skip_leading_rows=1 --allow_quoted_newlines --allow_jagged_rows --max_bad_records=1000 advanced_csv_analysis.test gs://cloud-ai-platform-0ffa93a6-ef53-4b3d-a206-5189c6a86aaa/A.csv
+
+replace advanced_csv_analysis.test to your actual table. here test is the parent table that will have gs://cloud-ai-platform-0ffa93a6-ef53-4b3d-a206-5189c6a86aaa/A.csv CSV file added.
+
+Very important:
+1. For the current app, let first record be created as per chat interface. just add the remaining to it.
+2. If in case parent table need to be created, ensure partition by and clustering is as per schema. check schema json of any reference you want to replicate.
