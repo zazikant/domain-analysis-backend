@@ -1,0 +1,31 @@
+===================== Preview_Regex_Email =============
+
+SELECT *
+FROM `feisty-outrider-471302-k6.advanced_csv_analysis.email_domain_results`
+WHERE REGEXP_CONTAINS(original_email, r'shethcorp');
+
+=======================================================
+
+======= Preview_extracted_domain_selected_url_mismatch =======
+
+Below code also consider gemengserv vs gemengsercompany.com as false because gemengserv followed by a dot is mandatory.
+
+WITH prepared_data AS (
+  SELECT
+    extracted_domain,
+    selected_url,
+    -- Extract base domain (remove last dot + TLD)
+    REGEXP_REPLACE(extracted_domain, r'\.[^.]*$', '') AS base_domain,
+    -- Escape dots in base_domain
+    REPLACE(REGEXP_REPLACE(extracted_domain, r'\.[^.]*$', ''), '.', '\\.') AS escaped_base_domain
+  FROM feisty-outrider-471302-k6.advanced_csv_analysis.email_domain_results
+)
+SELECT
+  extracted_domain,
+  selected_url,
+  base_domain,
+  -- Check for escaped base domain + trailing dot
+  REGEXP_CONTAINS(selected_url, escaped_base_domain || r'\.') AS domain_check
+FROM prepared_data;
+
+=======================================================
